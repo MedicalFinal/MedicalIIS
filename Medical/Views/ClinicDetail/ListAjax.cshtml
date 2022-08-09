@@ -1,0 +1,278 @@
+﻿@{
+    ViewData["Title"] = "ListTest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section css{ 
+<style>
+    .container th {
+        text-align: center;
+        background-color: #00aef0;
+        color:#ffffff;
+        vertical-align:middle;
+    }
+    .container td {
+        text-align: center;
+        vertical-align: middle;
+    }
+    a{
+        color:#000000;
+    }
+</style>
+}
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">門診時間表</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+<div class="container">
+    <div class="row">
+        <div class="data_div">
+            <div class="data_detail">
+                <h1 class="data_title text-center today"></h1>
+                <div data_content>
+                    <button class="btn btn-outline-primary" onclick="minus()">上一周</button>
+                    <input hidden id="addday" value=""/>
+                    <button class="btn btn-outline-primary" onclick="add()">下一周</button>
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-light">
+                            <tr class="tr">
+                                <th>時間</th>
+                                <th class="day1 th">星期一<div></div></th>
+                                <th class="day2 th">星期二<div></div></th>
+                                <th class="day3 th">星期三<div></div></th>
+                                <th class="day4 th">星期四<div></div></th>
+                                <th class="day5 th">星期五<div></div></th>
+                                <th class="day6 th">星期六<div></div></th>
+                                <th class="day0 th">星期日<div></div></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="period1">
+                                <th>
+                                    上午<br />08:00<br />|<br />13:00
+                                </th>
+                                <td class="day1 td">
+                                    休診
+                                </td>
+                                <td class="day2 td">
+                                    休診
+                                </td>
+                                <td class="day3 td">
+                                    休診
+                                </td>
+                                <td class="day4 td">
+                                    休診
+                                </td>
+                                <td class="day5 td">
+                                    休診
+                                </td>
+                                <td class="day6 td">
+                                    休診
+                                </td>
+                                <td class="day0 td">
+                                    休診
+                                </td>
+                            </tr>
+                            <tr class="period2">
+                                <th>
+                                    下午<br />13:00<br />|<br />17:00
+                                </th>
+                                <td class="day1 td">
+                                    休診
+                                </td>
+                                <td class="day2 td">
+                                    休診
+                                </td>
+                                <td class="day3 td">
+                                    休診
+                                </td>
+                                <td class="day4 td">
+                                    休診
+                                </td>
+                                <td class="day5 td">
+                                    休診
+                                </td>
+                                <td class="day6 td">
+                                    休診
+                                </td>
+                                <td class="day0 td">
+                                    休診
+                                </td>
+                            </tr>
+                            <tr class="period3">
+                                <th>
+                                    晚上<br />17:00<br />|<br />20:00
+                                </th>
+                                <td class="day1 td">
+                                    休診
+                                </td>
+                                <td class="day2 td">
+                                    休診
+                                </td>
+                                <td class="day3 td">
+                                    休診
+                                </td>
+                                <td class="day4 td">
+                                    休診
+                                </td>
+                                <td class="day5 td">
+                                    休診
+                                </td>
+                                <td class="day6 td">
+                                    休診
+                                </td>
+                                <td class="day0 td">
+                                    休診
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{ 
+    <script>
+        let datenow = new Date()
+        let daynow = datenow.toLocaleDateString()
+        let week = 0
+        let hournow = datenow.getHours()
+        
+            if (hournow >= 8 && hournow < 13) {
+                nowperiod = 1
+            }
+            if (hournow >= 13 && hournow < 17) {
+                nowperiod = 2
+            }
+            if (hournow >= 17 && hournow < 20) {
+                nowperiod = 3
+            }
+           
+        @*網頁開始*@
+        document.querySelector(".today").innerHTML += daynow                  ////標題日期
+        $(`tbody .day${datenow.getDay()}`).css("background-color", "#79dfd3")  ////改變今天顏色
+        $(`tbody .period${nowperiod} .day${datenow.getDay()}`).css("background-color", "#dfaf79") ////早午晚顏色
+        ref();                                                                ////刷新門診
+        getweek();                                                            ////刷新星期日期
+        ///////
+        @*下一周*@
+        function add() {
+            week +=7
+            document.getElementById("addday").value = week
+            ref()
+            getweek()
+        }
+        @*上一周*@
+        function minus() {
+            if (week == 0) {
+                $(this).hidden
+            }
+            else {
+                week -= 7
+                document.getElementById("addday").value = week
+                ref()
+                getweek()
+            }
+            
+        }
+        @*換周&刷新*@
+        function ref() {
+            $("td").html("休診");
+            loadClinicDetail(1,week)
+            loadClinicDetail(2,week)
+            loadClinicDetail(3,week)
+        }
+        @*換周*@
+        async function loadClinicDetail(period, week) {
+            const details = await fetch('@Url.Content("~/ClinicDetail/loadClinicDetail")' + `?period=${period}` +`&&addday=${week}`).then(response => response.json());
+            console.log(details)
+            if (details.length != 0) {
+                for (let i = 0; i < details.length; i++) {
+                    document.querySelector(`.period${period} .day${new Date(details[i].clinicDate).getDay()}`).innerHTML = "";
+                }
+                for (let i = 0; i < details.length; i++) {
+                    let 目前人數 = 0
+                    var promise = getReserve(details[i].clinicDetailId)
+                    promise.then(function (value) {
+                        目前人數 = value
+                        let 剩餘名額 = 6 - 目前人數
+                        td = ` <a href="/doctor/detail?id=${details[i].doctorId}">
+                          <b>${details[i].doctorName}(${details[i].roomName}診間)</b><br />
+                          <b>(剩餘名額:${剩餘名額})</b>
+                        </a><br />`
+                        document.querySelector(`.period${period} .day${new Date(details[i].clinicDate).getDay()}`).innerHTML += td;
+                    })
+                    
+                }
+            }
+            else
+                return
+        }
+        @*抓日期*@
+        function getweek() {
+            for (let i = 0; i < 7; i++) {
+                let 日期 = datenow.getDate() + i + week
+                let 月份 = datenow.getMonth() + 1
+                if (月份 == 1 || 月份 == 3 || 月份 == 5 || 月份 == 7 || 月份 == 8 || 月份 == 10 || 月份 == 12) {
+                    if (日期 > 32) {
+                        div = `<div>${datenow.getMonth() + 2}/${日期 - 32}</div>`
+                        if (datenow.getDay() + i > 6)
+                            document.querySelector(`.tr .day${i - 7 + datenow.getDay()} div`).innerHTML = div
+                        else
+                            document.querySelector(`.tr .day${datenow.getDay() + i} div`).innerHTML = div
+                    }
+                    else {
+                        div = `<div>${datenow.getMonth() + 1}/${日期}</div>`
+                        if (datenow.getDay() + i > 6)
+                            document.querySelector(`.tr .day${i - 7 + datenow.getDay()} div`).innerHTML = div
+                        else
+                            document.querySelector(`.tr .day${datenow.getDay() + i} div`).innerHTML = div
+                    }
+                }
+                if (月份 == 2) {
+                    if (日期 > 29) {
+                        div = `<div>${datenow.getMonth() + 2}/${日期 - 29}</div>`
+                        if (datenow.getDay() + i > 6)
+                            document.querySelector(`.tr .day${i - 7 + datenow.getDay()} div`).innerHTML = div
+                        else
+                            document.querySelector(`.tr .day${datenow.getDay() + i} div`).innerHTML = div
+                    }
+                    else {
+                        div = `<div>${datenow.getMonth() + 1}/${日期}</div>`
+                        if (datenow.getDay() + i > 6)
+                            document.querySelector(`.tr .day${i - 7 + datenow.getDay()} div`).innerHTML = div
+                        else
+                            document.querySelector(`.tr .day${datenow.getDay() + i} div`).innerHTML = div
+                    }
+                }
+                else {
+                    if (日期 > 31) {
+                        div = `<div>${datenow.getMonth() + 2}/${日期 - 31}</div>`
+                        if (datenow.getDay() + i > 6)
+                            document.querySelector(`.tr .day${i - 7 + datenow.getDay()} div`).innerHTML = div
+                        else
+                            document.querySelector(`.tr .day${datenow.getDay() + i} div`).innerHTML = div
+                    }
+                    else {
+                        div = `<div>${datenow.getMonth() + 1}/${日期}</div>`
+                        if (datenow.getDay() + i > 6)
+                            document.querySelector(`.tr .day${i - 7 + datenow.getDay()} div`).innerHTML = div
+                        else
+                            document.querySelector(`.tr .day${datenow.getDay() + i} div`).innerHTML = div
+                    }
+                }
+            }
+        }
+        @*抓預約人數是否額滿*@
+        async function getReserve(ClinicId) {
+            const reserves = await fetch('/ClinicDetail/loadReserve' + `?ClinicID=${ClinicId}`).then(response => response.json());
+            let 預約人數 = reserves.length
+            return 預約人數;
+        }
+    </script>
+}

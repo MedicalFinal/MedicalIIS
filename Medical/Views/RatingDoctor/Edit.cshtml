@@ -1,0 +1,48 @@
+﻿@model Medical.Models.RatingDoctor
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>資料修改</h1>
+
+<h4>RatingDoctor</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div hidden class="form-group">
+                <label asp-for="RatingDoctorId" class="control-label"></label>
+                <input asp-for="RatingDoctorId" class="form-control" />
+                <span asp-validation-for="RatingDoctorId" class="text-danger"></span>
+            </div>
+            <div hidden class="form-group">
+                <label asp-for="DoctorId" class="control-label"></label>
+                <input asp-for="DoctorId" class="form-control" />
+                <span asp-validation-for="DoctorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RatingTypeId" class="control-label" >給予評分</label>
+                <input asp-for="RatingTypeId" class="form-control" min="1" max="5"/>
+                <span asp-validation-for="RatingTypeId" class="text-danger">分數給予1~5分</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rating" class="control-label"></label>
+                <input asp-for="Rating" class="form-control" />
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

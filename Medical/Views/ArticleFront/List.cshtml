@@ -1,0 +1,82 @@
+﻿@model IEnumerable<Medical.ViewModel.AArticleViewModel>
+
+@{
+    ViewData["Title"] = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section css{
+
+
+}
+
+
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">衛教文章</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+@using (Html.BeginForm())
+{
+    @*========查詢按鍵============*@
+    <div class="input-group" style="display:block; text-align:center;margin-block:30px">
+        @Html.TextBox("txtKeyword", "", new { @class = "font-weight-bold", style = "font-size:26px;border-radius:15px;", @placeholder = "search..." })
+        <button type="submit" class="btn btn-lg btn-default">
+            <i class="fa fa-search">查詢</i>
+        </button>
+    </div>
+}
+
+    @*===熱搜標題===*@
+    <div style="margin-block: 30px; text-align: center">
+        <a>
+            <i class="" style="font-size: 20px; font-weight: bold;text-align:left">熱搜關鍵字 : </i>
+        </a>
+        @*====熱搜按鈕====*@
+        @*需要更改*@
+    <a href="~/ArticleFront/List?txtKeyword=飛秒雷射" class="col-2 btn btn-outline-primary" style="border-radius:15px">飛秒雷射</a>
+        <a href="~/ArticleFront/List?txtKeyword=近視" class="col-2 btn btn-outline-primary" style="border-radius:15px">近視</a>
+        <a href="~/ArticleFront/List?txtKeyword=老花" class="col-2 btn btn-outline-primary" style="border-radius:15px">老花</a>
+    </div>
+
+
+
+
+
+
+    @*===圖文======*@
+
+    <div class="row row-cols-1 row-cols-md-3">
+        @foreach (var item in Model)
+        {
+            <div class="col mb-4">
+                <div class="card h-100">
+                    @*===文章圖片===*@
+                    <img src="~/uploads/@item.ArPicturePath" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        @*===文章標題===*@
+                        <a>
+                            <i class="card-title" style="font-size: 30px; font-weight: bold;">@item.Articeltitle</i>
+                        </a>
+                        @*===日期===*@
+                        <a style="float: right; text-align: right;">
+                            <i class="fa fa-calendar">@item.CreateDate</i>
+                        </a>
+                        @*===文章內容===*@
+                    <p class="card-text">@item.ArticleContent.Substring(0, Math.Min(item.ArticleContent.Length, 100)).Replace("<p>", "").Replace("<strong>", "").Replace("</strong>", "").Replace("<h4>", "").Replace("</h4>", "").Replace("<br/>", "").Replace("</p>", "")........</p>
+                    </div>
+                    @*===文章連結===*@
+                    <div class="card-input" style="margin-left:10px;margin-block:10px">
+                        <a href="~/ArticleFront/ListDetail?id=@item.ArticleId" class="btn btn-outline-primary" style="border-radius:15px">Read more...</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+

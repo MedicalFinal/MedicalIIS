@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Medical.ViewModel.CReviewViewModel>
+
+@{
+    ViewData["Title"] = "ReviewList";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+<h1>產品評論清單</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                編號
+            </th>
+            <th>
+                產品名稱
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RatingType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CommentContent)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.ProductName)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.Product.)要新增照片
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Member.MemberName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RatingType.RatingTypeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommentContent)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.CreateDate)
+                    </td>*@
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

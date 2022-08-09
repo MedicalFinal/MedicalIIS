@@ -1,0 +1,104 @@
+﻿@{ ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+<p id="time" style="text-align:right"></p>
+
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="small-box bg-info">
+            <div class="inner" id="order">
+                <h3></h3>
+                <p>訂單總筆數</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-bag"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="small-box bg-success">
+            <div class="inner" id="reserve">
+                <h3></h3>
+                <p>預約總數</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="small-box bg-warning">
+            <div class="inner" id="user">
+                <h3></h3>
+                <p>會員總數</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-add"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="small-box bg-danger">
+            <div class="inner" id="rating">
+                <h3></h3>
+                <p>醫生滿意度</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-lg-6 col-12">
+        <div class="card" style="display: block; box-sizing: border-box; height: 400px;">
+            <div class="card-header border-0">
+                <h3 class="card-title">商品庫存警示</h3>
+                <div class="card-tools">
+                    <a href="#" class="btn btn-tool btn-sm" id="download-pdf">
+                        <i class="fas fa-download"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body table-responsive p-0" style="height: 350px;" id="mydiv">
+                <table class="table table-bordered  table-head-fixed table-striped dataTable dtr-inline text-nowrap" id="tblProduct">
+                    <thead>
+                        <tr>
+                            <th>序</th>
+                            <th>商品名稱</th>
+                            <th>庫存數量</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-12">
+        <div data-v-365c20ab="" class="chart-view card">
+            <canvas id="myChart" style="display: block; box-sizing: border-box; height: 400px;">
+            </canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/dashboard.js"></script>
+
+    <script>
+    </script>
+
+}

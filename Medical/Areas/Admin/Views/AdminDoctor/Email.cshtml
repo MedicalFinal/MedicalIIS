@@ -1,0 +1,33 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@{
+    ViewData["Title"] = "Email";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+<h1>Email</h1>
+@section Scripts{
+    <script src="https://smtpjs.com/v3/smtp.js"></script>     @*開發中 寄信功能*@
+    <script>
+        Email.send({
+            Host: "smtp.yourisp.com",
+            Username: "username",
+            Password: "password",
+            To: 'them@website.com',
+            From: "you@isp.com",
+            Subject: "This is the subject",
+            Body: "And this is the body"
+        }).then(
+            message => alert(message)
+        );
+        Email.send({
+            SecureToken: "C973D7AD-F097-4B95-91F4-40ABC5567812",
+            To: 'them@website.com',
+            From: "you@isp.com",
+            Subject: "This is the subject",
+            Body: "And this is the body"
+        }).then(
+            message => alert(message)
+        );
+    </script>
+}

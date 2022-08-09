@@ -1,0 +1,32 @@
+﻿@model Medical.Models.Advertise
+
+@{
+    ViewData["Title"] = "ListDetail";
+}
+
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">@Model.AdTitle</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+
+<div class="container-fluid">
+    <div class="row">
+            <div class="blog__details__text">
+                <input type="hidden" value="@Model.No" name="No" />
+                <h4 style="margin-block:20px"><i class="nav-check"></i>@Model.AdTitle</h4>
+                @*<img src="~/uploads/@Model.NewsPicturePath" alt="">*@
+                <p>
+                    @Html.Raw(@Model.AdContant)
+                </p>
+            </div>
+            <div class="card-body" style=" margin-top: 40px;display:inline;text-align:right">
+                <a href="~/AdvertiseFront/List" class="btn btn-outline-primary" style="border-radius: 15px; font-size: 24px; font-weight: bold; float:right; text-align: right;">返回文章</a>
+            </div>
+
+    </div>
+</div>

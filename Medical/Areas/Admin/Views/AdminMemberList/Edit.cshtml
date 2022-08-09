@@ -1,0 +1,105 @@
+﻿@model Medical.ViewModel.CMemberViewModel
+
+@{
+    ViewData["Title"] = "AdminLoginMemberList";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+<h4>會員資料修改</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*id要傳入*@
+            <input type="hidden" asp-for="MemberId" />
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MemberName" class="control-label"></label>
+                <input asp-for="MemberName" class="form-control" />
+                <span asp-validation-for="MemberName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdentityId" class="control-label"></label>
+                <input asp-for="IdentityId" class="form-control" />
+                <span asp-validation-for="IdentityId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BirthDay" class="control-label"></label>
+                <input asp-for="BirthDay" class="form-control" type="date"/>
+                <span asp-validation-for="BirthDay" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GenderId" class="control-label"></label>
+                <br />
+                <select asp-for="GenderId">
+                    <option>性別</option>
+                    @foreach (var item in Model.MemGender)
+                    {
+                        <option value="@item.GenderId">@item.Gender1</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="IcCardNo" class="control-label"></label>
+                <input asp-for="IcCardNo" class="form-control" />
+                <span asp-validation-for="IcCardNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+        <div class="form-group">
+            <label asp-for="Role" class="control-label"></label>
+            <br />
+            <select asp-for="Role">
+                <option value="2">權限篩選</option>
+                @foreach (var item in Model.roleTypes)
+                {
+                    <option value="@item.Role">@item.RoleName</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="CityId" class="control-label"></label>
+            <br />
+            <select asp-for="CityId">
+                <option>縣市</option>
+                @foreach (var item in Model.MemCity)
+                {
+                    <option value="@item.CityId">@item.CityName</option>
+                }
+            </select>
+        </div>
+                <div class="form-group">
+                    <label asp-for="Address" class="control-label"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="存檔" class="btn btn-primary" />
+                </div>
+        </form>
+    </div>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+
+@section Scripts {
+
+ @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

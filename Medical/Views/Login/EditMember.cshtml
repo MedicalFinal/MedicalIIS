@@ -1,0 +1,187 @@
+﻿@model Medical.ViewModel.CMemberViewModel
+
+@{
+    ViewData["Title"] = "EditMember";
+}
+
+<div class="row" id="logreg-forms">
+    <div>
+        <form asp-action="EditMember">
+            <input type="hidden" asp-for="MemberId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MemberName" class="control-label"></label>
+                @*設定readonly不給修改，用disable會回傳空值/undefined*@
+                <input asp-for="MemberName" class="form-control" readonly />
+                <span asp-validation-for="MemberName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                @*設定readonly不給修改，用disable會回傳空值/undefined*@
+                <input asp-for="Email" class="form-control" readonly id="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">舊密碼</label>
+                <input type="password" class="form-control" id="pass" />
+                <span class="text-danger" id="pwAlert"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">新密碼</label>
+                <input type="password" class="form-control" id="newPass" />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">密碼確認</label>
+                <input type="password" asp-for="Password" class="form-control" id="passCheck" />
+                <span asp-validation-for="Password" class="text-danger" id="pwcheckAlert"></span>
+
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" id="phone"/>
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BirthDay" class="control-label"></label>
+                <input asp-for="BirthDay" class="form-control" type="date" readonly/>
+                <span asp-validation-for="BirthDay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GenderId" class="control-label"></label>
+                <br />
+                <select asp-for="GenderId" onfocus="defaultValue=this.value" onchange="this.value=defaultValue">
+                    <option>性別</option>
+                    @foreach (var item in Model.MemGender)
+                    {
+                        <option value="@item.GenderId" >@item.Gender1</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CityId" class="control-label"></label>
+                <br />
+                <select asp-for="CityId">
+                    <option>縣市</option>
+                    @foreach (var item in Model.MemCity)
+                    {
+                        <option value="@item.CityId">@item.CityName</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" id="address"/>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @*用 onclick="verification(); return false;"來阻止繼續進行*@
+                <input type="submit" value="確認修改" class="btn btn-primary" id="submitbutton" onclick="verification(); return false;" />
+            </div>
+            <br />
+            <input type="button" value="舊密碼Demo" class="btn btn-primary btn-block" id="pwDemo" />
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("#pwDemo").click(() => {
+            $("#pass").val("abcde12345");
+            $("#newPass").val("aaaa1111");
+            $("#passCheck").val("aaaa1111");
+            $("#phone").val("123");
+            $("#address").val("資策會")
+            $("#pass").blur();
+            $("#newPass").blur();
+
+        })
+        //舊密碼錯誤錯誤顯示
+        $("#pass").blur(function () {
+            const mailstr = $("#email").val();
+            const pwstr = $(this).val();
+            $.ajax({
+                url: "/Login/LoginPwCheck?pw=" + pwstr + "&mail=" + mailstr,
+                method: "GET",
+                success: function (data) {
+                    $("#pwAlert").text(data);
+                },
+                error: function (msg) {
+                    alert('error：' + msg.toLabel);
+                }
+            })
+        })
+
+        //修改密碼確認
+        $("#passCheck").blur(function () {
+            const str = $(this).val();
+            const pass = $("#newPass").val();
+            if (str != pass) {
+                $("#pwcheckAlert").text("輸入錯誤，請重新輸入");
+
+            }
+            else
+                $("#pwcheckAlert").text("");
+        })
+
+        $("#newPass").blur(function () {
+            const str = $(this).val();
+            const pass = $("#passCheck").val();
+            if (str != pass) {
+                $("#pwcheckAlert").text("輸入錯誤，請重新輸入");
+
+            }
+            else
+                $("#pwcheckAlert").text("");
+        })
+
+        function verification() {
+            //Write verification
+            const mailstr = $("#email").val();
+            const pwstr = $("#pass").val();
+            const newpass = $("#newPass").val();
+            const newpasscheckstr = $("#passCheck").val();
+            $.ajax({
+                url: "/Login/EditPwCheck?pw=" + pwstr + "&mail=" + mailstr,
+                method: "GET",
+                success: function (data) {
+                    console.log(data);
+                    console.log(newpass);
+                    console.log(newpasscheckstr);
+
+                    if (data == "true" && newpass == newpasscheckstr && newpass !== "") {
+                        console.log("驗證通過");
+                        //window.event.returnValue = true; 或是 return true都沒用 乾脆把屬性拔掉
+                        $("#submitbutton").removeAttr("onclick");
+                        $("#submitbutton").click();   //直接觸發click事件
+                    }
+                    else if (newpass != newpasscheckstr) {
+                        console.log("驗證不通過");
+                        $("#pwcheckAlert").text("輸入錯誤，請重新輸入");
+                        window.event.returnValue = false;  //應該也沒用，主要依靠onclick="verification(); return false;
+                    }
+                    else if (data != "true")
+                    {
+                        //啥都不做，required屬性會做事
+                    }
+                    else {
+                        console.log("驗證大便");
+                        $("#pwcheckAlert").text("輸入錯誤，請重新輸入");
+                        window.event.returnValue = false;
+                    }
+                },
+
+                error: function (msg) {
+                    return false
+                }
+            })
+
+        }
+    </script>
+
+}

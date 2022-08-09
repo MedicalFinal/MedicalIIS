@@ -1,0 +1,235 @@
+﻿@model Medical.ViewModel.CCounponForShowViewModel
+
+@{
+    ViewData["Title"] = "ReturnOrderList";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+<div class="container-fluid" style=" margin: auto; ">
+
+    <div style="width: 1000px; height: 980px; background-color: rgb(234, 232, 232); margin: auto; margin-top: 20px; margin-bottom: 50px; border-radius: 15px; padding-top: 20px; ">
+
+        <div style=" display: flex; width: 95%; margin: auto;height: 6%;">
+            <a href="~/Admin/AdminProduct/productManage" class="btn btn-dark" style="width: 25%; height: 100%; border-radius: 0%; margin-right: 1px; font-size: 26px ">產品</a>
+            <a href="~/Admin/AdminProduct/QueryAllOrders" class="btn btn-dark" style="width: 25%; height: 100%; border-radius: 0%; margin-right: 1px; font-size: 26px ">訂單</a>
+            <a href="~/Admin/AdminProduct/DeleteReviews" class="btn btn-dark" style="width: 25%; height: 100%; border-radius: 0%; margin-right: 1px; font-size: 26px ">評價</a>
+            <a href="~/Admin/AdminProduct/CouponList" class="btn btn-primary" style="width: 25%; height: 100%; border-radius: 0%; font-size: 26px ">優惠券</a>
+        </div>
+
+        <div class="row mt-3" style="height: 88%; width: 95%;margin: auto;">
+
+            <!-- ==============left Start==================== -->
+            <div class="col col-md-4 h-100" style="padding-left: 5px;padding-right: 5px;background-color: white; max-height: 100%;">
+
+                <div style="height: 90%;max-height: 90%; overflow-y:hidden ;">
+                    <div style="width: 100%;height: 100%; margin: auto; overflow-y: auto;">
+                        <table class="table table-striped table-hover mt-2" id="mytable">
+                            @{
+                                int i = 1;
+
+                                foreach (var c in Model.couponlist)
+                                {
+                                    <tr><td width="10" class="tdCount">@i</td><td onclick="Selected(event)"><input value="@c.CouponId" type="hidden" /><span>滿@{@c.CouponRequireNum}優惠券</span></td></tr>
+                                    i++;
+                                }
+
+                             }
+     
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- ==============left End==================== -->
+            <!-- ==============right Start==================== -->
+            <div class="col col-m4-8" style="padding-left: 10px;padding-right: 0%;">
+                <div style="height: 100%;width: 100%;margin: 0%;">
+                    <div style="width: 100%;height: 26em;">
+                        <div style="background-color: white;height: 100%; margin-top: 0;">
+                            <p style="background-color: rgb(51, 51, 51); color: rgb(255, 255, 255);line-height: 40px;padding-left: 15px;margin-bottom: 0%;">優惠券圖示</p>
+                            <div style="height: 89%;">
+                                <div class="row h-100" style="width: 100%;margin: auto;">
+                                    <!-- ==============  單筆 start  ============= -->
+                                    <div class="col col-md-12 h-100">
+                                        <div style="height: 85%; overflow:hidden ;">
+                                            <!-- ======================  折價券模型 Start ========================-->
+                                            <form  style="margin:0;padding:0;" id="myform">
+                                                <div class="row mt-5" style="width: 95%; height: 12em; margin-bottom: 2em; max-height: 30%; background-image: url('~/images/pngtree-simple-blue-business-coupon-background-image_229938.jpg');margin:auto;border:1px solid black;">
+                                                    @*沒有img*@ @*<img src="~/images/pngtree-simple-blue-business-coupon-background-image_229938.jpg"  width="300"/>*@
+
+                                                    <div class="col col-md-9 row" style="margin: auto;height: 100%;border-right: 1px dashed black;">
+
+                                                        <div class="row" style="height: 90%;width:100%;border: 2px solid rgb(210, 210, 210);margin: auto;">
+                                                            <div class="col col-md-4" style="height: 100%;margin: auto; text-align: center;display: flex;justify-content: center;">
+                                                                <p style="margin: auto;height: 80%;width:100%;vertical-align: middle;color: black;"><span style="font-size: 5em;color: black;" id="mydisCountSP">30</span>$</p>
+                                                            </div>
+                                                            <div class="col col-md-8" style="height: 100%;text-align: center;display: flex;justify-content: center;">
+                                                                <p style="margin: auto;height: 60%;width:100%;vertical-align: middle;font-size: 2em;">消費滿<span style="color: goldenrod;font-size: 36px;" id="myReqSP">300</span>元可用折價券</p>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col col-md-3 row" style="margin: auto;height: 100%;">
+
+                                                        <div style="height: 90%;width:100%;border: 2px dashed rgb(210, 210, 210);margin: auto; text-align: center;display: flex;justify-content: center;">
+                                                            <p style="margin: auto;height: 60%;width:100%; min-width:100%;vertical-align: middle;color: white;font-size: 28px;"><button type="button" style="color: goldenrod; font-size: 30px; border: 0;" class="btn btn-outline-dark ">立即<br />領取</button></p>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                            <!-- ======================  折價券模型 End ========================-->
+                                        </div>
+                                    </div>
+
+                                    <!-- ==============  單筆 End  ============= -->
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ==============  多筆 Start  ============= -->
+                    <div class="mt-4" style="width: 100%;height: 25em;">
+                        <div style="background-color: white;height: 100%; margin-top: 0;border-radius:0 0 15px 15px ;">
+                            <p style="background-color: rgb(51, 51, 51); color: white;line-height: 40px;padding-left: 15px;margin-bottom: 0%;">新增優惠券</p>
+                            <div style="height: 88%;">
+                                <div style="height:60%;">
+
+                                    <!-- ======================  折價券模型 Start ========================-->
+                                    <form style="margin:0;padding:0;" id="myform">
+                                        <div class="row mt-3" style="width: 95%; height: 12em; margin-bottom: 2em; max-height: 30%; background-image: url('~/images/pngtree-simple-blue-business-coupon-background-image_229938.jpg');margin:auto;border:1px solid black;">
+                                            @*沒有img*@ @*<img src="~/images/pngtree-simple-blue-business-coupon-background-image_229938.jpg"  width="300"/>*@
+
+                                            <div class="col col-md-9 row" style="margin: auto;height: 100%;border-right: 1px dashed black;">
+
+                                                <div class="row" style="height: 90%;width:100%;border: 2px solid rgb(210, 210, 210);margin: auto;">
+                                                    <div class="col col-md-4" style="height: 100%;margin: auto; text-align: center;display: flex;justify-content: center;">
+                                                        <p style="margin: auto;height: 80%;width:100%;vertical-align: middle;color: black;"><span style="font-size: 5em;color: black;" id="mydisCountSP2">0</span>$</p>
+                                                    </div>
+                                                    <div class="col col-md-8" style="height: 100%;text-align: center;display: flex;justify-content: center;">
+                                                        <p style="margin: auto;height: 60%;width:100%;vertical-align: middle;font-size: 2em;">消費滿<span style="color: goldenrod;font-size: 36px;" id="myReqSP2">0</span>元可用折價券</p>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col col-md-3 row" style="margin: auto;height: 100%;">
+
+                                                <div style="height: 90%;width:100%;border: 2px dashed rgb(210, 210, 210);margin: auto; text-align: center;display: flex;justify-content: center;">
+                                                    <p style="margin: auto;height: 60%;width:100%; min-width:100%;vertical-align: middle;color: white;font-size: 28px;"><button type="button" style="color: goldenrod; font-size: 30px; border: 0;" class="btn btn-outline-dark ">立即<br />領取</button></p>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                    <!-- ======================  折價券模型 End ========================-->
+                                </div>
+                                <div style="height:20%;">
+                                    <p style="margin-left:2em;"><span style="font-size:large;font-weight:bold;">新增優惠券</span><br /><span  style="margin-left:1em;">條件:</span><input type="number" name="name" value="0" required style="margin-left:1em;" id="txtReq" min="0" max="100000"/><span style="margin-left:1em;">折扣:</span><input type="number" name="name" value="0" style="margin-left:1em;"id="txtDiscount" min="0"/></p>
+                                </div>
+                                <div style="height:10%;text-align:end;">
+                                    <button class="btn btn-warning btn-sm mt-1" type="button" style="width: 20%;margin-right: 3em;" id="btnAddNewCoupon">確認新增 </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ==============  多筆 End  ============= -->
+                </div>
+            </div>
+            <!-- ==============right End==================== -->
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        let mytable = $("#mytable")
+        let mydisCountSP = $("#mydisCountSP");
+        let myReqSp = $("#myReqSP");
+
+        let mydisCountSP2 = $("#mydisCountSP2");
+        let myReqSp2 = $("#myReqSP2");
+
+        let txtDiscount = $("#txtDiscount");
+        let txtReq = $("#txtReq");
+
+        function Selected(event) {
+            let targetId = $(event.target).parents("tr").children("td").children("input").val();
+
+            GetSelected(targetId);
+        }
+
+
+        async function GetSelected(targetId) {
+            console.log(targetId);
+            const reponse = await fetch('@Url.Content("~/Admin/AdminProduct/SelectedCoupon")' + `?id=${targetId}`);
+            const datas = await reponse.json();
+
+            $("#mydisCountSP").text(datas.couponDiscountNum);
+            $("#myReqSP").text(datas.couponRequireNum);
+
+
+          //  myProductNameForChange.val(datas.productName);
+        }
+
+        // 條件
+        txtDiscount.blur (function () {
+
+            mydisCountSP2.text($(this).val());
+        })
+
+        txtReq.blur(function () {
+
+            myReqSp2.text($(this).val());
+        })
+
+
+
+        //新增
+        $("#btnAddNewCoupon").on("click", function () {
+            let reqNum = txtReq.val();
+            let discountNum = txtDiscount.val();
+            let tdnumber = parseInt($("table tr:last td:first").text())+1;
+
+            $.ajax({
+                url: "@Url.Content("~/Admin/AdminProduct/AddNewCoupon") ",
+                type: 'POST',
+                data: { reqNum: reqNum,discountNum:discountNum},
+
+                success: function (message) {
+
+                    if (message === "失敗") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: '折扣數不能為0!',
+                        })
+                    }
+                    else {
+                        Swal.fire(
+                            '成功!',
+                            '已新增優惠券!',
+                            'success'
+                        )
+                        mytable.append(`<tr><td width="10" class="tdCount">${tdnumber}</td><td onclick="Selected(event)"><input value="${message}" type="hidden" /><span>滿${txtReq.val()}優惠券</span></td></tr>`)
+                    }
+
+                }
+            })
+
+
+        })
+
+
+
+
+    </script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+}

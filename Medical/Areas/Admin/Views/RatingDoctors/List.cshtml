@@ -1,0 +1,135 @@
+﻿@model IEnumerable<Medical.ViewModels.RatingDoctoeViewModel>
+
+@{
+    ViewData["Title"] = "List";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+<h1>評論修改</h1>
+<br>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                序
+            </th>
+            <th>
+                醫生
+            </th>
+            <th>
+                評分分數
+            </th>
+            <th>
+                評語
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Doctor.DoctorName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RatingTypeId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rating)
+                    </td>
+                    <td>
+                        @Html.ActionLink("修改", "Edit", new { id = item.ratingDoctor.RatingDoctorId }) |
+                        @Html.ActionLink("刪除", "Delete", "RatingDoctor", new { id = item.ratingDoctor.RatingDoctorId },
+                                new { onclick = "return confirm('確定要刪除嗎 ? ')" })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<div class="card">
+    <div class="card-header border-transparent">
+        <h3 class="card-title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">即時診間</font></font></h3>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table m-0">
+                <thead>
+                    <tr>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">診間編號</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">看診醫師</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">科別</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">現在號碼</font></font></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="pages/examples/invoice.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">501</font></font></a></td>
+                        <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使命召喚IV</font></font></td>
+                        <td><span class="badge badge-success"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">已發貨</font></font></span></td>
+                        <td>
+                            <div class="sparkbar" data-color="#00a65a" data-height="20"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">90,80,90,-70,61,-83,63</font></font></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="pages/examples/invoice.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">502</font></font></a></td>
+                        <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">三星智能電視</font></font></td>
+                        <td><span class="badge badge-warning"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">待辦的</font></font></span></td>
+                        <td>
+                            <div class="sparkbar" data-color="#f39c12" data-height="20"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">90,80,-90,70,61,-83,68</font></font></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="pages/examples/invoice.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">503</font></font></a></td>
+                        <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">iPhone 6 加</font></font></td>
+                        <td><span class="badge badge-danger"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">發表</font></font></span></td>
+                        <td>
+                            <div class="sparkbar" data-color="#f56954" data-height="20"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">90,-80,90,70,-61,83,63</font></font></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="pages/examples/invoice.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">504</font></font></a></td>
+                        <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">三星智能電視</font></font></td>
+                        <td><span class="badge badge-info"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">加工</font></font></span></td>
+                        <td>
+                            <div class="sparkbar" data-color="#00c0ef" data-height="20"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">90,80,-90,70,-61,83,63</font></font></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="pages/examples/invoice.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">505</font></font></a></td>
+                        <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">三星智能電視</font></font></td>
+                        <td><span class="badge badge-warning"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">待辦的</font></font></span></td>
+                        <td>
+                            <div class="sparkbar" data-color="#f39c12" data-height="20"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">90,80,-90,70,61,-83,68</font></font></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="pages/examples/invoice.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">506</font></font></a></td>
+                        <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">iPhone 6 加</font></font></td>
+                        <td><span class="badge badge-danger"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">發表</font></font></span></td>
+                        <td>
+                            <div class="sparkbar" data-color="#f56954" data-height="20"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">90,-80,90,70,-61,83,63</font></font></div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="card-footer clearfix">
+        <a href="javascript:void(0)" class="btn btn-sm btn-info float-left"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">刷新</font></font></a>
+        <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">查看所有訂單</font></font></a>
+    </div>
+
+</div>

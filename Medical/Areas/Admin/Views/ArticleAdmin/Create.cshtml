@@ -1,0 +1,143 @@
+﻿@model Medical.ViewModel.AArticleViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+
+@section Styles{
+
+    @*修改*@
+    <style>
+
+        .card {
+            margin-left: 20px;
+        }
+
+            .card div {
+                margin-left: 20px;
+            }
+
+
+        .form-group select {
+            border: 2px solid gold;
+            border-radius: 10px;
+        }
+
+        .form-group .form-control {
+            border: 2px solid gold;
+            border-radius: 10px;
+        }
+
+        .form-group textarea {
+            border: 2px solid gold;
+            border-radius: 10px;
+            padding-left: 20px
+        }
+
+        .form-group label {
+            font-size: 20px;
+            font-family: 微軟正黑體;
+            font-weight: bold;
+        }
+
+        #selDoctorName option {
+            font-size: 20px;
+            font-family: 微軟正黑體;
+            font-weight: bold;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            @*修改*@
+            <h1 style="font-family: 微軟正黑體;font-weight:bold;margin-left:100px">新增文章(Create)</h1>
+        </div>
+    </div>
+</div>
+
+@*修改*@
+<div class="card" style="padding-top:30px">
+    <div class="row">
+        @*修改*@
+        <div class="col-md-5">
+            <form asp-action="Create" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    @*修改*@
+                    <label asp-for="Doctor.DoctorName" class="control-label">醫生</label>
+                    <select asp-for="Doctor.DoctorName" class="form-control form-control-lg " id="selDoctorName"></select>
+                    <span asp-validation-for="Doctor.DoctorName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Articeltitle" class="control-label"></label>
+                    <input asp-for="Articeltitle" class="form-control form-control-lg " />
+                    <span asp-validation-for="Articeltitle" class="text-danger"></span>
+                </div>
+                @*修改*@
+                <div class="form-group">
+                    <label asp-for="ArticleContent" class="control-label"></label>
+                    <textarea id="editor" asp-for="ArticleContent" class="form-control form-control-lg "></textarea>
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="ArPicturePath" class="control-label"></label>
+                    <input name="photo" type="file" asp-for="ArPicturePath" class="form-control form-control-lg" />
+
+                </div>
+                <div class="form-group">
+                    @*修改*@
+                    <label asp-for="CreateDate" class="control-label" hidden="hidden"></label>
+                    <input asp-for="CreateDate" class="form-control" hidden="hidden" />
+
+                </div>
+                @*修改*@
+                <div class="form-group btn btn-success">
+                    <i class="fas fa-plus">
+                        <input type="submit" value="新增" class="btn btn-success" onclick="return confirm('確定新增此資料嗎??')" style="width:40px;height:30px;margin:0;padding:0;font-weight:bold;" />
+                    </i>
+                </div>
+            </form>
+        </div>
+    </div>
+    @*修改*@
+    <div style="margin: 0 0 50px 65px">
+        <a asp-action="List" type="button" class="btn bg-gradient-warning" style="border-radius: 5px; font-weight: bold"><i class="fa fa-book" style="margin-right: 10px;"></i>回到衛教文章</a>
+    </div>
+
+</div>
+
+
+
+
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
+    <script>
+        //增加文章內容的格式轉換
+        ClassicEditor
+            .create(document.querySelector('#editor'));
+
+
+        //加入醫生姓名
+    LoadDoctorName();
+
+    async function LoadDoctorName() {
+        const response = await fetch("@Url.Content("~/admin/ArticleAdmin/CreateDoctorCheckBox")");
+        const datas = await response.json();
+
+        datas.forEach(value=> {
+
+            let options = new Option(value, value);
+            let selDoctorName = document.querySelector("#selDoctorName");
+            selDoctorName.options.add(options);
+        })
+        }
+
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

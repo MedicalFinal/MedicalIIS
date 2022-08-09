@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Medical.Models.RatingDoctor>
+
+
+
+<h3> @ViewBag.name  醫師 共有 @ViewBag.count 則評論 </h3>
+<table class="table">
+    <thead>
+        <tr>            
+            <th>
+                評分
+            </th>
+            <th>
+                評論內容
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int count = 0;
+            double total = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>                  
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RatingType.RatingTypeName)  
+                        <img />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rating)
+                    </td>
+                </tr>
+                total += Convert.ToDouble(@item.RatingType.RatingTypeName);
+
+            }
+            double a = Math.Round((total / count),2);
+        }
+    </tbody>
+</table>
+<div class="card-footer clearfix">
+    <h3 style="vertical-align: inherit;">平均分數: @a / 5</h3>
+</div>

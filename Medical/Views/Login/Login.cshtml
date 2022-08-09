@@ -1,0 +1,145 @@
+﻿@model Medical.ViewModel.CLoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+@*================使用template==================*@
+<div id="logreg-forms">
+    @*id="demo-form" method="POST"給reCAPCHA使用*@
+    <form class="form-signin" asp-action="Login" id="demo-form" method="POST">
+        @*在這邊寫callback，submit時會先驗證required屬性*@
+        <div class="g-recaptcha"
+             @*這裡還有key會再入兩次recaptcha，會出現錯誤:reCAPTCHA placeholder element must be empty*@
+             @*data-sitekey="6Lfk2AkhAAAAAOtIbeGmRkHUqjne2XfLYmM21Kg3"*@
+             data-size="invisible"
+             data-callback="formSubmit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">登入</h1>
+            @*↓Google登入部分↓*@
+            @*參考https://developers.google.com/identity/gsi/web/guides/display-button#html*@
+            @*參考https://developers.google.com/identity/gsi/web/reference/html-reference#element_with_class_g_id_signin*@
+            <script src="https://accounts.google.com/gsi/client" async defer></script>
+            <div class="googlePosition">
+                <div id="g_id_onload"
+                     data-client_id="418480068071-oc8k48ub8fha5gjg06tn17sbpcpgaelo.apps.googleusercontent.com"
+                     @*data-login_uri="https://localhost:44302/Login/Login"*@
+                     data-login_uri="http://localhost:85/Login/Login"
+                     data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin "
+                     data-type="standard"
+                     data-width=380
+                     data-size="large"
+                     data-theme="filled_black"
+                     data-text="sign_in_with"
+                     data-shape="pill"
+                     data-logo_alignment="left">
+                </div>
+            </div>
+            @*↑Google登入部分↑*@
+            <p style="text-align:center"> OR  </p>
+            <div class="input-group">
+                <input type="email" class="form-control" placeholder="電子郵件信箱" required="" autofocus="" asp-for="txtAccount" id="email">
+                <br />
+            </div>
+            <span asp-validation-for="txtAccount" class="text-danger"></span>
+            <div class="input-group">
+                <input type="password" class="form-control" placeholder="密碼" required="" asp-for="txtPassword" id="pass">
+                <br />
+            </div>
+            <span asp-validation-for="txtPassword" class="text-danger" id="pwAlert"></span>
+            <div class="input-group">
+                @*reCAPTCHA登入已改到上方div<button class="g-recaptcha" data-sitekey="your_site_key" data-callback="onSubmit">*@
+                <button class="btn btn-md btn-rounded btn-block form-control submit" type="submit">
+                    <i class="fas fa-sign-in-alt"></i> 登入
+                </button>
+            </div>
+            <div style="width:80px">
+                <a asp-action="ForgetPassword" style="color: mediumslateblue">忘記密碼?</a>
+            </div>
+            <hr>
+            <!-- <p>Don't have an account!</p>  -->
+            <a asp-action="Register" class="btn btn-primary mb-2"><i class="fas fa-user-plus"></i>註冊新會員</a>
+            <br>
+            <input type="button" value="AdminDemo" class="btn btn-primary btn-block " id="adDemo" />
+
+            <input type="button" value="DoctorDemo" class="btn btn-primary btn-block " id="docDemo" />
+
+            <input type="button" value="CustomerDemo" class="btn btn-primary btn-block" id="cusDemo" />
+            <br>
+            <br>
+            <input type="button" value="小名(修改前)Demo" class="btn btn-primary btn-block" id="fgotDemo" />
+            <input type="button" value="小名(修改後)Demo" class="btn btn-primary btn-block" id="EditedDemo" />
+            <br>
+            <input type="hidden" asp-for="reserve" value="reserve" class="btn btn-primary btn-block" id="cusDemo" />
+        </div>
+    </form>
+
+</div>
+@*<br />避免被footer擋到*@
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $("#adDemo").click(() => {
+            $("#email").val("hanks@gmail.com");
+            $("#pass").val("hankseye001")
+        })
+        $("#docDemo").click(() => {
+            $("#email").val("mnbvcxz@gmail.com");
+            $("#pass").val("851208")
+        })
+        $("#cusDemo").click(() => {
+            $("#email").val("c121474790@gmail.com");
+            $("#pass").val("sgsdg5049")
+        })
+        $("#fgotDemo").click(() => {
+            $("#email").val("giraffegod@gmail.com");
+            $("#pass").val("abcde12345")
+        })
+        $("#EditedDemo").click(() => {
+            $("#email").val("giraffegod@gmail.com");
+            $("#pass").val("aaaa1111");
+        })
+        //密碼錯誤顯示
+        $("#pass").blur(function () {
+            const mailstr = $("#email").val();
+            const pwstr = $(this).val();
+            $.ajax({
+                url: "/Login/LoginPwCheck?pw=" + pwstr + "&mail=" + mailstr,
+                method: "GET",
+                success: function (data) {
+                    $("#pwAlert").text(data);
+                },
+                error: function (msg) {
+                    alert('error：' + msg.toLabel);
+                }
+            })
+        })
+
+    </script>
+    @*==========================================================*@
+    @*reCAPTCHA套件使用，要使用有較多控制權的JS連結*@
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lfk2AkhAAAAAOtIbeGmRkHUqjne2XfLYmM21Kg3" async defer></script>
+    <script>
+        function onSubmit(token) {
+            document.getElementById("demo-form").submit();
+        }
+
+        function formSubmit(response) {
+            // submit the form which now includes a g-recaptcha-response input
+        }
+    </script>
+}
+

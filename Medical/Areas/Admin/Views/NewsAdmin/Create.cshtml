@@ -1,0 +1,153 @@
+﻿@model Medical.ViewModel.NNewsViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+@section Styles{
+
+    @*修改*@
+    <style>
+
+        .card {
+            margin-left: 20px;
+        }
+
+            .card div {
+                margin-left: 20px;
+            }
+
+
+        .form-group select {
+            border: 2px solid gold;
+            border-radius: 10px;
+        }
+
+        .form-group .form-control {
+            border: 2px solid gold;
+            border-radius: 10px;
+        }
+
+        .form-group textarea {
+            border: 2px solid gold;
+            border-radius: 10px;
+            padding-left: 20px
+        }
+
+        .form-group label {
+            font-size: 20px;
+            font-family: 微軟正黑體;
+            font-weight: bold;
+        }
+
+        #selCategoryName option {
+            font-size: 20px;
+            font-family: 微軟正黑體;
+            font-weight: bold;
+        }
+    </style>
+
+}
+
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            @*修改*@
+            <h1 style="font-family: 微軟正黑體;font-weight:bold;margin-left:100px">新增消息(Create)</h1>
+        </div>
+    </div>
+</div>
+
+
+
+@*修改*@
+<div class="card" style="padding-top:30px">
+
+    @*修改*@
+    <div class="col-md-5">
+        <form asp-action="Create" enctype="multipart/form-data" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="No" class="control-label" hidden="hidden"></label>
+                <input asp-for="No" class="form-control" hidden="hidden" />
+            </div>
+            <div class="form-group">
+                <label asp-for="AdminId" class="control-label" hidden="hidden"></label>
+                <input asp-for="AdminId" class="form-control" hidden="hidden" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NewsTitle" class="control-label"></label>
+                <input asp-for="NewsTitle" class="form-control form-control-lg " />
+                <span asp-validation-for="NewsTitle" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NewsContent" class="control-label"></label>
+                <textarea id="editor" asp-for="NewsContent" class="form-control form-control-lg " style="width:500px;height:200px;font-size:15px"></textarea>
+                <span asp-validation-for="NewsContent" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NewsPicturePath" class="control-label"></label>
+                <input name="photo" type="file" asp-for="NewsPicturePath" class="form-control form-control-lg" />
+
+            </div>
+            <div class="form-group">
+                <label asp-for="PublishDate" class="control-label"></label>
+                <input asp-for="PublishDate" class="form-control form-control-lg" id="datetimepicker1" />
+                <span asp-validation-for="PublishDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NewsCategory.NewsCategoryName" class="control-label">分類</label>
+                <select asp-for="NewsCategory.NewsCategoryName" class="form-control form-control-lg" id="selCategoryName" />
+                <span asp-validation-for="NewsCategory.NewsCategoryName" class="text-danger"></span>
+            </div>
+
+            @*修改*@
+
+            <div class="form-group btn btn-success">
+                <i class="fas fa-plus">
+                    <input type="submit" value="新增" class="btn btn-success" onclick="return confirm('確定新增此資料嗎??')" style="width:75px;height:40px;margin:0;padding:0;font-weight:bold;" />
+                </i>
+            </div>
+        </form>
+    </div>
+    @*修改*@
+    <div style="margin: 0 0 50px 45px">
+        <a asp-action="List" type="button" class="btn bg-gradient-warning" style="border-radius: 5px; font-weight: bold"><i class="fa fa-book" style="margin-right: 10px;"></i>回到消息內容</a>
+    </div>
+</div>
+
+
+
+@section Scripts {
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
+    <script>
+
+        //增加文章內容的格式轉換
+        ClassicEditor
+            .create(document.querySelector('#editor'));
+
+
+        LoadCategoryName();
+
+        async function LoadCategoryName() {
+            const response = await fetch("@Url.Content("~/Admin/NewsAdmin/LoadCategoryName")");
+            const data = await response.json();
+            data.forEach(value => {
+                let selCategoryName = document.querySelector("#selCategoryName");
+                const option = new Option(value, value);
+                selCategoryName.options.add(option);
+            })
+
+        }
+
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+

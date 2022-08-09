@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Medical.Models.Question>
+
+@{
+    ViewData["Title"] = "List";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+<h1>Q&A常見問題</h1>
+
+<p>
+    <a asp-action="Create"> 新增 Q&A </a>
+</p>
+<table class="table table-sm align-middle table-hover" style=" margin:20px 0 100px 0">
+    <thead>
+        <tr>
+            <th>
+                序
+            </th>
+            <th>
+                相關問題
+            </th>
+            <th>
+                回答
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var count = 0;
+
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.QuestionContain)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Answer)
+                    </td>
+                    <td>
+                        @Html.ActionLink("修改", "Edit", new { id = item.QuestionId }, new { @class = " fas fa-feather me-md-3" })
+                    </td>
+                    <td>
+                        @Html.ActionLink("刪除", "Delete", new { id = item.QuestionId },
+                         new { onclick = "return confirm('確定要刪除此筆資料嗎??')", @class = "fas fa-trash-alt" })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

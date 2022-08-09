@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Medical.ViewModel.AAdvertiseViewModel>
+
+@{
+    ViewData["Title"] = "List";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+
+
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 style="font-family: 微軟正黑體; font-weight: bold; color: mediumslateblue;">相關文章(後臺系統)</h1>
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+
+    @*開始修改*@
+
+
+    @using (Html.BeginForm())
+    {
+        <div style="text-align: center;padding-top:20px">
+            <label class="" style="font-size: 25px; font-family: 微軟正黑體; font-weight: bold; color: mediumslateblue;">關鍵字 : </label>
+            @Html.TextBox("txtKeyword", "", new { @class = "font-weight-bold", style = "font-size:26px;border-radius:15px;", @placeholder = "search..." })
+            <button type="submit" class="btn btn-info btn-lg">
+                <i class="fa fa-search">
+                    查詢
+                </i>
+            </button>
+        </div>
+    }
+    @*修改*@
+    <p style="padding: 20px 30px 0 0; text-align: right;">
+        @Html.ActionLink("新增衛教內容", "Create", "AdvertiseAdmin", "",
+                               new { @class = "btn btn-outline-success", @style = "font-size:18px;border-radius:5px; font-weight: bold " })
+    </p>
+
+    @{
+        int count = 0;
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" style="font-size: 25px; font-family: 微軟正黑體; font-weight: bold; color: mediumslateblue;">相關文章表單細節</h3>
+            </div>
+
+            <div class="card-body">
+                <div id="example2_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="row"><div class="col-sm-12 col-md-6"></div><div class="col-sm-12 col-md-6"></div></div><div class="row">
+                        <div class="col-sm-12">
+                            <table id="example2" class="table table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
+                                <thead>
+                                    <tr>
+                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">序</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">標題</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">廣告內容</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">圖片</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">狀態</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        count++;
+                                        <tr class="odd">
+                                            <td class="dtr-control sorting_1 font-weight-bold" tabindex="0" style="width:5%">@count</td>
+                                            <td style="width:10%" class="font-weight-bold">@Html.DisplayFor(modelItem => item.AdTitle)</td>
+                                            <td style="width:50%" class="font-weight-bold">
+                                                <p>
+                                                    @item.AdContant.Substring(0, Math.Min(item.AdContant.Length, 100)).Replace("<h3>", "").Replace("</h3>", "").Replace("<h2>", "").Replace("</h2>", "").Replace("<br>", "").Replace("<p>", "").Replace("<strong>", "").Replace("</strong>", "").Replace("<h4>", "").Replace("</h4>", "").Replace("<br/>", "").Replace("</p>", "")........
+                                                </p>
+                                            </td>
+                                            <td class="font-weight-bold" style="width:20%"><img src="~/uploads/@item.AdPicturePath" style="width:150px;height:150px"></td>
+                                            <td style="width:5%" class="font-weight-bold">@Html.DisplayFor(modelItem => item.Adstatue.Adstatue)</td>
+                                            <td style="width:10%">
+                                                <div class="fas fa-pencil-alt" style="color: dodgerblue; margin-block: 3px">
+                                                    @Html.ActionLink("修改", "Edit", "AdvertiseAdmin", new { id = item.No }, new { @class = "btn bg-gradient-primary btn-sm" })
+                                                </div>
+                                                <br />
+                                                <div class="fas fa-trash" style="color: orangered; margin-top: 3px">
+                                                    @Html.ActionLink("刪除", "Delete", "AdvertiseAdmin", new { id = item.No },
+new { onclick = "return confirm('確定要刪除此筆資料嗎??')", @class = "btn btn-danger btn-sm", @style = "margin-left:1px" })
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
+}

@@ -1,0 +1,50 @@
+﻿@model Medical.Models.Question
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+<h1>新增常見Q&A</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" hidden>
+                <label asp-for="QuestionId" class="control-label"></label>
+                <input asp-for="QuestionId" class="form-control" />
+                <span asp-validation-for="QuestionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QuestionContain" class="control-label">相關問題</label>
+                <input asp-for="QuestionContain" class="form-control" id="inpQ"/>
+                <span asp-validation-for="QuestionContain" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Answer" class="control-label">回答</label>
+                <textarea asp-for="Answer" class="form-control" id="inpA" style="width: 500px; height: 200px; font-size:15px ;resize: none"></textarea>
+                <span asp-validation-for="Answer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="新增" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<button id="btnDemo" class="btn btn-primary">Demo</button>
+@*<div>
+        <a asp-action="List">回上頁</a>
+    </div>*@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("#btnDemo").click(() => {
+            $("#inpQ").val("有些人明明近視，卻因為愛美不願戴眼鏡。長期霧裡看花會加劇視力不良嗎？");
+            $("#inpA").val("近視到了一定程度，大概是150度以上，視力也會跟著下降到0.5以下，這時候看遠的視力就會有不夠用的情況。如果這時候沒有一副正確的眼鏡來輔助看清楚遠方的物體，看近距離物體雖然沒有太大影響，但是看遠方目標自然會有霧裡看花的感覺。但是因為某些原因，例如愛美、覺得視力過得去就好，或是對眼鏡產生誤解，認為戴了眼鏡以後就拔不掉，甚至以為戴了眼鏡之後度數加深的速度會更快，所以就遲遲不肯戴上眼鏡。這樣，不但會對日常生活造成影響，對工作、學習也會產生不良的效應。眼睛在看不清楚的狀況下，會有不自主瞇眼或調節的動作，一旦養成習慣，就算後來戴了眼鏡，看清楚了，瞇眼的壞習慣也不一定矯正得過來。不戴眼鏡，不但不會對近視度數有任何幫助，反而因為看不清楚、瞇眼，造成睫狀肌過度調節，使得近視度數加深的速度更快。所以近視度數已經到了需要驗配眼鏡的階段，一副由眼科醫師或專業驗光師給予正確處方的眼鏡是必要的。");
+        })
+    </script>
+}

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Medical.ViewModel.AAdvertiseViewModel>
+
+@{
+    ViewData["Title"] = "List";
+}
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">相關文章</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+<!-- START THE FEATURETTES -->
+@{
+    bool flag = true;
+    <div class="container marketing" style="margin-top:100px">
+
+        @foreach (var item in Model)
+        {
+            flag = !flag;
+            if (flag)
+            {
+                <div class="row featurette" style="display: flex; justify-content: center; align-items: center;">
+                    <div class="col-md-7">
+                        <h2><i class="nav-check"></i>@item.AdTitle</h2>
+                        <p>@item.AdContant.Substring(0, Math.Min(item.AdContant.Length, 80)).Replace("<h2>", "").Replace("</h2>", "").Replace("<h3>", "").Replace("</h3>", "").Replace("<h4>", "").Replace("</h4>", "").Replace("<p>", "").Replace("<strong>", "").Replace("</strong>", "").Replace("<br>", "").Replace("</p>", "")........</p>
+                        <a href="~/AdvertiseFront/ListDetail?id=@item.No" class="btn btn-outline-primary" style="border-radius:15px">Read more...</a>
+                    </div>
+                    <div class="col-md-5">
+                        <img src="~/uploads/@item.AdPicturePath" style="width:500px;" />
+                    </div>
+                </div>
+
+                <hr class="featurette-divider">
+            }
+            else
+            {
+                <div class="row featurette" style="display: flex; justify-content: center; align-items: center;">
+                    <div class="col-md-7 order-md-2">
+                        <h2><i class="nav-check"></i>@item.AdTitle</h2>
+                        <p>@item.AdContant.Substring(0, Math.Min(item.AdContant.Length, 80)).Replace("<h1>", "").Replace("</h1>", "").Replace("<h2>", "").Replace("</h2>", "").Replace("<h3>", "").Replace("</h3>", "").Replace("<h4>", "").Replace("</h4>", "").Replace("</strong>", "").Replace("<br>", "").Replace("<p>", "").Replace("<strong>", "").Replace("<br />", "").Replace("</p>", "")........</p>
+                        <a href="~/AdvertiseFront/ListDetail?id=@item.No" class="btn btn-outline-primary" style="border-radius:15px">Read more...</a>
+                    </div>
+                    <div class="col-md-5 order-md-1">
+                        <img src="~/uploads/@item.AdPicturePath" style="width:500px;" />
+                    </div>
+                </div>
+
+                <hr class="featurette-divider">
+            }
+        }
+    </div>
+}
+<!-- /END THE FEATURETTES -->

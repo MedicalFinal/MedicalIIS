@@ -1,0 +1,472 @@
+﻿@model Medical.ViewModel.CShoppingCartViewModel
+@{
+    ViewData["Title"] = "ProductDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section css{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+}
+<div class="container-fluid" style="width: 100%;  margin: auto;">
+
+    <ul class="breadcrumb" style="background-color: white; font-size: 20px; margin-top: 30px;">
+        <li class="breadcrumb-item"><a href="">首頁</a></li>
+        <li class="breadcrumb-item"><a href="~/Product/ProductList">產品列表</a></li>
+        <li class="breadcrumb-item"><a href="~/Product/CartViewList">我的購物車</a></li>
+
+    </ul>
+
+    <div class="row" style="background-color: rgb(246, 246, 246); padding-top: 20px; padding-bottom: 20px; width:99%;margin:auto">
+        <div class="col-md-4" style=" text-align: center;margin:auto">
+            <img id="mainPic" src="~/images/@Model.prodSpec.ProductImage" alt="@Model.prod.ProductName" style="height:250px;width:250px;">
+        </div>
+        <div class="col-md-2" style=" text-align: center;height:100% ;padding-bottom: 0%;padding-right:2em;">
+            @for (int i = 0; i < 3; i++)
+            {
+                if (Model.otherP.Count != 0)
+                {
+                    <img class="mt-3 myOtherImg" src="~/images/@Model.otherP[i]" alt="~/images/@Model.prodSpec.ProductImage" style="border: 1px solid black;height:115px;width:70%;">
+                }
+                else
+                {
+                    <img class="mt-3 myOtherImg" src="~/img/noimage.png" alt="images" style="border: 1px solid black;height:30%;width:70%;">
+                }
+            }
+        </div>
+        <div class="col-md-6" style="padding-left: 20px;">
+            <form method="post" id="myform">
+                <br>
+                <h3>@Model.prod.ProductName</h3>
+
+                <br>
+                <h5>@Model.prodSpec.UnitPrice.ToString("C0")</h5>
+                <br>
+                <button type="button" style="width: 90%; background-color: black; color: white;font-size: 20px;" id="btnAddToCart"> 加入購物車</button>
+
+                <br>
+                <br>
+
+                <div style="width: 90%; display: flex ; justify-content: space-between;">
+                    <span style="font-weight: bold;font-size: 20px;"> 數量: <input id="inputNum" type="number" style="width: 100px;height: 30px;" value="1" name="txtCount" min="1" max="@Model.prod.Stock" oninput="if(value>@Model.prod.Stock)value=@Model.prod.Stock;if(value<1)value=1" required> &nbsp; <span style="font-size:16px">庫存:@Model.prod.Stock</span> </span>
+                    <input value="@Model.prod.ProductId" name="txtPid" hidden>
+                    <input type="hidden" name="MemberID" value="@Model.MemberID" id="mID" />
+                    <button type="button" class="btn btn-outline-danger" style="width: 120px;height: 32px;" id="btnDirectBuy">直接購買</button>
+                </div>
+                <div class="mt-1"><span style="font-size:14px">(數量不可超過庫存)</span></div>
+            </form>
+        </div>
+    </div>
+
+    @*推薦商品*@
+
+    <div class="row">
+        <div class="row mt-3 col-md-8" style="height: 20em; padding-top: 10px; padding-bottom: 20px; margin-left: 5px; ">
+            <p style="margin: 0; width: 100%; font-size: larger; background-color:darkcyan;color:white;">推薦商品</p>
+            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" style="height: 95%; width: 100%; background-color: white;">
+                <div class="carousel-inner" style="height: 100%;width: 100%;">
+                    <div class="carousel-item active" style="height: 100%;width: 100%;text-align: center;margin: 0%;padding: 0%;">
+                        <div class="row" style="height: 100%;width: 100%;">
+                            <div class="col-md-4">
+                                <figure style="height: 100%; width: 80%; margin-top: 1em; text-align: center;">
+                                    <figcaption style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"><a id="myOthersProdtxt1" href="#">產品名稱</a></figcaption>
+                                    <img id="myOthersProdImg1" src="~/images/a022138d-dfa9-42f2-9532-c168f2a39fd1.jpg" style="width: 80%;height: 60%;margin: 10px;" class="figure-img img-fluid rounded mt-1" alt="...">
+                                    <figcaption id="myOthersProdPrice1" style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption">123</figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-md-4">
+                                <figure style="height: 100%; width: 80%; margin-top: 1em; text-align: center; ">
+                                    <figcaption style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"><a id="myOthersProdtxt2" href="#">產品名稱</a></figcaption>
+                                    <img id="myOthersProdImg2" src="~/images/a022138d-dfa9-42f2-9532-c168f2a39fd1.jpg" style="width: 80%;height: 60%;margin: 10px;" class="figure-img img-fluid rounded mt-1" alt="...">
+                                    <figcaption id="myOthersProdPrice2" style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"></figcaption>
+
+                                </figure>
+                            </div>
+                            <div class="col-md-4">
+                                <figure style="height: 100%; width: 80%; margin-top: 1em; text-align: center;">
+                                    <figcaption style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"><a id="myOthersProdtxt3" href="#">產品名稱</a></figcaption>
+                                    <img id="myOthersProdImg3" src="~/images/a022138d-dfa9-42f2-9532-c168f2a39fd1.jpg" style="width: 80%; height: 60%; margin: 10px;" class="figure-img img-fluid rounded mt-1" alt="...">
+                                    <figcaption id="myOthersProdPrice3" style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"></figcaption>
+                                </figure>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="carousel-item" style="height: 100%;width: 100%;text-align: center;">
+                        <div class="row" style="height: 100%;width: 100%;">
+                            <div class="col-md-4">
+                                <figure style=" height: 100%;width: 80%;margin-top: 1em;">
+                                    <figcaption style="height: 20px; margin: 0%; font-size: larger; " class="figure-caption"><a id="myOthersProdtxt4" href="#">產品名稱</a></figcaption>
+                                    <img id="myOthersProdImg4" src="~/images/a022138d-dfa9-42f2-9532-c168f2a39fd1.jpg" style="width: 80%; height: 60%; margin: 10px;" class="figure-img img-fluid rounded mt-1" alt="...">
+                                    <figcaption id="myOthersProdPrice4" style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"></figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-md-4">
+                                <figure style=" height: 100%;width: 80%;margin-top: 1em;">
+                                    <figcaption style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"><a id="myOthersProdtxt5" href="#">產品名稱</a></figcaption>
+                                    <img id="myOthersProdImg5" src="~/images/a022138d-dfa9-42f2-9532-c168f2a39fd1.jpg" style="width: 80%; height: 60%; margin: 10px; " class="figure-img img-fluid rounded mt-1" alt="...">
+                                    <figcaption id="myOthersProdPrice5" style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"></figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-md-4">
+                                <figure style=" height: 100%;width: 80%;margin-top: 1em;">
+                                    <figcaption style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"><a id="myOthersProdtxt6" href="#">產品名稱</a></figcaption>
+                                    <img id="myOthersProdImg6" src="~/images/a022138d-dfa9-42f2-9532-c168f2a39fd1.jpg" style="width: 80%; height: 60%; margin: 10px; " class="figure-img img-fluid rounded mt-1" alt="...">
+                                    <figcaption id="myOthersProdPrice6" style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"></figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" style="height: 100%;width: 100%;text-align: center;">
+                        <div class="row" style="height: 100%;width: 100%;">
+                            <div class="col-md-4">
+                                <figure style=" height: 100%;width: 80%;margin-top: 1em;">
+                                    <figcaption style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"><a id="myOthersProdtxt7" href="#">產品名稱</a></figcaption>
+                                    <img id="myOthersProdImg7" src="~/images/a022138d-dfa9-42f2-9532-c168f2a39fd1.jpg" style="width: 80%; height: 60%; margin: 10px; " class="figure-img img-fluid rounded mt-1" alt="...">
+                                    <figcaption id="myOthersProdPrice7" style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"></figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-md-4">
+                                <figure style=" height: 100%;width: 80%;margin-top: 1em;">
+                                    <figcaption style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"><a id="myOthersProdtxt8" href="#">產品名稱</a></figcaption>
+                                    <img id="myOthersProdImg8" src="~/images/a022138d-dfa9-42f2-9532-c168f2a39fd1.jpg" style="width: 80%; height: 60%; margin: 10px; " class="figure-img img-fluid rounded mt-1" alt="...">
+                                    <figcaption id="myOthersProdPrice8" style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"></figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-md-4">
+                                <figure style=" height: 100%; width: 80%; margin-top: 1em;">
+                                    <figcaption style="height: 20px; margin: 0%; font-size: larger; " class="figure-caption"><a id="myOthersProdtxt9" href="#">產品名稱</a></figcaption>
+                                    <img id="myOthersProdImg9" src="~/images/a022138d-dfa9-42f2-9532-c168f2a39fd1.jpg" style="width: 80%; height: 60%; margin: 10px; " class="figure-img img-fluid rounded mt-1" alt="...">
+                                    <figcaption id="myOthersProdPrice9" style="height: 20px; margin: 0%; font-size: larger;" class="figure-caption"></figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div class="row mt-3 col-md-4" style="height: 20em; padding-top: 10px; padding-bottom: 20px; margin-left: 5px;">
+            <p style="margin: 0; width: 94%; font-size: larger; background-color:darkcyan;color:white;margin:auto;">本月暢銷商品</p>
+            <div style="height: 95%; width: 100%; background-color: white;margin:auto;">
+                <img src="~/img/global_shopping.gif" style="height:140px; width:100%;" />
+                <table class="table table-striped table-hover" id="top3table" style="width:99%;">
+                    <tr>
+                        <th style="font-size:larger;">#1</th>
+                        <th><i style="color:goldenrod" class="fa-solid fa-crown fa-xl"></i></th>
+                        <th><a href="#" style="font-size:larger;" id="top1"></a></th>
+                    </tr>
+                    <tr>
+                        <th style="font-size:larger;">#2</th>
+                        <th><i style="color:#c0c0c0" class="fa-solid fa-crown fa-xl"></i></th>
+                        <th><a href="#" style="font-size:larger;" id="top2"></a></th>
+                    </tr>
+                    <tr>
+                        <th style="font-size:larger;">#3</th>
+                        <th><i style="color: rgb(205, 113, 0) " class="fa-solid fa-crown fa-xl"></i></th>
+                        <th><a href="#" style="font-size:larger;" id="top3"></a></th>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+    <!-- ==============================手風琴================================ -->
+    <div class="mt-5" style="width: 99%;  margin: auto;">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size:20px">
+                        商品規格
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <hr />
+                        <table class="table" style="font-size:18px">
+                            <tr><th>品名</th><td>@Model.prod.ProductName</td></tr>
+                            <tr><th>品牌名稱</th><td>@Model.prod.ProductBrand.ProductBrandName</td></tr>
+                            <tr><th>種類名稱</th><td>@Model.prod.ProductCategory.ProductCategoryName</td></tr>
+                            <tr><th>商品外觀</th><td>@Model.prodSpec.ProductAppearance</td></tr>
+                            <tr><th>商品顏色</th><td>@Model.prodSpec.ProductColor</td></tr>
+                            <tr><th>商品材質</th><td>@Model.prodSpec.ProductMaterial</td></tr>
+                            <tr><th>使用期限</th><td>@Model.prod.Shelfdate 天</td></tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="font-size:20px">
+                        商品評價
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <h3>評論</h3>
+                        <div style="background-color: rgb(238, 238, 238);align-items:center ;padding-top:5px; padding:8px; display:flex; justify-content:space-between">
+                            <p style="font-size:18px;margin-bottom:0">共 @Model.prodReviewList.Count 項 評論</p>
+                            <p style="font-size:18px;margin-bottom:0;margin-right:20px">
+                                @*<span>排序方式:</span>*@
+                                <select id="orderby" class="form-select">
+                                    <option>最新發佈</option>
+                                    <option value="最高至最低評價">最高至最低評價</option>
+                                    <option value="最低至最高評價">最低至最高評價</option>
+                                </select>
+                            </p>
+                            @*<p style="font-size:18px;margin-bottom:0"></p>*@
+                        </div>
+                        <div id="reviewRow">
+                            @foreach (var item in Model.prodReviewList)
+                            {
+                                <div class="mt-4" style="background-color: rgb(246, 246, 246);padding:15px">
+                                    @for (int i = 0; i <= int.Parse(item.RatingType.RatingTypeName) - 1; i++)
+                                    {
+                                        <i class='fa-solid fa-star' style="color: goldenrod;"></i>
+                                    }
+                                    <span class="SPstars" hidden> @item.RatingType.RatingTypeName</span>
+                                    <span style="font-weight:bold;margin-left:1em;"> @item.Member.MemberName.FirstOrDefault() 先生/小姐</span>
+                                    <span> @item.CreateDate</span>
+                                    <br />
+                                    <br />
+                                    <h5> @item.CommentContent</h5>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script>
+
+            let inputNum = $("#inputNum");
+            let myForm = $("#myform");
+            //console.log(myForm)
+            //console.log($("#mID").val());
+
+            //console.log($("#myOthersProdtxt1"));
+            //console.log($("#myOthersProdImg1"));
+
+
+            //換主圖片
+
+            $(".myOtherImg").on("click", function () {
+                $(".myOtherImg").css("border", "1px solid black");
+                $(this).css("border", "2px solid blue");
+                let clicksrc = $(this).attr("src");
+
+                $("#mainPic").attr("src", clicksrc);
+            })
+
+            //取得推薦商品
+
+            async function GetProducts() {
+                    const reponse = await fetch('@Url.Content("~/Product/GetOthersProduct")');
+                    const datas = await reponse.json();
+                //console.log(datas);
+                let count = 1;
+                datas.forEach(products => {
+
+                    let prodstr = "#myOthersProdtxt" + count;
+                    let imgstr = "#myOthersProdImg" + count;
+                    let pricestr = "#myOthersProdPrice" + count;
+                    $(prodstr).text(products.productName);
+                    $(pricestr).text("NT$"+products.unitPrice);
+                    $(prodstr).attr("href", `/Product/ProductDetail?productName=${products.productName}`)
+                    $(imgstr).attr("src",`/images/${products.productImage}`)
+                    console.log("=================");
+                    count++;
+                    });
+
+                }
+
+            GetProducts();
+
+
+            //取得TOP3
+
+            async function GetTopThree() {
+                    const reponse = await fetch('@Url.Content("~/Product/GetTopThree")');
+                    const datas = await reponse.json();
+                let count = 1;
+                datas.forEach(products => {
+
+                    let prodstr2 = "#top" + count;
+                    $(prodstr2).text(products.productName);
+                    $(prodstr2).attr("href", `/Product/ProductDetail?productName=${products.productName}`);
+
+                    count++;
+                    });
+                }
+
+            GetTopThree();
+
+            //直接購買
+            $("#btnDirectBuy").click(() => {
+                  $.ajax({
+                    url: "@Url.Content("~/Product/AddToCart")",
+                    type: 'POST',
+                    enctype: "multipart/form-data",
+                    data: myForm.serialize(),
+
+
+                      success: function (message) {
+                          let word = message.split('+');
+                          let memberId = word[1];
+                          if (message === "成功+" + memberId) {
+                            let timerInterval
+                            Swal.fire({
+                                icon: 'success',
+                                title: '成功',
+                                html: '已將商品加入至購物車',
+                                timer: 1000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading()
+                                    const b = Swal.getHtmlContainer().querySelector('b')
+                                    timerInterval = setInterval(() => {
+                                        b.textContent = Swal.getTimerLeft()
+                                    }, 100)
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval)
+                                }
+                            }).then((result) => {
+
+                                window.location.href = "/Product/CheckViewList"
+
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log('I was closed by the timer')
+                                }
+                            })
+                        }
+
+                        else if (message === "失敗")
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: '請確認購物車商品總數是否超出庫存!',
+                            })
+                        else
+                            window.alert("請先登入會員");
+                            //window.location.href = message;  todo 為什麼成功也跳轉
+                    }
+                })
+            })
+
+
+            //加入購物車
+            $("#btnAddToCart").click(() => {
+                $.ajax({
+                    url: "@Url.Content("~/Product/AddToCart")",
+                    type: 'POST',
+                    enctype: "multipart/form-data",
+                    data: myForm.serialize(),
+
+
+                    success: function (message) {
+                        let word = message.split('+');
+                        let memberId = word[1];
+                        if (message === "成功+"+memberId) {
+                            let timerInterval
+                            Swal.fire({
+                                icon: 'success',
+                                title: '成功',
+                                html: '已將商品加入至購物車',
+                                timer: 1000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading()
+                                    const b = Swal.getHtmlContainer().querySelector('b')
+                                    timerInterval = setInterval(() => {
+                                        b.textContent = Swal.getTimerLeft()
+                                    }, 100)
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval)
+                                }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log('I was closed by the timer')
+                                }
+                            })
+                        }
+
+                        else if (message === "失敗")
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: '請確認購物車商品總數是否超出庫存!',
+                            })
+                        else
+                            window.alert("請先登入會員");
+                            //window.location.href = message;  todo 為什麼成功也跳轉
+                    }
+                })
+            });
+
+            //排序
+            $("#orderby").change(function () {
+                console.log("test")
+
+                $(function () {
+                    //=========== star ============
+                    var Starasc = function (a, b) {
+                        return parseFloat($(a).find(".SPstars").text()) > parseFloat($(b).find(".SPstars").text()) ? 1 : -1;
+                    }
+
+                    var Stardesc = function (a, b) {
+                        return parseFloat($(a).find(".SPstars").text()) > parseFloat($(b).find(".SPstars").text()) ? -1 : 1;
+                    }
+                    //=========== star ============
+
+                    function sortBySpan(sortBy) {
+                        var sortEle = $('#reviewRow>div').sort(sortBy);
+                        $("#reviewRow").empty().append(sortEle);
+                    }
+
+
+                    var option = $("#orderby").val();
+                    console.log(option);
+                    switch (option) {
+                        case "最高至最低評價":
+                            sortBySpan(Stardesc);
+                            break;
+                        case "最低至最高評價":
+                            sortBySpan(Starasc);
+                            break;
+                    }
+
+                })
+
+
+            });
+
+
+
+    </script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+}

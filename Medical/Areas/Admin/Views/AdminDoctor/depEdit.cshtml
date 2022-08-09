@@ -1,0 +1,88 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@{
+    ViewData["Title"] = "depEdit";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}-->
+@*///////////////////////////////////////////////////////////開發中 Ajax 選單選擇Departmant 和 Category*@
+<!--<h1>depEdit</h1>
+
+<h4>CDoctorDetailViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="depEdit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <select id="select1">選擇科別</select>
+            <div class="form-group">
+                <label asp-for="DeptCategoryName" class="control-label"></label>
+                <input asp-for="DeptCategoryName" class="form-control" id="dpc" />
+                <span asp-validation-for="DeptCategoryName" class="text-danger"></span>
+            </div>
+            <select id="select2">選擇專長</select>
+            <div class="form-group">
+                <label asp-for="DepName" class="control-label"></label>
+                <input asp-for="DepName" class="form-control" id="dpn" />
+                <span asp-validation-for="DepName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+            <div>@Html.ActionLink("刪除科別", "depDelete", new { deps = Model }, new { @class = "btn btn-primary" })</div>
+            <div>@Html.ActionLink("刪除專長", "depDelete", new { deps = Model }, new { @class = "btn btn-primary" })</div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+    const selDepC = document.querySelector("#select1");
+    const selDep = document.querySelector("#select2");
+    const txtDpc = document.querySelector("#dpc");
+    const txtDpn = document.querySelector("#dpn");
+    selDepC.addEventListener("change", () =>
+    {
+        txtDpc.value = selDepC.value;
+        getDep();
+    })
+    getDepC();
+    selDep.addEventListener("change", () => {
+        txtDpn.value = selDep.value;
+    })
+    async function getDepC()
+    {
+        $("#select1").empty();
+        const depCs = await fetch('@Url.Content("~/Doctor/getDepC")').then(response => response.json());
+        depCs.forEach((DeptCategoryName) =>
+        {
+            const opt = new Option(DeptCategoryName, DeptCategoryName);
+
+            selDepC.options.add(opt);
+
+        })
+        const str = new Option("新增科別", "depC");
+        selDepC.options.add(str);
+        getDep();
+    }
+    async function getDep()
+    {
+        depStr =  selDepC.options[selDepC.selectedIndex].value;
+        $("#select2").empty();
+        const deps = await fetch('@Url.Content("~/Doctor/getDep")'+`?depCName=${depStr}`).then(response => response.json());
+        console.log(deps);
+        deps.forEach((DeptName) => {
+            const opt = new Option(DeptName, DeptName);
+
+            selDep.options.add(opt);
+
+        })
+        const str = new Option("新增專長", "dep");
+        selDep.options.add(str);
+    }
+    </script>
+}-->

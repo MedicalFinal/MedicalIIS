@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Medical.ViewModel.MProductViewModel>
+@{
+    ViewData["Title"] = "tempList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>tempList</h1>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                序號
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrandName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stock)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Shelfdate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductColor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductAppearance)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductMaterial)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductBrandName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductCategoryName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Stock)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Shelfdate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitPrice)
+                    </td>
+                    <td>
+                        <img src="~/images/@item.ProductImage" width="200" height="160" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductColor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductAppearance)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductMaterial)
+                    </td>
+                    <td>
+                        @Html.ActionLink("修改", "tempEdit", new { id = item.ProductId }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

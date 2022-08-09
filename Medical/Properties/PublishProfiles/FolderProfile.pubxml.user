@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\MedicalIIS</_PublishTargetUrl>
+    <History>True|2022-08-05T10:29:06.7196181Z;False|2022-08-05T18:28:07.3231345+08:00;False|2022-08-05T18:27:05.5679683+08:00;True|2022-08-05T18:11:53.1431644+08:00;False|2022-08-05T18:07:32.7228006+08:00;False|2022-08-05T18:06:25.6563107+08:00;True|2022-08-05T17:49:08.1470558+08:00;</History>
+  </PropertyGroup>
+</Project>

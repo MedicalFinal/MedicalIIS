@@ -1,0 +1,544 @@
+﻿<!DOCTYPE html>
+@using Medical.Models;
+@using Medical.ViewModel;
+@using Microsoft.AspNetCore.Http;
+@using System.Linq;
+@using System.Text.Json;
+
+@{
+    string logJson = "";
+    string logGoogle = "";
+    string showID = "";
+    int showID2 = 0;
+    int user = 0;
+    string userName = "";
+    string LoginbuttonValue = "";
+    string LogoutbuttonValue = "";
+    CLoginViewModel gg = null;
+
+    CMemberAdminViewModel vm = null;
+    if (!Context.Session.Keys.Contains(CDictionary.SK_LOGINED_USE) && !Context.Session.Keys.Contains(CDictionary.SK_GOOGLELOGINED_USE))
+    {
+
+        showID = "尚未登入";
+        LoginbuttonValue = "請登入";
+        LogoutbuttonValue = "";
+    }
+    else if (Context.Session.Keys.Contains(CDictionary.SK_LOGINED_USE))
+    {
+        logJson = Context.Session.GetString(CDictionary.SK_LOGINED_USE);
+        vm = JsonSerializer.Deserialize<CMemberAdminViewModel>(logJson);
+        showID = vm.MemberName;
+        showID2 = vm.MemberId;
+        LogoutbuttonValue = "登出";
+        user = (int)vm.Role;
+        userName = vm.MemberName;
+    }
+    else if (Context.Session.Keys.Contains(CDictionary.SK_GOOGLELOGINED_USE))
+    {
+        logGoogle = Context.Session.GetString(CDictionary.SK_GOOGLELOGINED_USE);
+        gg = JsonSerializer.Deserialize<CLoginViewModel>(logGoogle);
+        showID = gg.txtName;
+        LogoutbuttonValue = "登出";
+
+    }
+}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>DentCare - Dental Clinic Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="~/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <link href="~/lib/twentytwenty/twentytwenty.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/css/style.css" rel="stylesheet">
+
+    <!-- SweetAlert style -->
+
+    <link rel="stylesheet" href="~/plugins/sweetalert2/sweetalert2.css">
+    <!-- 智能機器人 -->
+    <link rel="stylesheet" href="~/css/Robot.css">
+
+    @await RenderSectionAsync("css", required: false)
+    @await RenderSectionAsync("reserve", required: false)
+</head>
+
+<body>
+    <header>
+        <!-- Spinner讀取圖示 Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-grow text-primary m-1" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-dark m-1" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-secondary m-1" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+        <!-- Topbar置頂資訊欄 Start -->
+        <div class="container-fluid bg-light ps-5 pe-0 d-none d-lg-block">
+            <div class="row gx-0">
+                <div class="col-md-6 text-center text-lg-start mb-2 mb-lg-0">
+                    <div class="d-inline-flex align-items-center">
+                        <!-- 上方營業時間註解 -->
+                        <small class="py-2"><i class="far fa-clock text-primary me-2"></i>營業時間: Mon - Tues : 10.00 am - 21.00 pm, 周日公休 </small>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center text-lg-end">
+                    <div class="position-relative d-inline-flex align-items-center bg-primary text-white top-shape px-5">
+                        <!-- 官網信箱 -->
+                        <div class="me-3 pe-3 border-end py-2">
+                            <p class="m-0"><i class="fa fa-envelope-open me-2"></i>hanks@gmail.com</p>
+                        </div>
+                        <!-- 官網電話 -->
+                        <div class="py-2">
+                            <p class="m-0"><i class="fa fa-phone-alt me-2"></i>02-2431123456</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Topbar End -->
+        <!-- Navbar 移動選單條 Start -->
+        <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
+            <!-- 漢克斯眼科-->
+            <a href="~/Home/index" class="navbar-brand p-0">
+                <h1 class="m-0 text-primary"><i class="fa fa-eye me-2"></i>漢克斯智能眼科</h1>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto py-0">
+                    <!-- 調整位置狀態 -->
+                    <!-- 選單 -->
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">眼科資訊</a>
+                        @*更改處，文章搜尋一起*@
+                    <div class="dropdown-menu m-0">
+                        <a href="~/NNewsFront/List" class="dropdown-item">最新消息</a>
+                        <a href="~/ArticleFront/List" class="dropdown-item">衛教文章</a>
+                        <a href="~/AdvertiseFront/List" class="dropdown-item">相關文章</a>
+                        <a href="~/QandA/List" class="dropdown-item">Q&A常見問題</a>
+                    </div>
+                    </div>
+                    <!--<div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">智能資訊</a>-->
+                        @*有更改，獨立到上面*@
+                        <!--<div class="dropdown-menu m-0">
+                            <a href="~/clinicdetail/listajax" class="dropdown-item">門診時間表</a>-->
+                            @*取消這行*@
+                            @*<a href="~/SignalR/index" class="dropdown-item">智能客服</a>*@
+                            <!--<a href="~/QandA/List" class="dropdown-item">Q&A常見問題</a>
+                        </div>
+                    </div>-->
+                    <div class="nav-item dropdown">
+                        <a href="~/Doctor/ListTest" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">醫療團隊</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="~/clinicdetail/listajax" class="dropdown-item">門診時間表</a>
+                            <a href="~/Doctor/ListTest" class="dropdown-item">醫療團隊</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="~/Reserve/ReserveList" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">網路掛號</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="~/Reserve/ReserveList" class="dropdown-item">線上掛號</a>
+                            <a href="~/Reserve/ReserveSearch" class="dropdown-item">查詢與取消</a>
+                            <a href="~/ClinicDetail/List" class="dropdown-item">即時看診進度</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="/Product/productList" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">線上商城</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="/Product/ProductList" class="dropdown-item">產品列表</a>
+                            <a href="/Product/CartViewList" class="dropdown-item">我的購物車</a>
+                            <a href="/Product/ReceiveCoupon?id=@showID2" class="dropdown-item">優惠券專區</a>
+                            <a href="/Product/CheckViewList" class="dropdown-item">結帳</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-item dropdown" id="membercenter" hidden="hidden">
+                        <a href="" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">會員中心</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="/Login/EditMember" class="dropdown-item">會員修改</a>
+                            <a href="/PatientRecord/List" class="dropdown-item">診療紀錄</a>
+                            <a href="/Product/CartViewList" class="dropdown-item">我的購物車</a>
+                            <a href="/Product/OrderList" class="dropdown-item">歷史訂單</a>
+                        </div>
+                    </div>
+                </div>
+
+                @*把Button的Bootstrap改寫到div，就不會顯示兩個<a>標籤的按鈕*@
+                <div class="btn btn-light">
+                    <a asp-action="Login" asp-controller="Login" id="loginButton">@LoginbuttonValue</a>
+                    <a asp-action="Logout" asp-controller="Login" id="looutButton">@LogoutbuttonValue</a>
+                </div>
+
+                <div id="showMe" class="fas fa-user" value="@showID">
+                    <a asp-action="LeadTobyRole" asp-controller="Login">@showID</a>
+                    @*@showID*@
+                </div>
+                <!-- 購物車清單開始-->
+                <div class="dropdown ml-auto">
+                    <button class="btn btn-cart btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" style="position: relative; ">
+                        <i class="fas fa-shopping-cart text-dark fa-2x"></i>
+                        <span class="badge badge-pill badge-danger"></span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg-left" style="min-width: 300px; position: absolute; right: 10px; " aria-labelledby="dropdownMenuButton">
+                        <div class="p-3">
+                            <h6 id="myCartH6">購物車目前沒有商品</h6>
+                            <table class="table table-sm" id="myCartTable">
+                                <tbody id="mytbody">
+                                </tbody>
+                            </table>
+                            <a href="/Product/CheckViewList?id=@showID2" id="myCartCheckbtn" class="btn btn-block btn-primary btn-sm text-white" hidden>確認結帳</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 購物車清單結束-->
+            </div>
+        </nav>
+        <!-- Navbar End -->
+
+
+
+
+
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </header><!-- /header放這裡 動態條才會跟著 -->
+    <!-- Footer Start -->
+
+    <div class="container-fluid bg-dark text-light py-5 wow fadeInUp" data-wow-delay="0.3s" style="margin-top: 0px;">
+        <div class="container pt-5">
+            <div class="row g-5 pt-4">
+                <div class="col-lg-3 col-md-6">
+                    <h3 class="text-white mb-4">快速連結</h3>
+                    <div class="d-flex flex-column justify-content-start">
+                        <a class="text-light mb-2" href="~/ArticleFront/List"><i class="bi bi-arrow-right text-primary me-2"></i>智能資訊</a>
+                        <a class="text-light mb-2" href="~/Doctor/ListTest"><i class="bi bi-arrow-right text-primary me-2"></i>醫療團隊</a>
+                        <a class="text-light mb-2" href="~/Reserve/ReserveList"><i class="bi bi-arrow-right text-primary me-2"></i>網路掛號</a>
+                        <a class="text-light mb-2" href="/Product/productList"><i class="bi bi-arrow-right text-primary me-2"></i>線上商城</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h3 class="text-white mb-4">聯絡資訊</h3>
+                    <p class="mb-2"><i class="bi bi-geo-alt text-primary me-2"></i>106台北市大安區復興南路一段390號2樓</p>
+                    <p class="mb-2"><i class="bi bi-envelope-open text-primary me-2"></i>hanks@gmail.com</p>
+                    <p class="mb-0"><i class="bi bi-telephone text-primary me-2"></i>02-2431123456</p>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h3 class="text-white mb-4">Line Us</h3>
+                    <p class="mb-2"><i class='fab fa-line fa-2x'>智能眼科</i><br />  ID@981uepkv</p>
+
+                    <img src="~/images/LineCord.png" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid text-light py-4" style="background: #051225;">
+        <div class="container">
+            <div class="row g-0">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-md-0">&copy; <a class="text-white border-bottom" href="#">漢克斯智能眼科</a>. All Rights Reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0">
+                        Designed by <a class="text-white border-bottom" href="https://htmlcodex.com">HTML Codex</a><br>
+                        Distributed by <a class="text-white border-bottom" href="https://themewagon.com">ThemeWagon</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+    <button class="btn btn-light message_btn" data-open="false" onclick="show()"><span>?</span>找不到醫生</button>
+    <div class="upDialogue">
+        <div class="topDialogue">
+            <div class="dialogue">
+                <div class="user remote">
+                    <div class="avatar">
+                        <div class="pic">
+                            <img src="https://picsum.photos/100/100?random=12" />
+                        </div>
+                        <div class="name">漢克斯</div>
+                    </div>
+                    <div class="text">
+                        您好，需要甚麼幫忙嗎？
+                    </div>
+                </div>
+                <div class="user remote">
+                    <div class="avatar">
+                        <div class="pic">
+                            <img src="https://picsum.photos/100/100?random=12" />
+                        </div>
+                        <div class="name">漢克斯</div>
+                    </div>
+                    <div class="text">
+                        <input class="btn" type="button" value="加入會員" onclick="Register()">
+                        <input class="btn" type="button" value="我要掛號" onclick="Register()">
+                        </br><input class="btn" type="button" value="交通指引" onclick="Register()">
+                        <input class="btn" type="button" value="衛教健保" onclick="Register()">
+                        </br><input class="btn" type="button" value="該掛哪科" onclick="WhichDep()">
+                        <input class="btn" type="button" value="線上購物" onclick="Register()">
+                    </div>
+                </div>
+                @*<div class="user local">
+                        <div class="avatar">
+                            <div class="pic">
+                                <img src="https://picsum.photos/100/100?random=16" />
+                            </div>
+                            <div class="name">Me</div>
+                        </div>
+                        <div class="text">這是我的對話文字</div>
+                    </div>*@
+            </div>
+            <div class="inputText">
+                <input id="txtBox" type="text" value="" />
+                <input class="btn btn-primary" type="button" value="輸入" onclick="Insert()" />
+                <input class="btn btn-warning" type="button" value="不知道問甚麼" onclick="QuestionButton()" />
+                <input class="btn btn-sm" type="button" value="Demo" onclick="demoone()" />
+                <input class="btn btn-sm" type="button" value="Demo2" onclick="demotwo()" />
+            </div>
+        </div>
+    </div>
+
+
+    <div id="fb-title" style="position: fixed; bottom: 2px; bottom:100px; right: 45px; color: black; font-weight: bold; z-index: 999;">
+        @*<a href="/SignalR/index" style="border-radius:15px">
+                <img style="border-radius: 20px;width:50px; display: block; margin: 0 auto 5px;" src="~/images/1111111111.jpg"/>
+            </a>*@
+        <img style="border-radius: 20px;width:50px; display: block; margin: 0 auto 5px;" src="~/images/1111111111.jpg" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <span style="display: block; text-align: center;">
+            聊天室<br>
+        </span>
+    </div>
+
+    <!-- Modal -->
+
+    <div class="modal " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="" style="background-color: #FFFCEC ">
+                            <div class="card card-primary card-outline direct-chat direct-chat-primary">
+                                @*====標題====*@
+                                <div class="card-header" style="background-color: #FFFCEC ">
+                                    <h3 class="card-title">眼科聊天室</h3>
+                                </div>
+                                @*====聊天內容====*@
+                                <input type="hidden" value="@user" id="inpUser" />
+                                <input type="hidden" value="@userName" id="inpUser2" />
+                                <div class="card-body" style="background-color: #FFFCEC ">
+                                    <div class="direct-chat-messages" id="MSN">
+                                        @*====聊天內容====*@
+                                    </div>
+                                </div>
+
+                                @*============尾巴輸入字串的地方=============*@
+                                <div class="card-footer" style="background-color: #FFFCEC ">
+                                    <form action="#" method="post">
+                                        <div class="input-group">
+                                            <input type="text" id="messageInput" name="message" placeholder="Type Message ..." class="form-control">
+                                            <span class="input-group-append">
+                                                <button type="submit" class="btn btn-primary" id="sendButton" value="Send Message">Send</button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div>
+                                    <button id="btnChatDemo1" class="btn btn-light">Demo1</button>
+                                    <button id="btnChatDemo2" class="btn btn-light">Demo2</button>
+                                    <button id="btnChatDemo3" class="btn btn-light">Demo3</button>
+                                    <button id="btnChatDemo4" class="btn btn-light">Demo4</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- Back to Top -->
+    <div class="card">
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+
+
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/wow/wow.min.js"></script>
+    <script src="~/lib/easing/easing.min.js"></script>
+    <script src="~/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/lib/tempusdominus/js/moment.min.js"></script>
+    <script src="~/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="~/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="~/lib/twentytwenty/jquery.event.move.js"></script>
+    <script src="~/lib/twentytwenty/jquery.twentytwenty.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="~/js/main.js"></script>
+
+
+    <!-- SweetAlert -->
+    <script src="~/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+
+    <!-- 智能機器人 -->
+    <script src="~/js/Robot.js"></script>
+    <!-- SignalR聊天室 -->
+    @*Demo鍵*@
+    <script>
+        $("#btnChatDemo1").click(function () {
+            $("#messageInput").val("您好呀，我想知道有關你們家的產品有哪些?")
+
+        })
+        $("#btnChatDemo2").click(function () {
+            $("#messageInput").val("你好，很高興為您服務")
+
+        })
+        $("#btnChatDemo3").click(function () {
+            $("#messageInput").val("您可以先進入我們上方的線上商城進行瀏覽哦!!")
+
+        })
+        $("#btnChatDemo4").click(function () {
+            $("#messageInput").val("好的，謝謝你~~<3")
+
+        })
+
+
+    </script>
+
+    <!--購物清單-->
+    <script>
+        let myCartCheckbtn = $("#myCartCheckbtn");
+        let myCartTable = $("#myCartTable");
+        let memID =  @showID2;
+        let myCartH6 = $("#myCartH6");
+
+        function loadCartData(memId) {
+            memId = memID;
+            if (memId != 0) {
+                async function GetMainPageCartItem(memId) {
+                const reponse = await fetch('@Url.Content("~/Product/MainPageCart")' + `?id=${memId}`);
+                const datas = await reponse.json();
+                if (datas.length != 0) {
+                    myCartCheckbtn.attr("hidden", false);
+                    myCartH6.text("購物車清單")
+                    }
+
+                    $("#mytbody").empty();
+
+                datas.forEach(cart => {
+                    let totalprice = parseInt(cart.productAmount) * parseInt(cart.unitPrice)
+                    $("#myCartTable").append(`<tr><td class="align-middle text-center"><a cartid="${cart.shoppingCartId}" onclick="mainPageClearItem(event)" data-price="${cart.unitPrice}" data-title="${cart.productName}" data-toggle="modal"data-target="#removeModal"><i class="far fa-trash-alt "></i></a></td><td class="align-middle">${cart.productName}</td><td class="align-middle">${cart.productAmount}件</td><td class="align-middle text-right">${totalprice}</td></tr>`)
+                });
+                }
+                GetMainPageCartItem(memId)
+            }
+        }
+
+        loadCartData(memID);
+
+        function mainPageClearItem(event) {
+            let cardid = parseInt($(event.target).parents("a").attr("cartid"))
+            //$(event.target).parents("tr").remove();
+
+            Swal.fire({
+                title: '確定要移除該商品嗎?',
+                text: "該商品將被移除購物車",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '確定移除!',
+                cancelButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            url: "@Url.Content("~/Product/DeleteCartItem")",
+                            type: 'POST',
+                            data: {ShoppingCartId:cardid},
+                            success: function (message) {
+                                if (message.includes("成功")) {
+
+                                    Swal.fire(
+                                        '成功!',
+                                        '已將此商品移除購物車',
+                                        'success'
+                                    )
+
+                                    $(event.target).parents("tr").remove();
+                                }
+
+                            }
+                        })
+                    }
+                }
+            })
+        }
+
+        var showMe = $("#showMe").attr("value");
+        console.log(showMe);
+        //console.log($("#membercenter"));
+
+        if (showMe != "尚未登入") {
+            $("#membercenter").attr("hidden", false);
+            /*console.log(showMe);*/
+        }
+
+
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+
+
+
+</body>
+</html>
+

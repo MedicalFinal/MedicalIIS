@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Medical.ViewModel.CClinicDetailAdminViewModel>
+
+@{
+    ViewData["Title"] = "List";
+    Layout = "~/Areas/Doctors/Doctor_Layout.cshtml";
+}
+
+
+<!-- Content Wrapper. Contains page content -->
+<!-- Main content -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"></h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    門診編號
+                                </th>
+                                <th>
+                                    醫生
+                                </th>
+                                <th>
+                                    科別
+                                </th>
+                                <th>
+                                    時段
+                                </th>
+                                <th>
+                                    診間
+                                </th>
+                                <th>
+                                    開診日期
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ClinicDetailId)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Doctor.DoctorName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Department.DeptName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Period.PeriodDetail)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Room.RoomName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ClinicDate)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("進入工作區", "WorkSpace", null, new { id = item.ClinicDetailId }, new { @class = "btn btn-primary" })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container-fluid -->
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+</aside>
+<!-- /.control-sidebar -->
+<!-- ./wrapper -->
+
+@section Scripts{
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/call.js"></script>
+    <script>
+        $(function () {
+            $("#example1").DataTable(
+                {
+                    "responsive": true, "lengthChange": false, "autoWidth": false,
+                    "buttons": ["copy", "csv", "excel", "pdf", "print"]
+                }
+            ).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+}

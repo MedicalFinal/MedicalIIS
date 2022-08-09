@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Medical.Models.Question>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">Q&A常見問題</h3>
+        </div>
+    </div>
+</div>
+
+<div style="padding: 40px 40px 40px 40px" id="change">
+    @{
+        int count = 0;
+        foreach (var item in Model)
+        {
+            count++;
+        <div>
+            <div class="card bg-light mb-3 collapsed-card" style="border: 2px solid #32a1ce; border-radius:20px ;cursor:pointer">
+                <div class="card-header " style="display: flex; border:none;" data-card-widget="collapse">
+                    <h3 class="card-title">@count . @Html.DisplayFor(modelItem => item.QuestionContain)</h3>
+                </div>
+
+                <div class="card-body" style="display: none; font-size:20px">
+                    @Html.DisplayFor(modelItem => item.Answer)
+                </div>
+            </div>
+        </div>
+        <hr>
+            }
+        }
+</div>
+
+@section Scripts {
+    <script src="../dist/js/adminlte.min.js?v=5.0.0"></script>
+}

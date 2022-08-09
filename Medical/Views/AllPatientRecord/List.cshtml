@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Medical.ViewModels.CaseRecordViewModel>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">病患總覽</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+<br>
+@using (Html.BeginForm())
+{
+    @:病患查詢 @Html.TextBox("txtKeyword")
+    <input type="submit" value="查詢" class="btn btn-primary" />
+}
+<p></p>
+<table class="table table-sm align-middle table-hover" style="margin-bottom:100px">
+    <thead>
+        <tr>
+            <th>
+                序
+            </th>
+            <th>
+                病患名稱
+            </th>
+            <th>
+                病例概況
+            </th>
+            <th>
+                治療科目
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Member.MemberName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DiagnosticRecord)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TreatmentDetail.TreatmentDetail1)
+                    </td>
+                    <td>
+                        @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                            </td>*@
+                </tr>
+            }
+        }
+    </tbody>
+</table>

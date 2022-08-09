@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Medical.ViewModel.CClinicDetailAdminViewModel>
+
+@{
+    Layout = null;
+}
+
+
+
+<div id="dtPreview">
+    <table id="tbl_result" class="table table-bordered table-striped" width="100%" border="1" cellpadding="0" cellspacing="0" bordercolor="#CCCCCC" style="border-collapse: collapse;">
+        <tr class="ti_blue titHeight">
+            <td class="ti_green">序號</td>
+            <td class="ti_green">醫生</td>
+            <td class="ti_green">科目</td>
+            <td class="ti_green">時段</td>
+            <td class="ti_green">診間</td>
+            <td class="ti_green">開診日期</td>
+            <td>是否重覆開診</td>
+        </tr>
+        @if (Model != null)
+        {
+            int i = 0;
+            foreach (var item in Model)
+            {
+                i++;
+                <tr>
+                    <td>
+                        <label name="count">@i</label>
+                    </td>
+                    <td>
+                        <label name="doctorName" doctorid="@item.DoctorId">@item.doctorName</label>
+                    </td>
+                    <td>
+                        <label name="deptName" deptid="@item.DepartmentId">@item.deptName</label>
+                    </td>
+                    <td>
+                        <label name="periodName" periodid="@item.PeriodId">@item.periodName</label>
+                    </td>
+                    <td>
+                        <label name="RoomName" roomid="@item.RoomId">@item.roomName</label>
+                    </td>
+                    <td>
+                        <label name="ClinicDate">@item.ClinicDate.Value.ToString("yyyy/MM/dd")</label>
+                    </td>
+                    <td>
+                        @{
+                            if (@item.repeat)
+                            {
+                                <span class="badge badge-pill badge-warning repeat">已重覆</span>
+                            }
+                        }
+                    </td>
+
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td class="f_word_left" colspan="7">
+                    查無資料！
+                </td>
+            </tr>
+        }
+
+    </table>
+    <span class="badge badge-light" id="repeatDefault" hidden="hidden">@TempData["repeatKey"]</span>
+</div>
+
+
+
+<script>
+    //$('.btnDEL').click(function () {
+    //    Swal.fire({
+    //        title: '刪除',
+    //        text: "",
+    //        icon: 'success'
+    //    })
+    //});
+</script>
+

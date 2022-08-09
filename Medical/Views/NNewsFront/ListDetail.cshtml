@@ -1,0 +1,106 @@
+﻿@model Medical.Models.News
+
+@{
+    ViewData["Title"] = "ListDetail";
+}
+
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">@Model.NewsTitle</h3>
+            <div class="breadcrumb__option reveal_t1" style=" margin-top: 40px">
+                <a style="color:white">發佈日期 : @Model.PublishDate</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+
+@*=====================左側搜尋設計========================*@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3 mb-4">
+            <div class=" ">
+                @using (Html.BeginForm())
+                {
+                    @*========查詢按鍵============*@
+                    <div class="input-group" style="display:block; text-align:left;margin-block:30px">
+                        @Html.TextBox("txtKeyword", "", new { @class = "font-weight-bold", style = "font-size:14px;border-radius:15px;", @placeholder = "search..." })
+                        <button type="submit" class="btn btn-lg btn-default ">
+                            <i class="fa fa-search">查詢</i>
+                        </button>
+                    </div>
+                }
+
+
+
+                @*===熱搜標題===*@
+                <div style="margin-block:20px">
+                    <a>
+                        <i class="" style="font-size: 20px; font-weight: bold;text-align:left">熱搜關鍵字 : </i>
+                    </a>
+                </div>
+                @*====熱搜按鈕====*@
+                <div style="margin:10px">
+                    @*需要更改*@
+                    <a href="~/NNewsFront/List?txtKeyword=Smile" class="col-3 btn btn-outline-primary" style="border-radius:15px">Smile</a>
+                    <a href="~/NNewsFront/List?txtKeyword=近視" class="col-3 btn btn-outline-primary" style="border-radius:15px">近視</a>
+                    <a href="~/NNewsFront/List?txtKeyword=雷射" class="col-3 btn btn-outline-primary" style="border-radius:15px">雷射</a>
+                </div>
+                <div style="margin:10px">
+                    <a href="~/NNewsFront/List?txtKeyword=白內障" class="col-4 btn btn-outline-primary" style="border-radius:15px">白內障</a>
+                    <a href="~/NNewsFront/List?txtKeyword=孩童" class="col-3 btn btn-outline-primary" style="border-radius:15px">孩童</a>
+
+                </div>
+
+                @*===Categories的搜尋===*@
+                @*====搜尋標題====*@
+                <div style="margin-block:20px">
+                    <a>
+                        <i class="" style="font-size: 20px; font-weight: bold;text-align:left">另類搜尋 : </i>
+                    </a>
+                </div>
+
+                <div class="card-input" style="margin-left:10px;margin-block:10px">
+                    <a href="~/NNewsFront/List?txtKeyword=新聞報導" class="btn btn-outline-primary" style="border-radius: 15px; font-size: 24px; font-weight: bold">新聞報導</a>
+                </div>
+                <div class="card-input" style="margin-left:10px;margin-block:10px">
+                    <a href="~/NNewsFront/List?txtKeyword=名人經驗" class="btn btn-outline-primary" style="border-radius: 15px; font-size: 24px; font-weight: bold">名人經驗</a>
+                </div>
+                <div class="card-input" style="margin-left:10px;margin-block:10px">
+                    <a href="~/NNewsFront/List?txtKeyword=醫生分享" class="btn btn-outline-primary" style="border-radius: 15px; font-size: 24px; font-weight: bold">醫生分享</a>
+                </div>
+            </div>
+        </div>
+        @*=====================左側搜尋設計結束========================*@
+        @*=========================文章設計===========================*@
+        <div class="col-9">
+            <div class="container-fluid">
+                <div class="row">
+
+
+                    <div class="blog__details__text">
+                        <input type="hidden" value="@Model.No" name="No" />
+                        @*<img src="~/uploads/@Model.NewsPicturePath" alt="">*@
+                        <h4 style="margin-block:20px;display:inline"><i class="nav-check"></i>@Model.NewsTitle</h4>
+                        <div class="breadcrumb__option reveal_t1" style=" margin-top: 40px;display:inline;text-align:right">
+                            <i style="display:block;text-align:right;font-size:20px">發佈日期 : @Model.PublishDate</i>
+                        </div>
+                        <p>
+                            @Html.Raw(@Model.NewsContent)
+                        </p>
+                    </div>
+                    <div class="card-body" style=" margin-top: 40px;display:inline;text-align:right">
+                        <a href="~/NNewsFront/List" class="btn btn-outline-primary" style="border-radius: 15px; font-size: 18px; font-weight: bold; float:right; text-align: right;">返回文章總覽</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

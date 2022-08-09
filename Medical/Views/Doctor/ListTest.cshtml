@@ -1,0 +1,727 @@
+﻿@model IEnumerable<Medical.Models.Doctor>
+@{
+    ViewData["Title"] = "ListTest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section css{
+    <style>
+        @*醫生標題*@
+        .listFCN {
+            color: #06a3da !important;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 10px;            
+            font-family: Jost, sans-serif !important;
+        }
+        @*醫生內文1*@
+        .listFCS {
+            font-size: 18px;
+            height: 18px;
+            line-height: 18px;
+            margin-bottom: 6px;
+            overflow: hidden;
+            color: black !important;
+            font-family: Jost, sans-serif !important;
+        }
+        @*醫生內文2*@
+        .listFCC {
+            color: black !important;
+            font-size: 18px;
+            height: 54px;
+            line-height: 18px;
+            overflow: hidden;
+            font-family: Jost, sans-serif !important;
+        }
+        @*醫生圖片Div*@
+        .listFCP {
+            font-size: 0px;
+            line-height: 0px;
+            margin-bottom: 10px;
+        }
+        @*選單內框*@
+        .input-selector {
+            outline: none;
+            border: none;
+        }
+        @*選單外框*@
+        .muti-selector {
+            width: max-content;
+            padding-right: 4px
+        }
+        @*選單選項*@
+        .select-field {
+            border: 1px solid black;
+        }
+
+        .select-field, .task, .list {
+            width: 100%;
+            background-color: white;
+            padding: 6px;
+        }
+        @*醫生外框*@
+        .team-item {
+            background: #ffffff;
+            margin-top: 20px;
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #D3D3D3
+        }
+        @*選項框*@
+        .list {
+            box-shadow: 0px 30px 60px rgb(0,0,0,0.2);
+            display: none;
+            position: absolute;
+            width: 214.16px;
+            z-index: 10;
+        }
+        @*選單箭頭*@
+        .down-arrow {
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: inline-block;
+            transition: 0.2s linear;
+        }
+        @*選項內框*@
+        .task {
+            display: block;
+            padding-left: 0;
+        }
+
+        .task span {
+            float: right;
+            font-size: 0.6rem;
+            padding-top: 6px;
+        }
+
+        .task span:hover {
+            background-color: aliceblue;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .rotate180 {
+            transform: rotate(180deg);
+        }
+        
+        .detail {
+            background-color: #4F518C ;
+            border-color: #4F518C ;
+        }
+        .reserve {
+            background-color: #7b7ed5;
+            border-color: #7b7ed5;
+        }
+        .slideInUp {
+            background-color: #FE938C;
+            border: 0.2px #666;
+            border-radius: 25px 25px 25px 25px;
+            margin: 10px 5px 10px 5px;
+            width: 18.8888888888% !important;
+        }
+
+        #hateboot img {
+            border-radius: 25px 25px 25px 25px !important;
+            margin-top: 17px !important;
+            position: relative;
+        }
+
+        .detail {
+            color: white !important;
+            margin: 5px;
+        }
+
+        .buttonLoad {
+            margin: 5px;
+        }
+
+        .dcimg {
+            height: 250px;
+            object-fit: contain;
+        }
+        @*以下皆為聊天機器人*@
+/*        .upDialogue {
+            position: fixed;
+            bottom: -100%;
+            right: 200px;
+            z-index: 10;
+        }          
+            .topDialogue {
+                max-width: 500px;
+                padding: 20px 0px 0px;
+                box-shadow: 0 0 10px #000;
+                background-color: #d4e6ed;
+                border-radius: 20px;
+            }
+
+        .dialogue {
+            width: 100%;
+            height: 600px;            
+            overflow: auto;
+            padding:0 20px 0 20px;
+        }
+
+        .dialogue img {
+            max-width: 100%;
+        }
+
+        .user {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .user .avatar {
+            width: 60px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .user .pic {
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .user .pic .img {
+            width: 100%;
+            vertical-align: middle;
+        }
+
+        .user .name {
+            color: #333;
+        }
+
+        .user .text {
+            background-color: #aaa;
+            padding: 16px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .remote .text {
+            margin-left: 20px;
+            margin-right: 20px;
+            color: #eee;
+            background-color: #06a3da;
+        }
+
+        .remote .text &::before {
+            border-right: 10px solid #4179f1;
+            left: -10px;
+        }
+
+        .local {
+            justify-content: flex-end;
+        }
+
+        .local .text {
+            margin-right: 20px;
+            margin-left: 80px;
+            order: -1;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .local .text &::before {
+            border-left: 10px solid #fff;
+            right: -10px;
+        }
+        .message_btn {
+            position: fixed;
+            top: 40%;
+            right: 10px;
+            z-index: 2;
+            border-radius: 50%;
+            height: 106px;
+            padding: 12px;
+            box-shadow: 0 0 10px #0000002b;
+        }
+        .message_btn span{
+            display:block;
+            font-size:30px;
+            font-weight:bold;
+        }
+        .inputText {
+            background-color: #8ebcff;
+            padding: 15px;
+            box-shadow: 0 0 2px #000;
+            border-radius:0px 0px 20px 20px;
+            width: 100%;
+        }
+        .user a {
+            color: #ffffff;
+        }
+        #txtBox{
+            height:38px;
+        }
+        .text .btn {
+            background-color: #ffffff;
+            color: #f08300;
+        }
+        .text .dep {
+            color: #b9ab47;
+        }
+        .text .doc {
+            color: #255bbd;
+        }
+        .trt {
+            color: #52dd96;
+            
+        }
+        .text .reserve {
+            color: #9b609f;
+        }
+        .shopping {
+            background-color: #df8686;
+        }
+        .login {
+            background-color: #da9e06;
+        }
+        .reservelink {
+            background-color: #00d1c3;
+        }
+        .teach {
+            background-color:#8406da;
+        }*/
+    </style>
+
+}
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">醫生清單</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+<br>
+
+@using (Html.BeginForm())
+{
+    <div class="d-flex flex-wrap mt-2">
+        <div class="muti-selector">
+            <div class="select-field">
+                <input type="text" name="" placeholder="篩選科別" class="input-selector" />
+                <span class="down-arrow">&blacktriangledown;</span>
+
+            </div>
+            <div class="list">
+                <label for="" class="task">
+                    <input type="checkbox" class="checkAll1" name="123" id="c" onclick="check_all()" />
+                    全選
+                </label>
+            </div>
+        </div>
+        <div class="muti-selector">
+            <div class="select-field" id="select-field1">
+                <input type="text" name="" placeholder="篩選醫生" class="input-selector" />
+                <span class="down-arrow" id="down-arrow1">&blacktriangledown;</span>
+            </div>
+            <div class="list" id="list1">
+                <label for="" class="task">
+                    <input type="checkbox" class="checkAll2" onclick="check_allDp()" id="d" />
+                    全選
+                </label>
+            </div>
+        </div>
+        <input id="txtKeyword" hidden="hidden" type="text" name="txtKeyword" value="" />
+        @*<input type="submit" id="sub" value="查詢" class="btn btn-primary" />*@
+    </div>
+    <input id="txtKeyword" hidden="hidden" type="text" name="txtKeyword" value="" />
+}
+
+@*Ajax醫生加載*@
+<div class="webShow row"></div>
+@*聊天機器人視窗*@
+<!--<button class="btn btn-light message_btn" data-open="false" onclick="show()"><span>?</span>找不到醫生</button>
+<div class="upDialogue">
+    <div class="topDialogue">
+        <div class="dialogue">
+            <div class="user remote">
+                <div class="avatar">
+                    <div class="pic">
+                        <img src="https://picsum.photos/100/100?random=12" />
+                    </div>
+                <div class="name">漢克斯</div>
+            </div>
+            <div class="text">
+                您好，需要甚麼幫忙嗎？
+            </div>
+        </div>
+        <div class="user remote">
+            <div class="avatar">
+                <div class="pic">
+                    <img src="https://picsum.photos/100/100?random=12" />
+                </div>
+                <div class="name">漢克斯</div>
+                </div>
+            <div class="text">
+                <input class="btn" type="button" value="加入會員" onclick="Register()">
+                <input class="btn" type="button" value="我要掛號" onclick="Register()">
+                </br><input class="btn" type="button" value="交通指引" onclick="Register()">
+                <input class="btn" type="button" value="衛教健保" onclick="Register()">
+                </br><input class="btn" type="button" value="該掛哪科" onclick="WhichDep()">
+                <input class="btn" type="button" value="線上購物" onclick="Register()">
+            </div>
+            </div>-->
+        @*<div class="user local">
+                <div class="avatar">
+                    <div class="pic">
+                        <img src="https://picsum.photos/100/100?random=16" />
+                    </div>
+                    <div class="name">Me</div>
+                </div>
+                <div class="text">這是我的對話文字</div>
+            </div>*@
+        <!--</div>
+        <div class="inputText">
+            <input id="txtBox" type="text" value="" />
+            <input class="btn btn-primary" type="button" value="輸入" onclick="Insert()" />
+            <input class="btn btn-warning" type="button" value="不知道問甚麼" onclick="QuestionButton()" />
+            <input class="btn btn-sm" type="button" value="Demo" onclick="demo()" />
+            <input class="btn btn-sm" type="button" value="Demo2" onclick="demo2()" />
+        </div>
+    </div>
+</div>-->
+@*查看醫師評論*@
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="tbdRatingList" class="modal-body">
+                @*//這裡放partail*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">離開</button>
+            </div>
+        </div>
+    </div>
+</div>
+<footer style="clear:both"></footer>
+@section Scripts{
+    <script> src = "https://code.jquery.com/jquery-3.4.1.min.js"</script>
+    <script>
+        
+    @*冠名*@
+        function buttonLoad() {
+            var id = $(event.target).attr("data-docid");
+            console.log(id);
+            $('#tbdRatingList').load('@Url.Content("~/Doctor/RatingDoctorpartail/")' + id )
+        }
+
+
+    @*網頁開始全選*@
+        function firstCheck() {
+            document.getElementById("c").checked = true;
+        }
+        function firstCheck1() {
+            document.getElementById("d").checked = true;
+        }
+    @*醫生全選*@
+        function check_allDp() {
+            var ckboxs = document.getElementsByClassName("check1")
+            for (var i = 0; i < ckboxs.length; i++) {
+                ckboxs[i].checked = !ckboxs[i].checked;
+                if (ckboxs[i].checked == true)
+                    loadWebDoc(ckboxs[i].name)
+                else
+                    cancelWebDoc(ckboxs[i].name)
+            }
+        }
+    @*科別全選*@
+        function check_all() {
+            var checkboxs = document.getElementsByClassName("check")
+            for (var i = 0; i < checkboxs.length; i++) {
+                checkboxs[i].checked = !checkboxs[i].checked;
+                if (checkboxs[i].checked == true)
+                    loadDoc(checkboxs[i].name);
+                else
+                    cancelDoc(checkboxs[i].name);
+            }
+        }
+    @* 選單下拉 *@
+        document.querySelector('.select-field').addEventListener('click', () => {
+            document.querySelector('.list').classList.toggle('show');
+            document.querySelector('.down-arrow').classList.toggle('rotate180')
+        })
+        document.querySelector('#select-field1').addEventListener('click', () => {
+            document.querySelector('#list1').classList.toggle('show');
+            document.querySelector('#down-arrow1').classList.toggle('rotate180')
+        })
+    @*網頁開始執行*@
+        loadDep()
+    @*取消全選科別勾選*@
+        async function cancelDoc(N) {
+                depName = N;
+                const trtDs = await fetch('@Url.Content("~/Admin/AdminDoctor/Doc")' + `?depName=${depName}`).then(response => response.json());
+                trtDs.forEach((DoctorName) => {
+                    document.querySelector(`#${DoctorName}`).remove();
+                    document.getElementById(`${DoctorName}Div`).remove();
+                })
+        }
+    @*取消全選醫生Ajax*@
+        async function cancelWebDoc(N) {
+            dcName = N;
+            const doctors = await fetch('@Url.Content("~/doctor/GetDoctorWeb")' + `?docName=${dcName}`).then(response => response.json());
+            doctors.forEach((DoctorName) => {
+                var div = document.getElementById(`${doctors[0].doctorName}Div`);
+                div.remove()
+            })
+        }
+    @*取消/勾選專長*@
+        function CCC() {
+            if ($(event.target)[0].checked == true) {
+                loadDoc($(event.target)[0].name);
+            }
+            else
+                cancelDoc($(event.target)[0].name);
+        }
+    @*取消/勾選醫生*@
+        function DDD() {
+            if ($(event.target)[0].checked == true) {
+                loadWebDoc($(event.target)[0].name);
+            }
+            else
+                cancelWebDoc($(event.target)[0].name)
+        }
+    @*讀取科別選單*@
+        async function loadDep() {
+            const deps = await fetch('@Url.Content("~/Admin/AdminDoctor/Dep")').then(response => response.json())
+            deps.forEach((DeptName) => {
+                name =`<label for="" class="task">
+                       <input type="checkbox" class="check" onclick="CCC()" id="${DeptName}" name="${DeptName}" value="${DeptName}"/>
+                       ${DeptName}
+                       </label>`;
+                document.querySelector('.list').innerHTML += name;
+            })
+            firstCheck();
+            check_all();
+        }
+    @*讀取Doctor選單*@
+        async function loadDoc(N) {
+                depName =N/*($(event.target)[0].name);*/
+                const trtDs = await fetch('@Url.Content("~/Admin/AdminDoctor/Doc")' + `?depName=${depName}`).then(response => response.json());
+                trtDs.forEach((DoctorName) => {
+                    name = `<label for="" class="task" id="${DoctorName}">
+                                <input type="checkbox" class="check1" checked="true" name="${DoctorName}" onclick="DDD()" value="${DoctorName}"/>
+                                 ${DoctorName}
+                            </label>`;
+                    document.querySelector('#list1').innerHTML += name;
+                    loadWebDoc(`${DoctorName}`)
+                    
+                })
+            firstCheck1()
+        }
+    @*讀取醫生資料Ajax*@
+        async function loadWebDoc(dcname) {
+            docName = dcname;
+            const doctors = await fetch('@Url.Content("~/doctor/GetDoctorWeb")' + `?docName=${docName}`).then(response => response.json());
+            console.log(doctors)
+            doctors.forEach((DoctorName) => {
+                
+                web = `<div id="${doctors[0].doctorName}Div" class="col-lg-4 col-md-6 col-12 doctor_item">
+                        <div class="team-item">
+                            <div class="position-relative rounded-top  listFCP" style="z-index: 1;">
+                                <img class="img-fluid w-100 dcimg" src="/images/${doctors[0].picturePath}">
+                            </div>
+                            <div >
+                                <div class="${doctors[0].doctorName}">
+                                    <div class="listFCN">${doctors[0].doctorName}</div>
+                                    <div class="listFCS">現職:${doctors[0].jobTitle}</div>
+                                    <div class="listFCC">學歷:${doctors[0].education}</div>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button class = "btn btn-outline-success detail" name="${doctors[0].DoctorID}" onclick="location.href='/doctor/detail/${doctors[0].doctorId}'">詳細資料</button>
+                                    <button type="button" id="buttonLoad" onclick="buttonLoad()" class="btn btn-primary buttonLoad" data-bs-toggle="modal" data-bs-target="#exampleModal" data-docid="${doctors[0].doctorId}">
+                                    查看評價
+                                    </button>
+                                    <a href="/Reserve/ReserveList?id=${doctors[0].doctorId}" class="btn btn-outline-success detail reserve">我要掛號</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`                                
+                document.querySelector('.webShow').innerHTML += web;
+                loadWebDep(`${doctors[0].doctorName}`)
+                
+            })
+        }
+        async function loadWebDep(dcName) {
+            const dep = await fetch('@Url.Content("~/doctor/GetDepartment")' + `?dcName=${dcName}`).then(response => response.json());
+            web = `</br>科別:${dep[0]}`
+            document.querySelector(`.${dcName} .listFCC`).innerHTML += web;
+        }
+        
+    @*機器人*@
+        @*const dialogue = document.querySelector(".dialogue")
+        function Register() {
+            txt = $(event.target).attr("value")
+            GetA(txt);
+        }
+        function Insert() {
+            txt = document.getElementById('txtBox').value
+            GetA(txt);
+        }
+        function QuestionButton() {
+            Remotetext = `
+                <div class="user remote">
+                    <div class="avatar">
+                        <div class="pic">
+                            <img src="https://picsum.photos/100/100?random=12" />
+                        </div>
+                    <div class="name">漢克斯</div>
+                </div>
+                <div class="text">
+                    <input class="btn" type="button" value="加入會員" onclick="Register()">
+                    <input class="btn" type="button" value="我要掛號" onclick="Register()">
+                    </br><input class="btn" type="button" value="交通指引" onclick="Register()">
+                    <input  class="btn"type="button" value="衛教健保" onclick="Register()">
+                    </br><input  class="btn"type="button" value="該掛哪科" onclick="WhichDep()">
+                    <input class="btn" type="button" value="線上購物" onclick="Register()">
+                </div>`
+            dialogue.innerHTML += Remotetext;
+            dialogue.scrollTop = dialogue.scrollHeight;
+        }
+        async function GetA(txt) {
+            if (txt != "") {
+                const Aws = await fetch('@Url.Content("~/doctor/GetAnswer")' + `?Qs=${txt}`).then(response => response.json())
+                console.log(Aws.answer)
+                Usertext = `<div class="user local">
+                            <div class="avatar">
+                                <div class="pic">
+                                    <img src="https://picsum.photos/100/100?random=16" />
+                                </div>
+                            <div class="name">Me</div>
+                            </div>
+                            <div class="text">${txt}</div>
+                        </div>`;
+                Remotetext = `
+                <div class="user remote">
+                    <div class="avatar">
+                        <div class="pic">
+                            <img src="https://picsum.photos/100/100?random=12" />
+                        </div>
+                    <div class="name">漢克斯</div>
+                </div>
+                <div class="text">
+                    ${Aws.answer}
+                </div>
+        </div>`
+
+                dialogue.innerHTML += Usertext;
+                dialogue.innerHTML += Remotetext;
+                dialogue.scrollTop = dialogue.scrollHeight;
+
+            }
+            else {
+                alert("請輸入文字");
+            }
+        }
+        async function WhichDep() {
+            const txt = $(event.target).attr("value")
+            Remotetext = `<div class="user remote">
+                                <div class="avatar">
+                                    <div class="pic">
+                                        <img src="https://picsum.photos/100/100?random=12" />
+                                    </div>
+                                    <div class="name">漢克斯</div>
+                                </div>
+                                <div class="text">我們有服務的科目有\n`
+            const deps = await fetch('@Url.Content("~/Admin/AdminDoctor/Dep")').then(response => response.json())
+            deps.forEach((deptName)=>{
+                Remotetext +=`</br><input type="button" class="btn dep" value="${deptName}" onclick="Docbtn()">`
+            })
+            Usertext = `<div class="user local">
+                            <div class="avatar">
+                                <div class="pic">
+                                    <img src="https://picsum.photos/100/100?random=16" />
+                                </div>
+                            <div class="name">Me</div>
+                            </div>
+                            <div class="text">${txt}</div>
+                        </div>`;
+            Remotetext +=       `</div>
+                              </div>`
+            dialogue.innerHTML += Usertext;
+            dialogue.innerHTML += Remotetext;
+            dialogue.scrollTop = dialogue.scrollHeight;
+        }
+        async function Docbtn() {
+            depName = $(event.target).attr("value")
+            const docs = await fetch('@Url.Content("~/Admin/AdminDoctor/Doc")' + `?depName=${depName}`).then(response => response.json());
+            Remotetext = `<div class="user remote">
+                                <div class="avatar">
+                                    <div class="pic">
+                                        <img src="https://picsum.photos/100/100?random=12" />
+                                    </div>
+                                    <div class="name">漢克斯</div>
+                                </div>
+                                <div class="text">目前該科看診醫生有`
+            docs.forEach((DoctorName) => {
+                Remotetext += `</br><input class="btn doc" type="button" name="${docs[0].doctorId}" value="${DoctorName}" onclick="Trtbtn()">`
+            })
+            Usertext = `<div class="user local">
+                            <div class="avatar">
+                                <div class="pic">
+                                    <img src="https://picsum.photos/100/100?random=16" />
+                                </div>
+                            <div class="name">Me</div>
+                            </div>
+                            <div class="text">${depName}</div>
+                        </div>`;
+            Remotetext += `</div>
+                              </div>`
+            dialogue.innerHTML += Usertext;
+            dialogue.innerHTML += Remotetext;
+            dialogue.scrollTop = dialogue.scrollHeight;
+        }
+        async function Trtbtn() {
+            Remotetext = `<div class="user remote">
+                                <div class="avatar">
+                                    <div class="pic">
+                                        <img src="https://picsum.photos/100/100?random=12" />
+                                    </div>
+                                    <div class="name">漢克斯</div>
+                                </div>
+                                <div class="text">該醫生的治療項有\n<div class="trt">`
+            dcID = $(event.target).attr("value");
+            console.log(dcID)
+            const trts = await fetch('@Url.Content("~/doctor/getTreatmentByName")' + `?doctorName=${dcID}`).then(response => response.json());
+            console.log(trts)
+            for (let i = 0; i < trts.length; i++) {
+                Remotetext += `${trts[i].treatmentDetail1}</br>`
+            }
+            Usertext = `<div class="user local">
+                            <div class="avatar">
+                                <div class="pic">
+                                    <img src="https://picsum.photos/100/100?random=16" />
+                                </div>
+                            <div class="name">Me</div>
+                            </div>
+                            <div class="text">${dcID}</div>
+                        </div>`;
+            Remotetext += `</div><a href="/Reserve/ReserveList?id=${trts[0].doctorId}" class="btn">我要掛號</a>`+
+                                `</div>
+                              </div>`
+            dialogue.innerHTML += Remotetext;
+            dialogue.scrollTop = dialogue.scrollHeight;
+        }*@
+
+    @*機器人隱藏/展開*@
+        //var x = false;
+        //function show() {
+        //    if (x == false) {
+        //        document.querySelector('.upDialogue').style.bottom = "0%"
+        //        x = true;
+        //    }
+        //    else {
+        //        document.querySelector('.upDialogue').style.bottom = "-100%"
+        //        x = false;
+        //    }
+        //}
+    </script>
+}

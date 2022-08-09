@@ -1,0 +1,141 @@
+﻿@model Medical.ViewModels.CDoctorDetailViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@{
+    ViewData["Title"] = "CreateDetail";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+@section styles {
+    <style>
+        .xkfVF {
+            padding: 48px 40px 36px;
+            box-sizing: inherit;
+            font-family: roboto, "Noto Sans Myanmar UI", arial, sans-serif;
+        }
+
+        .Aa1VU {
+            flex-basis: 450px;
+            margin: 0 -48px;
+            overflow: hidden;
+            padding: 0 48px;
+            box-sizing: inherit;
+        }
+
+        .thisform {
+            float: left;
+        }
+    </style>
+}
+<h1>新增醫生帳戶</h1>
+<hr />
+@using (Html.BeginForm("CreateDetail", "AdminDoctor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row xkfVF">
+        <div class="col-md-4 Aa1VU">
+            <form asp-action="CreateDetail" class="thisform">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="DoctorName" class="control-label"></label>
+                    <input asp-for="DoctorName" class="form-control" id="dcn" onchange="checkDoc()"/>
+                    <small class="form-text text-muted check"></small>
+                    <span asp-validation-for="DoctorName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MemberName" class="control-label"></label>
+                    <input asp-for="MemberName" class="form-control" id="mmn" />
+                    <small class="form-text text-muted check"></small>
+                    <span asp-validation-for="MemberName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdentityID" class="control-label"></label>
+                    <input asp-for="IdentityID" class="form-control" id="idi" />
+                    <small class="form-text text-muted check"></small>
+                    <span asp-validation-for="IdentityID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" id="eml" />
+                    <small class="form-text text-muted check"></small>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" type="password" class="form-control" id="psw" />
+                    <small class="form-text text-muted check"></small>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input id="DepName" hidden="hidden" type="text" name="DepName" value="DepName" />
+                    <select id="selDep" onchange="selVal(this)" >
+                        <option value="asd">請選擇科別</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                        <img id="showImg" width="100" />
+                        <input type="file" name="photo" id="pho"/>
+                </div>
+                
+                <div class="form-group" hidden="hidden">
+                    <label asp-for="Role" class="control-label"></label>
+                    <input asp-for="Role" class="form-control" id="rol" value="2" />
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="新增" class="btn btn-primary" />                    
+                    <a href="/Admin/AdminDoctor" class="btn btn-secondary">返回</a>
+                    <input type="button" id="btnDmo" class="btn btn-info" value="D鍵" />
+                </div>                
+            </form>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>    
+    const setdep = document.getElementById("DepName")
+    const seldep = document.getElementById("selDep")
+    function selVal(sel) {
+        console.log(sel.options[sel.selectedIndex].text)
+        setdep.setAttribute('value', sel.options[sel.selectedIndex].text)
+        console.log(setdep.value)
+    }
+    
+        getDep()
+        $('#btnDmo').click(() => {
+            document.getElementById("dcn").value = "高壹陞";
+            document.getElementById("mmn").value = "高壹陞";
+            document.getElementById("idi").value = "A111111111";
+            document.getElementById("eml").value = "Kao@gmail.com"
+            document.getElementById("psw").value = "111";
+            document.getElementById("dpn").value = "視網膜科";
+        })
+
+        $('#pho').change(() => {
+
+            var file = $('#pho')[0].files[0];
+            var reader = new FileReader;
+            reader.onload = function (e) {
+                $('#showImg').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        })
+    @*驗證是否重複*@
+    async function checkDoc() {
+        const checkDN = $('#dcn');
+        console.log(checkDN)
+            docName = checkDN
+        const check = await fetch('@Url.Content("~/Admin/AdminDoctor/checkDN")' + `?dcName=${checkDN}`).then(response => response.json())
+        console.log(check)
+        document.getElementsByClassName("check").value = check.Answer
+        }
+    async function getDep() {
+        obj = document.getElementById("selDep")
+        const deps = await fetch('@Url.Content("~/Admin/AdminDoctor/Dep")').then(response => response.json())
+        deps.forEach((DeptName) => {            
+            obj.options.add(new Option(DeptName,DeptName))
+        })
+    }
+</script>
+}

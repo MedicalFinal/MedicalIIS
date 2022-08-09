@@ -1,0 +1,123 @@
+﻿@model Medical.ViewModel.MProductViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>MProductViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="tempEdit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProductId" class="control-label"></label>
+                <input asp-for="ProductId" class="form-control" />
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductCategoryId" class="control-label"></label>
+                <input asp-for="ProductCategoryId" class="form-control" />
+                <span asp-validation-for="ProductCategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductCategoryName" class="control-label"></label>
+                <input asp-for="ProductCategoryName" class="form-control" />
+                <span asp-validation-for="ProductCategoryName" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                    <label asp-for="ProductBrandId" class="control-label"></label>
+                    <input asp-for="ProductBrandId" class="form-control" />
+                    <span asp-validation-for="ProductBrandId" class="text-danger"></span>
+                </div>*@
+
+            <div class="form-group">
+                <label asp-for="ProductBrandName" class="control-label"></label>
+
+                @(Html.DropDownListFor(Model=>Model.ProductBrandId,ViewBag.SelectListItem as IEnumerable<SelectListItem>))
+
+                <span asp-validation-for="ProductBrandName" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Stock" class="control-label"></label>
+                <input asp-for="Stock" class="form-control" />
+                <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Discontinued" /> @Html.DisplayNameFor(model => model.Discontinued)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Shelfdate" class="control-label"></label>
+                <input asp-for="Shelfdate" class="form-control" />
+                <span asp-validation-for="Shelfdate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductSpecificationId" class="control-label"></label>
+                <input asp-for="ProductSpecificationId" class="form-control" />
+                <span asp-validation-for="ProductSpecificationId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnitPrice" class="control-label"></label>
+                <input asp-for="UnitPrice" class="form-control" />
+                <span asp-validation-for="UnitPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductImage" class="control-label"></label>
+                <input asp-for="ProductImage" class="form-control" />
+                <span asp-validation-for="ProductImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductColor" class="control-label"></label>
+                <input asp-for="ProductColor" class="form-control" />
+                <span asp-validation-for="ProductColor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductAppearance" class="control-label"></label>
+                <input asp-for="ProductAppearance" class="form-control" />
+                <span asp-validation-for="ProductAppearance" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductMaterial" class="control-label"></label>
+                <input asp-for="ProductMaterial" class="form-control" />
+                <span asp-validation-for="ProductMaterial" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">產品照片</label>
+                <input type="file" name="photo" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts
+ {
+    <script>
+
+
+
+
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
+}

@@ -1,0 +1,552 @@
+﻿@using Medical.ViewModel;
+
+@model CReserveforShowViewModel
+@{
+    ViewData["Title"] = "ReserveList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section css
+{
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- Theme style -->
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <!--<link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">-->
+
+
+
+
+
+}
+
+
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">線上掛號</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+<hr />
+
+<!-- 查詢預約 Start -->
+<div class="container-fluid bg-primary bg-appointment mb-5 wow fadeInUp" data-wow-delay="0.1s" style="margin-top: 90px;">
+    <div class="container">
+        <div class="row gx-5">
+            <div class="col-lg-6 py-5">
+                <div class="py-5">
+                    <h1 class="display-5 text-white mb-4">漢克斯眼科|近視控制的專家</h1>
+                    <ol>
+                        <li class=" text-white ">若有其他眼科門診需求，請現場掛號或電話詢問離您最近的門診單位，謝謝!</li>
+                        <li class=" text-white ">網路預約恕不接受當日預約，請於1天前預約，以便安排！</li>
+                        <li class=" text-white ">因檢查時間較長，請於門診時間結束前1小時到達，術前檢查請勿自行開車或騎車前往！</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5 wow zoomIn" data-wow-delay="0.6s">
+                    <h1 class="text-white mb-4">線上預約</h1>
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-12 col-sm-6">
+                                <select id="dep" class="form-select bg-light border-0" style="height: 55px;">
+                                    <option selected>選擇科別</option>
+                                    @foreach (var item in Model.departmentList)
+                                    {
+                                        <option name="@item.DeptName" value="@item.DeptName">@item.DeptName</option>
+
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <select id="doc" class="form-select bg-light border-0" style="height: 55px;">
+                                    <option selected>選擇醫生</option>
+                                    @foreach (var item in Model.doctorsList)
+                                    {
+                                        <option name="@item.DoctorName" value="@item.DoctorName">@item.DoctorName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <input id="date" type="date" name="txtdate" class="form-control bg-light border-0" placeholder="選擇日期" style="height: 55px;">
+                            </div>
+                            <div class="col-12">
+                                <button id="submit" class="btn btn-dark w-100 py-3" data-bs-toggle="modal" data-bs-target="#exampleModa2" type="submit" >查詢門診</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 查詢預約 End -->
+<!-- 跳出提示Modal -->
+<div class="modal fade" id="exampleModa2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">注意事項!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ol style="padding-left:30px;list-style:disc;margin-top:15px;">
+                    <li>預約完成後，將由諮詢專員於1~2個工作天內電話與您聯繫。</li>
+                    <li style="color:#f00">預約諮詢時間以諮詢專員電話聯繫為主。</li>
+                    <li>欲預約3天內的諮詢檢查，建議電話洽詢(02-2431123456)。</li>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">確定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@*結果顯現*@
+<div class="card">
+    <div class="card-header">
+        <h3 id="title" class="card-title">查詢結果</h3>
+    </div>
+    <div class="card-body">
+        <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="example1" class="table table-bordered table-striped" aria-describedby="example1_info">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@*結果顯現結束*@
+
+
+@*進入預約畫面*@
+<!-- Modal -->
+<div class="modal fade" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">預約</h5>
+                <input type="hidden" id="hiddenID" />
+                <input type="hidden" id="hiddenID2" />
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div id="re" class="col-7">
+                            <h1>確認預約</h1>
+
+                        </div>
+                        <div class="col-5 text-center" id="docimage">
+                            @*<img src="../../dist/img/user1-128x128.jpg" alt="user-avatar" class="img-circle img-fluid">*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="informationBox" class="Personal_informationBox" style="background: none;">
+                <input type="checkbox" name="use_Personal_information" id="use_Personal_information" value="1">
+                <label for="use_Personal_information">我同意「漢克斯智能眼科診所」使用本人之個人資料，做為預約資訊之提供、提升服務品質及客戶關懷使用。</label>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModa3">
+                    隱私權保護政策
+                </button>
+                <span id="txtPersonal_informationMsg" class="txtMsg"></span>
+
+            </div>
+            <div class="modal-footer">
+                <button id="out" type="button" class="btn btn-secondary" data-bs-dismiss="modal">退出</button>
+                <button id="startReserve" type="button" class="btn btn-primary" @*disabled="disabled"*@>送出預約</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 隱私權保護政策Modal -->
+<div class="modal fade" id="exampleModa3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">隱私權保護政策</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p style="line-height:32px;">
+                    漢克斯眼科(以下簡稱「本診所」)非常重視使用者的隱私權，因此制訂了大學眼科隱私權保護政策(以下簡稱「隱私權政策」)，並遵守我國相關法律(包括但不限於電腦處理個人資料保護法等)之規範。請您詳細閱讀以下「隱私權政策」之內容，這份文件將讓您更加瞭解當您拜訪本診所所經營之網站(https://www.eyedoctor.com.tw/，以下簡稱「本站」)時，我們在蒐集、處理您個人資訊方面的做法、您應享有哪些權利，以及您擁有哪些選擇以更進一步保護個人的隱私權，我們提供以下各項說明來告訴您我們的相關做法。
+                </p>
+                <p>
+                    若您不同意我們的做法，請暫時不要參與本站上的活動。當然您也可以告訴我們您的想法，若有任何意見或疑問，請利用客服專區回報系統提出您的疑議。
+                </p>
+                <p>
+                    本診所的隱私權政策所包含的內容如下<br>
+                    一、隱私權政策之修訂<br>
+                    二、個人資料之搜集與運用<br>
+                    三、個人資料之修改<br>
+                    四、個人資料提供予第三者及共有<br>
+                    五、Cookie<br>
+                    六、自我保護措施<br>
+                    七、資訊安全保護措施<br>
+                    八、個人資料管理責任者
+                </p>
+                <p>
+                    <span class="ex_title">一、隱私權政策之修訂</span><br>
+                    本隱私權政策自西元2012年9月30日起開始使用。然而，本診所有權依我國相關法律(包括但不限於個人資料保護法等)之修訂或本診所內部方針之變更，隨時修改或變更隱私權政策之內容。隱私權政策一旦發生變動，本診所將於本站上公佈修改內容，並以醒目標示提醒您前往點選閱讀，而不另對會員進行個別通知。
+                </p>
+                <p>
+                    建議您隨時注意該等修改或變更，以保障您自身的權益，如果您不同意修改的內容，請勿繼續使用本診所所提供的所有服務。當您於隱私權政策任何修改或變更後繼續使用本診所之服務，表示您已閱讀、瞭解並同意接受隱私權政策修改或變更後之內容。
+                </p>
+                <p>
+                    <span class="ex_title">二、隱私權政策適用範圍</span><br>
+                    隱私權政策內容適用在本診所如何處理在您使用本站服務時收集到的身份識別資料，也適用在本診所如何處理在商業伙伴與本站合作時分享的任何身份識別資料。
+                </p>
+                <p>隱私權保護政策不適用於本診所以外的公司及網站。同時您也必須了解：瀏覽本站服務時，在某些情形下，您可能會需要使用網頁超連結功能，例如當您使用某項由第三者所提供的內容服務，或閱讀某則本站所提供的資訊，而該項資訊包括其他網頁的連結功能時。本診所無法繼續提供您連結至他站後的隱私權保護。</p>
+                <p>故當您離開本站進入他站時，請別忘了先閱讀該網站所提供的隱私權條款，再決定是否繼續接受該網站的服務。</p>
+                <p>
+                    <span class="ex_title">三、個人資料之搜集與運用</span><br>
+                    本診所主要搜集您個人資料之項目及使用目的如下：
+                </p>
+                <p>
+                    1.姓名、出生年月日：您使用本診所服務時之識別、年齡之確認、重複申請本診所服務時之確認、您個人資料遺失或變更時之識別。<br>
+                    2.E-mail：傳達本診所之公告事項、與您意見溝通及傳遞本診所之資訊、商業性資料或電子郵件給您。本診所除了在該資料或電子郵件上註明是由本站發送，也會在該資料或電子郵件上提供您能隨時停止接收這些資料或電子郵件的方法、說明或功能連結。為了提供您其他服務或優惠權益需要與提供該服務或優惠的第三者傳送商業性資料或電子郵件時，本診所將會在活動時提供充分的說明，並且在第三者傳輸之前通知您，您可以自由選擇是否接受這項特定服務或活動。<br>
+                    3.其他項目：為提供本診所服務所必須，或為新增行銷資料及用戶別指南及廣告的傳輸或是寄送。<br>
+                    4.線上活動及網路調查：當您參與線上活動或網路調查時，本診所會請您提供姓名、身份證字號、電話、e-mail及住址等。所蒐集的姓名、身份證字號，僅供抽獎活動依據；電話、e-mail及住址等資訊，則作為通知抽獎結果及分析之用，並不做其他用途。其他資料僅止於商業及市場分析或學術用途；除非受訪者同意，所有資料僅供資料分析之用，本診所不會將資訊用做其他用途。
+                </p>
+                <p>
+                    另外，您所輸入的資料，僅供本診所提供服務或活動設計參考使用。凡未經您主動提供的資料，例如使用者機器的 IP 位址、使用時間、使用的流覽器、流覽及點選紀錄等資料，本診所僅對全體使用者行為總和進行分析，並不會對個別使用者進行分析。
+                </p>
+                <p>
+                    <span class="ex_title">四、個人資料之修改</span><br>
+                    您可以書面、電話、E-mail或傳真之方式，向本站之「個人資料管理責任者」提出查詢、修正、停止蒐集利用及刪除之要求，「個人資料管理責任者」會為您處理相關事宜。
+                </p>
+                <p>
+                    <span class="ex_title">五、個人資料提供予第三者及共有之政策</span><br>
+                    除經過您的同意、本隱私權政策或相關法令規定外，本診所絕不會任意出售、交換、或出租任何您的個人資料給其他團體或個人。但有下列之情形時，本診所得提供第三者或與第三者共用您的個人資料：
+                </p>
+                <p>
+                    1.為了提供您其他服務或優惠權益，需要與提供該服務或優惠之第三者共用您的資料時，本診所會在活動時提供充分說明，您可以自由選擇是否接受這項特定服務或優惠，若您不願意接受，請通知本診所。<br>
+                    2.為完成統計資料、學術研究或市場調查之必要情況時。<br>
+                    3.於政府機關或司法單位因公眾安全或法令之規定，要求本診所公開特定個人資料時，本診所將依該單位之合法程序(包括但不限於公文之要求等)為必要的配合。<br>
+                    4.當您有違反本站服務條款，或有損害或妨礙本站使用者或相關第三人權益之虞時，若本診所認為揭露您的個人資料係為辨識、連絡或對您採取法律行動所必要者，本診所得揭露您個人資料。此外，若本診所認為揭露為法律之需要，或為維護和改進本診所之服務而用於管理或其他目的時，本診所亦得揭露或讀取您的個人資料。
+                </p>
+                <p>
+                    <span class="ex_title">六、Cookie</span><br>
+                    所謂Cookie就是在瀏覽網站時，使用的伺服器(HTTP)從使用者的瀏覽器中發出非常小的text做為檔案，也可以儲存在使用者的電腦硬碟。本診所將隨時儲存使用者的資料和運作，尋找出Cookie。但您能夠在網路瀏覽器中選擇瀏覽器對Cookie的接受程度，包括「接受所有Cookie」、 「出現Cookie時加以通知」、「拒絕所有 Cookie」等三種。但如您選擇瀏覽器拒絕所有Cookie時，您使用本診所之服務將會變的困難。
+                </p>
+                <p>本診所亦會於下列情形及目的下，於您使用的瀏覽器中寫入並讀取Cookie：</p>
+                <p>
+                    1.在使用者環境設定等，也使用Cookie。放在個人所直接儲存選擇的檢索使用環境值，為了使用者必須做的環境設定，使用這項資料。<br>
+                    2.會員和非會員的連接頻率的差異或是反覆使用程度等，處理有關使用者的使用行動資料後，可以提供最佳化的資料。
+                </p>
+                <p>
+                    <span class="ex_title">七、自我保護措施</span><br>
+                    請妥善保管您的密碼及或任何個人資訊，不要將任何個人資訊，尤其是密碼提供給任何人。在您欲離開電腦前或不再使用本站的服務時，務必記得關掉會員帳號，若您是與他人共用電腦或使用公共電腦，切記要關閉流覽器視窗，以防止他人讀取您的個人資料。
+                </p>
+                <p>
+                    <span class="ex_title">八、資訊安全保護措施</span><br>
+                    本診所為保護使用者之個人資料安全，所做之技術性和管理性措施如下：
+                </p>
+                <p>
+                    1.收集的個人資料中，針對認證密碼等本人的資料進行加密的設置。
+                    2.在電腦病毒防治，為了阻擋個人資料的侵害，進行軟體設置、更新、檢查設置。
+                    3.針對個人資料系統，包含接近權限的設定，管理及阻斷侵入系統等，使用相關設計及裝置。
+                    4.針對個人資料管理人員，指派和權限的設定及教育，個人資料安全的管理。
+                </p>
+                <p>
+                    <span class="ex_title">九、個人資料管理責任者</span><br>
+                    本診所為聽取使用者的意見和處理使用者之不滿，及為保護使用者的個人資料及處理有關個人資料之爭議，因此特別設置聯絡窗口 - 「個人資料管理責任者」
+                </p>
+                <p>
+                    傳真：02-2655-7890<br>
+                    e-mail： service@eyedoctor.com.tw<br>
+
+                    若您對於本隱私權政策有任何疑問，請與個人資料管理責任者聯絡。
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 隱私權保護政策結束Modal -->
+
+
+
+
+@section scripts
+{
+    <script>
+        /////進入網頁查詢
+        const submit = document.querySelector('#submit')
+        const id = @ViewBag.id
+        if(id!=0)
+        load(id);
+        async function load(id) {
+            const dc = await fetch('@Url.Content("~/doctor/getDocName")' + `?id=${id}`).then(response => response.json());
+            console.log(dc[0])
+            document.getElementById('doc').value = dc[0]
+            submit.click();
+        }
+        /////
+
+
+        let table;
+        var result = false; //是否勾選同意協議
+        //查詢預約
+        $('#submit').click(function loderesult(evt) {
+            evt.preventDefault();
+            $("#example1").empty();
+            const doc = $("#doc").val();
+            const tre = $("#tre").val();
+            const dep = $("#dep").val();
+            const date = $("#date").val();
+            console.log(doc);
+            let count = 0;
+            let result = `<thead>
+                            <tr>
+                                <th class="sorting sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="醫生姓名: activate to sort column descending">醫生姓名</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="治療科別: activate to sort column ascending">治療科別</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="診間: activate to sort column ascending">診間</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="開診日期: activate to sort column ascending">開診日期</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="狀態: activate to sort column ascending">狀態</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label=":動作 activate to sort column ascending"></th>
+                            </tr>
+                        </thead>`;
+
+         
+            //丟入篩選條件 傳回ReserveResult去篩選
+            $.ajax({
+                url: '@Url.Content("~/Reserve/ReserveResult")',
+                type: "post",
+                data: { "doctorname": doc, "departmentname": dep, "treatmentDetailname": tre,"txtdate":date},
+                dataType: "json",
+                success: function (datas) {
+                    $.each(datas, function (index, item) {
+
+
+                        result += `<tbody><tr class="odd"><td class="dtr-control sorting_1" tabindex="0">${item.doctor}</td>`
+                        result += `<td>${item.department}</td>`
+                        result += `<td>${item.roomName}</td>`
+                        result += `<td>${item.clinicdate} ${item.period}</td>`
+                        if (item.online == 0) {
+                            result += `<td>剩餘:${item.sequence_number}位</td>`
+                            result += `<td><button type="button" id="GoReserve" name=${item.clinicDetailid} onclick="GoReserve()" class="btn btn-primary GoReserve" data-bs-toggle="modal" data-bs-target="#exampleModal4">我要預約</button></td></tr></tbody>`
+
+                        }                     
+
+                        count++;
+
+                        if (doc == "選擇醫生") {
+
+                            $("#title").html(`查詢全部 共有${count}筆`); 
+                        }
+                        else
+                        {
+                            $("#title").html(`查詢結果 醫生:${doc} --${date}  共有${count}筆`);
+                        }
+                        
+                    })
+                    result += `<tfoot>
+                                            <tr>
+                                                <th rowspan="1" colspan="1">醫生姓名</th>
+                                                <th rowspan="1" colspan="1">治療科別</th>
+                                                <th rowspan="1" colspan="1">診間</th>
+                                                <th rowspan="1" colspan="1">開診日期</th>
+                                                <th rowspan="1" colspan="1">狀態</th>
+                                                <th rowspan="1" colspan="1"></th>
+                                            </tr>
+                                        </tfoot>`
+
+                    $("#example1").html(result);
+
+
+
+
+                    $(function () {
+                        $("#example1").DataTable({
+                            "responsive": true, "lengthChange": false, "autoWidth": false,
+                            "buttons": ["copy", "excel", "pdf"], "retrieve": true
+                        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+                    });
+                }
+            })
+
+        })
+
+        /*loderesult();*/
+
+        //setInterval($(function () {
+        //    $("#example1").DataTable({
+        //        "responsive": true, "lengthChange": false, "autoWidth": false,
+        //        "buttons": ["copy", "excel",], "retrieve": true
+        //    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+        //}), 1000);
+
+        //按下預約 填入modal
+        function GoReserve() {
+
+            const clinicID = $(event.target).attr("name");
+            let result1 = "";
+             $.ajax({
+                url: '@Url.Content("~/Reserve/GoReserve/")',
+                type: "post",
+                 data: { "clinicDetailid": clinicID},
+                dataType: "json",
+                 success: function (datas)
+                 {
+                     if (datas==null)
+                     {
+
+                         /*沒登入跳轉登入畫面*/
+                         alert("本診所採全會員制~您尚未成為會員  頁面即將跳轉!");
+                         $('#exampleModal').attr("hidden", "hidden");
+                         const back = window.location.href;
+                         console.log(back);
+
+                         window.location.href = `@Url.Content("~/Login/Login/?reserve=reserve")`;
+                     }
+                     console.log(datas);
+                     $.each(datas, function (index, item) {
+                         if (item.memberid > 0)
+                         {
+                             $("#docimage").html(`<img src="/images/${item.picturePath}" alt="user-avatar" class="img-circle img-fluid"><h3 class="lead"><b>醫師:${item.doctor}</b></h3>`)
+                             $("#hiddenID").val(item.clinicDetailid);
+                             $("#hiddenID2").val(7 - item.sequence_number);
+                             result1 += `<h1 class="lead" style="color:red;"><b>順位:${7 - item.sequence_number}</b></h1>`
+                             result1 += `<h2 class="lead"><b>姓名:${item.membername}</b></h2>`
+                             result1 += `<h2 class="lead"><b>信箱: ${item.email}</b></h2>`
+                             result1 += `<h2 class="lead"><b>預約日期:${item.clinicdate}</b></h2>`
+                             result1 += `<h2 class="lead"><b>時段: ${item.period}</b></h2>`
+                             result1 += `<h2 class="lead"><b>科別:${item.department}</b></h2>`
+                             /*result1 += `<h2 class="lead"><b>醫師:${item.doctor}</b></h2>`*/
+                             /*result1 += `<h2 class="lead"><img src="/images/${item.picturePath}" alt="user-avatar" class="img-circle img-fluid"></h2>`*/
+                             result1 += `<h2 class="lead"><b>備註</b></h2><textarea id="Remark_Patient" name="Remark_Patient" rows="5" cols="33"></textarea>`
+                             result1 +=`<div class="form-group">
+                                            <input type="button" value="Demo" class="btn btn-primary" onclick="demo()" />
+                                        </div>`
+                         }
+                         $("#re").html(result1);
+
+                     })
+
+                 }
+
+            })
+        }
+
+        //開始預約
+        $("#startReserve").click(function (evt) {
+            evt.preventDefault();
+
+            if (result == false) {
+                alert("請先同意協議");
+            }
+            else
+            {
+            let clinicID = $("#hiddenID").val();
+            let Remark = $("#Remark_Patient").val();
+            let rank = $("#hiddenID2").val();
+
+            $.ajax({
+                url: '@Url.Content("~/Reserve/CreateReserve/")',
+                type: "post",
+                data: { "clinicDetailid": clinicID, "Remark_Patient": Remark, "rank": rank },
+                dataType: "json",
+            }).done((datas) => {
+                 if (datas==null)
+                     {
+                         /*預約成功 跳轉頁面*/
+                         alert("預約成功  已發送至您的信箱");
+                         window.location.href = '@Url.Content("~/Home/Index")';
+                     }
+
+
+            })
+            }
+
+
+        })
+
+
+        $("#use_Personal_information").click(function ()
+        {
+            console.log(result);
+
+            if (result == false)
+            {
+                $("#informationBox").attr("style", "background:rgb(255, 249, 134)");
+                /*$("#startReserve").removeAttr("disabled")*/
+                result = true;
+            }
+            else
+            {
+                $("#informationBox").attr("style", "background:none");
+                /*//$("#startReserve").attr("disabled", "disabled")*/
+                result = false;
+            }
+
+
+
+            //if ($("#informationBox").attr("style", "background:none"))
+            //    $("#informationBox").attr("style", "background:rgb(255, 249, 134)");
+
+        })
+        function demo() {
+            $("#Remark_Patient").val("我有兩隻眼睛");
+
+
+
+        }
+
+
+
+
+    </script>
+
+
+
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script> @*//套件本體*@
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/plugins/jszip/jszip.min.js"></script>
+    <script src="~/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <!-- AdminLTE App -->
+    @*<script src="~/dist/js/adminlte.min.js"></script>*@
+
+
+
+
+
+
+
+
+
+}

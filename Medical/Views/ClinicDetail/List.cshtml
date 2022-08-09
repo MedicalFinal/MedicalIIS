@@ -1,0 +1,446 @@
+﻿@model IEnumerable<Medical.ViewModel.CClinicDetailViewModel>
+@{
+    ViewData["Title"] = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">即時門診</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+
+
+<div id="room" style="display: flex; /* 水平置中*/ justify-content: center; /* 垂直置中 */ align-items: center; flex-wrap: wrap;">
+    <div class="col-3 wow zoomIn" data-wow-delay="0.5s" style="float: left; border: solid 2px black; margin: 20px; border-radius: 15%; width: 300px; ">
+        <div id="Room501" class="bg-primary d-flex flex-column p-5" style="height: 300px; width: auto; border-radius: 15%">
+            <h2>診間:501</h2>
+            <div class="d-flex justify-content-between text-white mb-3">
+                <h4 class="text-white mb-3">
+                    醫生姓名:
+                </h4>
+                <p class="mb-0">
+
+                </p>
+            </div>
+            <div class="d-flex justify-content-between text-white mb-3">
+                <h4 class="text-white mb-3">
+                    科目:
+                </h4>
+                <p class="mb-0">
+
+                </p>
+            </div>
+            <div class="d-flex justify-content-between text-white mb-3">
+                <h4 class="text-white mb-3">
+                    現在號碼:
+                </h4>
+                <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO">
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-3 wow zoomIn" data-wow-delay="0.5s" style="float: left; border: solid 2px black; margin: 20px; border-radius: 15%; width: 300px; ">
+            <div id="Room502" class="bg-primary d-flex flex-column p-5" style="height: 300px; width: auto; border-radius: 15%">
+                <h2>診間:502</h2>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        醫生姓名:
+                    </h4>
+                    <p class="mb-0">
+
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        科目:
+                    </h4>
+                    <p class="mb-0">
+
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        現在號碼:
+                    </h4>
+                    <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO">
+                    </h1>
+                </div>
+            </div>
+        </div>
+    <div class="col-3 wow zoomIn" data-wow-delay="0.5s" style="float: left; border: solid 2px black; margin: 20px; border-radius: 15%; width: 300px; ">
+            <div id="Room503" class="bg-primary d-flex flex-column p-5" style="height: 300px; width: auto; border-radius: 15%">
+                <h2>診間:503</h2>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        醫生姓名:
+                    </h4>
+                    <p class="mb-0">
+
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        科目:
+                    </h4>
+                    <p class="mb-0">
+
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        現在號碼:
+                    </h4>
+                    <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO">
+                    </h1>
+                </div>
+
+            </div>
+        </div>
+    <div class="col-3 wow zoomIn" data-wow-delay="0.5s" style="float: left; border: solid 2px black; margin: 20px; border-radius: 15%; width: 300px; ">
+            <div id="Room504" class="bg-primary d-flex flex-column p-5" style="height: 300px; width: auto; border-radius: 15%">
+                <h2>診間:504</h2>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        醫生姓名:
+                    </h4>
+                    <p class="mb-0">
+
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        科目:
+                    </h4>
+                    <p class="mb-0">
+
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        現在號碼:
+                    </h4>
+                    <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO">
+                    </h1>
+                </div>
+
+            </div>
+        </div>
+    <div class="col-3 wow zoomIn" data-wow-delay="0.5s" style="float: left; border: solid 2px black; margin: 20px; border-radius: 15%; width: 300px; ">
+            <div id="Room505" class="bg-primary d-flex flex-column p-5" style="height: 300px; width: auto; border-radius: 15%">
+                <h2>診間:505</h2>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        醫生姓名:
+                    </h4>
+                    <p class="mb-0">
+
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        科目:
+                    </h4>
+                    <p class="mb-0">
+
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        現在號碼:
+                    </h4>
+                    <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO">
+                    </h1>
+                </div>
+
+            </div>
+        </div>
+    <div class="col-3 wow zoomIn" data-wow-delay="0.5s" style="float: left; border: solid 2px black; margin: 20px; border-radius: 15%; width: 300px; ">
+            <div id="Room506" class="bg-primary d-flex flex-column p-5" style="height: 300px; width: auto; border-radius: 15%">
+                <h2>診間:506</h2>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        醫生姓名:
+                    </h4>
+                    <p class="mb-0">
+
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        科目:
+                    </h4>
+                    <p class="mb-0">
+
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between text-white mb-3">
+                    <h4 class="text-white mb-3">
+                        現在號碼:
+                    </h4>
+                    <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO">
+                    </h1>
+                </div>
+
+            </div>
+        </div>
+</div>
+
+
+    <div class="card">
+        <div class="card-header border-transparent">
+            <h3 class="card-title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">今日 @ViewBag.Time 診間</font></font></h3>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table m-0">
+                    <thead>
+                        <tr>
+                            <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">診間編號</font></font></th>
+                            <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">看診醫師</font></font></th>
+                            <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">科別</font></font></th>
+                            <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">狀態</font></font></th>
+                            <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">現在號碼</font></font></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            string online = "";
+                            if (item.Online == 0)
+                            {
+                                online = "";
+                            }
+                            else if (item.Online == 1)
+                            {
+                                online = "(已結束)";
+                            }
+                            <tr>
+                                <td>
+                                    <h4  id="@item.Room.RoomName">@item.Room.RoomName</h4>
+                                </td>
+                                <td>
+                                    <img class="img-fluid rounded-top mb-2" src="/images/@item.Doctor.PicturePath" alt="" style="width:100px" />
+                                    @item.Doctor.DoctorName
+                                </td>
+                                <td>@item.Department.DeptName</td>
+                                <td>
+                                    <div class="sparkbar" data-color="#00a65a" data-height="20" name="Period">
+                                        @item.Period.PeriodDetail @online
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="sparkbar" data-color="#00a65a" data-height="20" name="roomNO">@item.Room.Number</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        
+    
+</div>
+
+
+@section scripts
+{
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/call.js"></script>
+    <script>
+
+        $(function () {
+           Loadroom();
+        })
+
+        function Loadroom() {
+            $.get('@Url.Content("~/ClinicDetail/Listjson")', {}, function (datas) {
+                let room501 = "";
+                let room502 = "";
+                let room503 = "";
+                let room504 = "";
+                let room505 = "";
+                let room506 = "";
+
+                $.each(datas, function (index, item) {
+                    if (item.roomName == 501 && item.online == 0)
+                    {
+                        room501 += `        <h2>診間:${item.roomName}</h2>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                醫生姓名:
+                                            </h4>
+                                            <p class="mb-0">
+                                                 ${item.docName}
+                                            </p>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                科目:
+                                            </h4>
+                                            <p class="mb-0">
+                                                ${item.depName}
+                                            </p>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                           <h4 class="text-white mb-3">
+                                               現在號碼:
+                                           </h4>
+                                           <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO">
+                                                ${item.number}
+                                           </h1>
+                                        </div>`
+                        $("#Room501").html(room501);
+                    }
+                    if (item.roomName == 502 && item.online == 0) {
+                        room502 += `        <h2>診間:${item.roomName}</h2>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                醫生姓名:
+                                            </h4>
+                                            <p class="mb-0">
+                                                 ${item.docName}
+                                            </p>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                科目:
+                                            </h4>
+                                            <p class="mb-0">
+                                                ${item.depName}
+                                            </p>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                           <h4 class="text-white mb-3">
+                                               現在號碼:
+                                           </h4>
+                                           <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO"> ${item.number}</h1>
+                                        </div>`
+                        $("#Room502").html(room502);
+                    }
+                    if (item.roomName == 503 && item.online == 0) {
+                        room503 += `        <h2>診間:${item.roomName}</h2>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                醫生姓名:
+                                            </h4>
+                                            <p class="mb-0">
+                                                 ${item.docName}
+                                            </p>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                科目:
+                                            </h4>
+                                            <p class="mb-0">
+                                                ${item.depName}
+                                            </p>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                           <h4 class="text-white mb-3">
+                                               現在號碼:
+                                           </h4>
+                                           <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO"> ${item.number}</h1>
+                                        </div>`
+                        $("#Room503").html(room503);
+                    }
+                    if (item.roomName == 504 && item.online == 0) {
+                        room504 += `        <h2>診間:${item.roomName}</h2>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                醫生姓名:
+                                            </h4>
+                                            <p class="mb-0">
+                                                 ${item.docName}
+                                            </p>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                科目:
+                                            </h4>
+                                            <p class="mb-0">
+                                                ${item.depName}
+                                            </p>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                           <h4 class="text-white mb-3">
+                                               現在號碼:
+                                           </h4>
+                                           <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO"> ${item.number}
+                                           </h1>
+                                        </div>`
+                        $("#Room504").html(room504);
+                    }
+                    if (item.roomName == 505 && item.online == 0) {
+                        room505 += `        <h2>診間:${item.roomName}</h2>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                醫生姓名:
+                                            </h4>
+                                            <p class="mb-0">
+                                                 ${item.docName}
+                                            </p>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                科目:
+                                            </h4>
+                                            <p class="mb-0">
+                                                ${item.depName}
+                                            </p>
+                                        </div>
+
+                                         <div class="d-flex justify-content-between text-white mb-3">
+                                           <h4 class="text-white mb-3">
+                                               現在號碼:
+                                           </h4>
+                                           <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO">
+                                           </h1>
+                                        </div>`
+                        $("#Room505").html(room505);
+                    }
+                    if (item.roomName == 506 && item.online==0) {
+                        room506 += `        <h2>診間:${item.roomName}</h2>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                醫生姓名:
+                                            </h4>
+                                            <p class="mb-0">
+                                                 ${item.docName}
+                                            </p>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                            <h4 class="text-white mb-3">
+                                                科目:
+                                            </h4>
+                                            <p class="mb-0">
+                                                ${item.depName}
+                                            </p>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between text-white mb-3">
+                                           <h4 class="text-white mb-3">
+                                               現在號碼:
+                                           </h4>
+                                           <h1 class="mb-0" style="color:red;font-size:50px" name="roomNO"> ${item.number}
+                                           </h1>
+                                        </div>`
+                        $("#Room506").html(room506);
+                    }
+                })
+            })
+        };
+
+
+
+    </script>
+}

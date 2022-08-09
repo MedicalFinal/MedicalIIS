@@ -1,0 +1,319 @@
+﻿@model IEnumerable<Medical.ViewModel.OrderDetailViewModel>
+@{
+    ViewData["Title"] = "OrderList";
+}
+@section css
+{
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- Theme style -->
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <!--<link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">-->
+}
+
+
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">歷史訂單</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+<hr />
+
+
+
+@*歷史訂單結果顯示*@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">@ViewBag.name 共有 @ViewBag.count 筆訂單紀錄</h3>
+    </div>
+
+    <div class="card-body">
+        <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="example1" class="table table-bordered table-striped" aria-describedby="example1_info">
+                        <thead>
+                            <tr>
+                                <th class="sorting sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="訂單編號: activate to sort column descending">訂單編號</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="訂單日期: activate to sort column ascending">訂單日期</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="付款狀態: activate to sort column ascending">付款狀態</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="訂單狀態: activate to sort column ascending">訂單狀態</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="付款方式: activate to sort column ascending">付款方式</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label=": activate to sort column ascending"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int count = 0;
+                                string sign = "";
+                                string state = "";
+                                foreach (var item in Model)
+                                {
+                                    if (item.Order.IsPaid == true)
+                                    {
+                                        state = "success";
+                                        sign = "已付款";
+                                    }
+                                    if (item.Order.IsPaid == false)
+                                    {
+                                        state = "secondary";
+                                        sign = "未付款";
+                                    }
+                                    count++;
+                                    <tr>
+                                        <td>
+                                            @count
+                                            <input type="hidden" name="@item.Order.OrderId" />
+                                        </td>
+                                        <td>
+                                            @item.Order.OrderDate
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-@state">
+                                                @sign
+                                            </span>
+                                        </td>
+                                        <td>
+
+                                            @item.Orderstate.OrderState1
+
+                                        </td>
+                                        <td>
+                                            @item.Paytype.PayType1
+                                        </td>
+                                        <td>
+                                            <button type="button" id="GoReserve" name="@item.Order.OrderId" onclick="GoDetail()" class="btn btn-primary GoReserve" data-bs-toggle="modal" data-bs-target="#exampleModal">顯示訂單內容</button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th rowspan="1" colspan="1">訂單編號</th>
+                                <th rowspan="1" colspan="1">訂單日期</th>
+                                <th rowspan="1" colspan="1">付款狀態</th>
+                                <th rowspan="1" colspan="1">訂單狀態</th>
+                                <th rowspan="1" colspan="1">付款方式</th>
+                                <th rowspan="1" colspan="1"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*結果顯示*@
+
+
+<!-- 顯示詳細訂單內容Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">訂單內容</font></font></h3>
+                            <div class="card-tools">
+                                <div class="input-group input-group-sm" style="width: 150px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table table-head-fixed text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">產品編號</font></font></th>
+                                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">商品名稱</font></font></th>
+                                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">商品照片</font></font></th>
+                                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">購買日期</font></font></th>
+                                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">數量</font></font></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orderDetail">
+                                    @*//這裡放訂單詳細*@
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="out" type="button" class="btn btn-secondary" data-bs-dismiss="modal">退出</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 顯示新增評論Modal -->
+<div class="modal fade" id="exampleModa2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">新增評論</font></font></h3>
+                            <div class="card-tools">
+                                <div class="input-group input-group-sm" style="width: 150px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <form asp-action="OrderList">
+                                    <input type="hidden" name="ProductId" id="ProductId" value="" />
+                                    @*<input type="hidden" name="MemberId" value="" />*@
+                                    <input type="hidden" name="CreateDate" value="@DateTime.Now" />
+                                    <div class="col-12 col-sm-6">
+                                        <select name="RatingTypeId" value="" id="selectDepartments " class="form-select bg-light border-0" style="height: 55px;">
+                                            <option selected>選擇評分</option>
+                                            <option id="opt1" value="1">1</option>
+                                            <option id="opt2" value="2">2</option>
+                                            <option id="opt3" value="3">3</option>
+                                            <option id="opt3" value="4">4</option>
+                                            <option id="opt3" value="5">5</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="message-text" class="col-form-label">評論</label>
+                                        <textarea name="CommentContent" value="" class="form-control" id="message-text"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="送出評論" class="btn btn-primary" onclick="submit()" />
+                                    </div>
+                                </form>
+
+                            </div>
+                            <div class="form-group">
+                                <input type="button" value="Demo" class="btn btn-primary" onclick="demo()" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="modal-footer">
+                <button id="out" type="button" class="btn btn-secondary" data-bs-dismiss="modal">送出</button>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts
+{
+
+    <script>
+        function GoDetail() {
+            $("#orderDetail").empty();
+            //得到訂單id
+            const detail = $(event.target).attr("name");
+            //console.log(detail);
+            let result = "";
+            let count = 0;
+            $.post('@Url.Content("~/Product/OrderDetailList")', { "detail": detail }, function (datas) {
+                //console.log(datas);
+
+                $.each(datas, function (index, item) {
+                    //console.log(item.productimage);
+                    count++;
+                    result += `<tr><td>${count}</td>`
+                    result += `<td>${item.productname}</td>`
+                    result += `<td><img class="img-fluid rounded-top w-75" src="/images/${item.productimage}"  alt=""/></td>`
+                    result += `<td>${item.orderday}</td>`
+                    result += `<td>${item.quantity}</td>`
+                    result += `<td><button type="button" id="GoDetail" name="${item.productid}" onclick="GoReview()" class="btn btn-primary GoReserve" data-bs-toggle="modal" data-bs-target="#exampleModa2">前往評論</button></td></tr>`
+                })
+
+                $("#orderDetail").html(result);
+
+              })
+        }
+
+        function GoReview()
+        {
+            $("#review").empty();
+            const re = $(event.target).attr("name")
+            $("#ProductId").attr("value", re);            
+        }
+        function demo() {
+            $("#message-text").val("很棒的商品");
+            
+
+
+        }
+
+
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script> @*//套件本體*@
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/plugins/jszip/jszip.min.js"></script>
+    <script src="~/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <!-- AdminLTE App -->
+    @*<script src="~/dist/js/adminlte.min.js"></script>*@
+
+    <script>
+
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false,
+                "buttons": ["copy", "excel", "pdf", "colvis"], "retrieve": true
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+}

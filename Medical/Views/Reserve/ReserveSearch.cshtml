@@ -1,0 +1,191 @@
+﻿@model IEnumerable<Medical.ViewModel.ReservesSearch>
+@{
+    ViewData["Title"] = "ReserveList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section css
+{
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- Theme style -->
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <!--<link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">-->
+
+
+
+
+}
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">預約掛號查詢</h3>
+        </div>
+    </div>
+</div>
+
+
+<!-- Hero End -->
+@*結果顯示*@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">@ViewBag.name</h3>
+        
+    </div>
+
+    <div class="card-body">
+        <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
+ 
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <table id="example1" class="table table-bordered table-striped" aria-describedby="example1_info">
+                        <thead>
+                            <tr>
+                                <th class="sorting sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="預約醫生: activate to sort column descending">預約醫生</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="看診日期: activate to sort column ascending">看診日期</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="看診順序: activate to sort column ascending">看診順序</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="預約備註: activate to sort column ascending">預約備註</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="預約方式: activate to sort column ascending">預約方式</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="預約狀態: activate to sort column ascending">預約狀態</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="動作: activate to sort column ascending">動作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                string sign = "";
+                                string h = "";
+
+                                foreach (var item in Model)
+                                {
+                                    if (item.state == "完成看診")
+                                    {
+
+                                        sign = "success";
+                                        h = "hidden=hidden";
+                                    }
+                                    if (item.state == "取消掛號")
+                                    {
+                                        h = "";
+                                        sign = "secondary";
+                                    }
+                                    if (item.state == "未報到")
+                                    {
+                                        sign = "secondary";
+                                        h = "";
+                                    }
+                                    if (item.state == "掛號成功")
+                                    {
+                                        sign = "success";
+                                        h = "";
+                                    }
+
+
+
+                                    <tr class="odd">
+                                        <td class="dtr-control sorting_1" tabindex="0">
+                                            <img class="img-fluid rounded-top mb-2" src="/images/@item.PicturePath" alt="" style="width:100px" />
+                                            @item.docname
+                                        </td>
+                                        <td>@item.DateTime @item.PeriodDetail</td>
+                                        <td>@item.sequence_number</td>
+                                        <td>@item.Remark_Patient</td>
+                                        <td>線上</td>
+                                        <td><span class="badge bg-@sign">@item.state</span></td>
+                                        <td>
+                                            <div @h>
+                                                @Html.ActionLink("取消預約", "Delete", "Reserve", new { id = item.reserveid }, new { onclick = "return confirm('是否確定取消預約? ')", @class = "btn btn-primary" })
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th rowspan="1" colspan="1">預約醫生</th>
+                                <th rowspan="1" colspan="1">看診日期</th>
+                                <th rowspan="1" colspan="1">看診順序</th>
+                                <th rowspan="1" colspan="1">預約備註</th>
+                                <th rowspan="1" colspan="1">預約方式</th>
+                                <th rowspan="1" colspan="1">預約狀態</th>
+                                <th rowspan="1" colspan="1">動作</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@*結果顯示*@
+
+
+<!-- Modal -->
+@*<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">取消預約</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+            </div>
+            <div class="modal-body">
+                是否取消預約?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">退出</button>
+                <button type="button" class="btn btn-primary">確定取消</button>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+@section Scripts
+{
+
+
+
+
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script> @*//套件本體*@
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/plugins/jszip/jszip.min.js"></script>
+    <script src="~/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <!-- AdminLTE App -->
+    @*<script src="~/dist/js/adminlte.min.js"></script>*@
+
+    <script>
+
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false,
+                "buttons": ["copy", "excel", "pdf", "print", "colvis"], "retrieve": true
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        });
+
+     
+    </script>
+}

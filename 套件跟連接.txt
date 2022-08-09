@@ -1,0 +1,8 @@
+Scaffold-DbContext "Data Source=.;Initial Catalog=Medical;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -f 
+
+
+Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 
+
+Microsoft.EntityFrameworkCore.SqlServer 
+
+Microsoft.EntityFrameworkCore.Tools 

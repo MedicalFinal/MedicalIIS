@@ -1,0 +1,106 @@
+﻿@model IEnumerable<Medical.ViewModel.CRatingDoctorViewModel>
+
+@{
+    ViewData["Title"] = "DoctorRatinglist";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+<h1>醫師評論管理--<strong>@ViewBag.name  醫師</strong></h1>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table m-0">
+                <thead>
+                    <tr>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">評論編號</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">評分</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Html.DisplayNameFor(model => model.Rating)</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">遮蔽狀態</font></font></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int count = 0;
+                        double total = 0;
+                        string shade = "";
+                        string sign = "";
+                        double a = 0;
+                        foreach (var item in Model)
+                        {
+                            count++;
+
+                            if (item.Shade == true)
+                            {
+                                shade = "已遮蔽";
+                                sign = "danger";
+                            }
+                            else if (item.Shade == false || item.Shade == null)
+                            {
+                                shade = "正常評論";
+                                sign = "primary";
+
+                            }
+                            <tr>
+                                <td><a href="pages/examples/invoice.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@count</font></font></a></td>
+                                <td><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Html.DisplayFor(modelItem => item.RatingType.RatingTypeName)</font></font></span></td>
+                                <td>
+                                    <div class="sparkbar" data-color="#00a65a" data-height="20"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Html.DisplayFor(modelItem => item.Rating)</font></font></div>
+                                </td>
+                                <td><span class="badge badge-@sign">@shade</span></td>
+                                <td>
+
+                                    <button type="button" id="buttonLoad" class="btn btn-primary buttonLoad" data-bs-toggle="modal" data-bs-target="#exampleModal" data-docid="@item.RatingDoctorId">
+                                        遮蔽
+                                    </button>
+                                </td>
+                            </tr>
+                            total += Convert.ToDouble(item.RatingType.RatingTypeName);
+                            a = total / count;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">回到上一頁</a>
+</div>
+
+@section Scripts
+{
+    <script>
+
+        $(".buttonLoad").click(function(evt) {
+            evt.preventDefault();
+            var docid = $(event.target).attr("data-docid");
+            var shade = $(event.target).closest("tr").children("td:eq(3)");
+            //var span = $(event.target).closest("tr").children("td:eq(3)").closest("span");
+            
+
+
+            $.post('@Url.Content("~/Admin/AdminDoctor/DoctorRatingEdit")', { "docid": docid }, function (datas) {
+                console.log(datas);
+                if (datas == "已遮蔽") {
+                    shade.html(`<span class="badge badge-danger">${datas}</span>`);                  
+                    //window.location.reload()
+                }
+                if (datas == "正常評論")
+                {
+                    shade.html(`<span class="badge badge-primary">${datas}</span>`);                    
+                    //window.location.reload()
+                }
+
+
+              })
+
+        })
+
+
+
+
+    </script>
+
+
+}

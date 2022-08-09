@@ -1,0 +1,255 @@
+﻿@model Medical.ViewModel.CMemberViewModel
+
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+@*<form action="#" class="form-reset">
+        <input type="email" id="resetEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+        <button class="btn btn-primary btn-block" type="submit">Reset Password</button>
+        <a href="#" id="cancel_reset"><i class="fas fa-angle-left"></i> Back</a>
+    </form>*@
+<div id="logreg-forms">
+    @*id="demo-form" method="POST"給reCAPCHA使用*@
+    <form class="form-signin" asp-action="Register" id="demo-form" method="POST">
+        @*在這邊寫callback，submit時會先驗證required屬性*@
+        <div class="g-recaptcha"
+             @*data-sitekey="6Lfk2AkhAAAAAOtIbeGmRkHUqjne2XfLYmM21Kg3"*@
+             data-size="invisible"
+             data-callback="formSubmit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">會員註冊</h1>
+
+            @*註冊不填太多資料，身分證預設值1*@
+            <div class="form-group" hidden="hidden">
+                <label asp-for="IdentityId" class="control-label"></label>-->
+                <input asp-for="IdentityId" class="form-control mb-2" id="idid" value="1" />
+                <span asp-validation-for="IdentityId" class="text-danger"></span>
+            </div>
+
+            <label asp-for="MemberName" class="control-label"></label>
+            <span asp-validation-for="MemberName" class="text-danger"></span>
+            <input type="text" class="form-control" placeholder="姓名" asp-for="MemberName" id="memName">
+
+            <label asp-for="Email" class="control-label"></label>
+            <span asp-validation-for="Email" class="text-danger" id="accountAlert"></span>
+            <input type="email" class="form-control" placeholder="電子郵件信箱" id="txtEmail" asp-for="Email">
+
+            <label asp-for="Password" class="control-label"></label>
+            <span asp-validation-for="Password" class="text-danger" id="passAlert"></span>
+            <input type="password" class="form-control" placeholder="密碼" asp-for="Password" id="pass">
+            <label class="control-label">密碼確認</label>
+            <input type="password" class="form-control" placeholder="密碼確認" id="passCheck">
+
+            @*<input class="form-control" placeholder="身分證字號" required autofocus="" asp-for="IdentityId" id="idid">
+        <span asp-validation-for="IdentityId" class="text-danger"></span>*@
+
+            @*日期格式type="date" 預設值value="2000-01-01"*@
+            <label asp-for="BirthDay" class="control-label"></label>
+            <input class="form-control" autofocus="" asp-for="BirthDay" type="date" value="2000-01-01" id="bday">
+            <span asp-validation-for="BirthDay" class="text-danger"></span>
+            <label asp-for="GenderId" class="control-label"></label><br />
+            <select asp-for="GenderId" id="genSelect">
+                <option>您的性別</option>
+                @foreach (var item in Model.MemGender)
+                {
+                    <option value="@item.GenderId">@item.Gender1</option>
+                }
+            </select>
+            <br />
+            <label asp-for="Phone" class="control-label"></label>
+            <input asp-for="Phone" class="form-control" id="phone" placeholder="電話號碼" />
+            <div class="form-group" hidden="hidden">
+                @*設定隱藏並給預設身分1後台修改*@
+                <label asp-for="Role" class="control-label"></label>
+                <input asp-for="Role" class="form-control mb-2" value="1" />
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+            <label asp-for="CityId" class="control-label"></label><br />
+            <select asp-for="CityId" id="citySelect">
+                <option>居住縣市</option>
+                @foreach (var item in Model.MemCity)
+                {
+                    <option value="@item.CityId">@item.CityName</option>
+                }
+            </select>
+            <br />
+            <label asp-for="Address" class="control-label"></label>
+            <input asp-for="Address" class="form-control" id="address" placeholder="地址" />
+
+            <div class="input-group">
+                @*用 onclick="verification(); return false;"來阻止繼續進行*@
+                <button class="btn btn-md btn-block submit" type="submit" id="submitbutton" onclick="verification(); return false;">
+                    <i class="fas fa-user-plus"></i> 註冊
+                </button>
+            </div>
+            <br />
+            <input type="button" value="帳號重複Demo" class="btn btn-primary btn-block" id="regiDemo1" />
+            <input type="button" value="RegisterDemo" class="btn btn-primary btn-block" id="regiDemo2" />
+        </div>
+    </form>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("#regiDemo1").click(() => {
+            $("#txtEmail").val("asd@gmail.com");
+            $("#pass").val("abcd1234")
+            $("#passCheck").val("abcd1234")
+
+            $("#idid").val("LC23426789")
+            $("#phone").val("0900717717")
+            $("#memName").val("李小美")
+            $('#bday').val("2005-07-17");
+            $("#address").val("")
+            //====================自動跳出下拉選單!!!   
+            $('#citySelect').val("1");
+            $('#genSelect').val("2");
+            $("#txtEmail").blur();
+            $("#passCheck").blur();
+        })
+
+        $("#regiDemo2").click(() => {
+            $("#txtEmail").val("giraffegod@gmail.com");
+            $("#pass").val("abcde12345")
+            $("#passCheck").val("abcde12345")
+
+            $("#idid").val("A123456789")
+            $("#memName").val("陳小名")
+            $("#phone").val("0900999999")
+            $("#address").val("新店區中正路1號1樓")
+
+            //====================自動跳出下拉選單!!!
+            $('#citySelect').val("2");
+            $('#genSelect').val("1");
+            //生日值顯示
+            $('#bday').val("2012-02-06");
+            $("#txtEmail").blur();
+            $("#passCheck").blur();
+        })
+
+
+        $("#txtEmail").blur(function () {
+            const str = $(this).val();
+            $.ajax({
+                url: "/Login/AccountCheck?account=" + str,
+                method: "GET",
+                success: function (data) {
+                    if (data == "true") {
+                        $("#accountAlert").text("帳號可使用");
+                    }
+                    else if (data == "used") {
+                        $("#accountAlert").text("此帳號已被使用");
+                    }
+                    else if (data == "false") {
+                        $("#accountAlert").text("請輸入帳號");
+                    }
+                    /*把span擺在label後面靠右顯示，省一行*/
+                    $("#accountAlert").css("float", "right");
+                },
+                error: function (msg) {
+                    alert('error：' + msg.toLabel);
+                }
+            })
+        })
+
+        $("#passCheck").blur(function () {
+            const str = $(this).val();
+            const pass = $("#pass").val();
+            if (str != pass) {
+                $("#passAlert").text("輸入錯誤，請重新輸入");
+                /*把span擺在label後面靠右顯示，省一行*/
+                $("#passAlert").css("float", "right");
+                //$("#regBtn").removeProp("data-callback")
+            }
+            else
+                $("#passAlert").text("");
+            //$("#regBtn").prop("data-callback", "onSubmit")
+        })
+        $("#pass").blur(function () {
+            const str = $("#pass").val();
+            const pass = $("#passCheck").val();
+            if (str != pass) {
+                $("#passAlert").text("輸入錯誤，請重新輸入");
+                /*把span擺在label後面靠右顯示，省一行*/
+                $("#passAlert").css("float", "right");
+                //$("#regBtn").removeProp("data-callback")
+            }
+            else
+                $("#passAlert").text("");
+            //$("#regBtn").prop("data-callback", "onSubmit")
+        })
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lfk2AkhAAAAAOtIbeGmRkHUqjne2XfLYmM21Kg3"></script>
+    <script>
+        //function onSubmit(token) {
+        //    document.getElementById("demo-form").submit();
+        //}
+        function verification() {
+            //Write verification
+            const pwstr = $("#pass").val();
+            const passcheckstr = $("#passCheck").val();
+
+            let flag = false;
+                const str = $("#txtEmail").val();
+                $.ajax({
+                    url: "/Login/AccountCheck?account=" + str,
+                    method: "GET",
+                    success: function (data) {
+                        if (data == "true") {
+
+                            $("#accountAlert").text("帳號可使用");
+                            checkpwFunction();
+                        }
+                        else if (data == "used") {
+                            $("#accountAlert").text("此帳號已被使用");
+                        }
+                        else if(data=="false"){
+                            $("#accountAlert").text("請輸入帳號");
+                        }
+                        /*把span擺在label後面靠右顯示，省一行*/
+                        $("#accountAlert").css("float", "right");
+                    },
+                    error: function (msg) {
+                        alert('error：' + msg.toLabel);
+                    }
+                })
+           function checkpwFunction(){
+            if (pwstr == passcheckstr && passcheckstr !== "") {
+                        console.log("驗證通過");
+                        //window.event.returnValue = true; 或是 return true都沒用 乾脆把屬性拔掉
+                        $("#submitbutton").removeAttr("onclick");
+                        $("#submitbutton").click();   //直接觸發click事件
+                    }
+            else if (pwstr != passcheckstr) {
+                        console.log("驗證不通過");
+                $("#passAlert").text("輸入錯誤，請重新輸入");
+                        window.event.returnValue = false;  //應該也沒用，主要依靠onclick="verification(); return false;
+                    }
+                    else {
+                        console.log("驗證大便");
+                $("#passAlert").text("輸入錯誤，請重新輸入");
+                        window.event.returnValue = false;
+                    }
+                }
+            }
+
+    </script>
+    <script>
+
+
+        function formSubmit(response) {
+            // submit the form which now includes a g-recaptcha-response input
+        }
+    </script>
+}
+

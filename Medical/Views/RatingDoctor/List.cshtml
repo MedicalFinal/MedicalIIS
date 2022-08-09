@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Medical.ViewModels.RatingDoctoeViewModel>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">評論修改</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+<br>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                序
+            </th>
+            <th>
+                醫生
+            </th>
+            <th>
+                評分分數
+            </th>
+            <th>
+                評語
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Doctor.DoctorName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RatingTypeId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rating)
+                    </td>
+                    <td>
+                        @Html.ActionLink("修改", "Edit", new { id = item.ratingDoctor.RatingDoctorId }) |
+                        @Html.ActionLink("刪除", "Delete", "RatingDoctor", new { id = item.ratingDoctor.RatingDoctorId },
+                                new { onclick = "return confirm('確定要刪除嗎 ? ')" })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

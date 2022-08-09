@@ -1,0 +1,204 @@
+﻿@section css{
+    <style>
+        .topDialogue{
+            max-width:500px;
+        }
+        .dialogue {
+            width: 100%;
+            height: 600px;
+            padding: 20px;
+            box-shadow: 0 0 10px #000;
+            background-color: #E0DFC0;
+            border-radius: 20px;
+            overflow: auto;
+        }
+
+        .dialogue img {
+            max-width: 100%;
+        }
+
+        .user {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .user .avatar {
+            width: 60px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .user .pic {
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .user .pic .img {
+            width: 100%;
+            vertical-align: middle;
+        }
+
+        .user .name {
+            color: #333;
+        }
+
+        .user .text {
+            background-color: #aaa;
+            padding: 16px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .remote .text {
+            margin-left: 20px;
+            margin-right: 80px;
+            color: #eee;
+            background-color: #4179f1;
+        }
+
+        .remote .text &::before {
+            border-right: 10px solid #4179f1;
+            left: -10px;
+        }
+
+        .local {
+            justify-content: flex-end;
+        }
+
+        .local .text {
+            margin-right: 20px;
+            margin-left: 80px;
+            order: -1;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .local .text &::before {
+            border-left: 10px solid #fff;
+            right: -10px;
+        }
+        /*.inputText{
+            position:absolute;
+            bottom:0px;
+        }*/
+    </style>
+}
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">推薦機器人</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+<br>
+<button onclick="show()">呼叫機器人</button>
+<div class="topDialogue">
+    <div class="dialogue">
+        <div class="user remote">
+            <div class="avatar">
+                <div class="pic">
+                    <img src="https://picsum.photos/100/100?random=12" />
+                </div>
+                <div class="name">漢克斯</div>
+            </div>
+            <div class="text">
+                您好，需要甚麼幫忙嗎？
+            </div>
+        </div>
+        <div class="user remote">
+            <div class="avatar">
+                <div class="pic">
+                    <img src="https://picsum.photos/100/100?random=12" />
+                </div>
+                <div class="name">漢克斯</div>
+            </div>
+            <div class="text">
+                <input type="button" value="我要掛號" onclick="Register()">
+                <input type="button" value="交通指引" onclick="Register()">
+                <input type="button" value="衛教健保" onclick="Register()">
+                <input type="button" value="該掛哪科" onclick="Register()">
+            </div>
+        </div>
+        @*<div class="user local">
+                <div class="avatar">
+                    <div class="pic">
+                        <img src="https://picsum.photos/100/100?random=16" />
+                    </div>
+                    <div class="name">Me</div>
+                </div>
+                <div class="text">這是我的對話文字</div>
+            </div>*@
+    </div>
+    <div class="inputText">
+        <input id="txtBox" type="text" value="" />
+        <input type="button" value="輸入" onclick="Insert()" />
+        <input type="button" value="不知道問甚麼" onclick="QuestionButton()" />
+    </div>
+</div>
+@section Scripts{
+    <script>
+
+
+        function Register() {
+            txt = $(event.target).attr("value")
+            GetA(txt);
+        }
+        function Insert() {
+            txt = document.getElementById('txtBox').value
+            GetA(txt);
+        }
+        function QuestionButton() {
+            Remotetext = `
+                <div class="user remote">
+                    <div class="avatar">
+                        <div class="pic">
+                            <img src="https://picsum.photos/100/100?random=12" />
+                        </div>
+                    <div class="name">漢克斯</div>
+                </div>
+                <div class="text">
+                    <input type="button" value="我要掛號" onclick="Register()">
+                    <input type="button" value="交通指引" onclick="Register()">
+                    <input type="button" value="衛教健保" onclick="Register()">
+                    <input type="button" value="該掛哪科" onclick="Register()">
+                </div>`
+            document.querySelector(".dialogue").innerHTML += Remotetext;
+        }
+        async function GetA(txt) {
+            if (txt != "") {
+                const Aws = await fetch('@Url.Content("~/doctor/GetAnswer")' + `?Qs=${txt}`).then(response => response.json())
+                console.log(Aws.answer)
+                Usertext = `<div class="user local">
+                            <div class="avatar">
+                                <div class="pic">
+                                    <img src="https://picsum.photos/100/100?random=16" />
+                                </div>
+                            <div class="name">Me</div>
+                            </div>
+                            <div class="text">${txt} </div>
+                        </div>`;
+                Remotetext = `
+                <div class="user remote">
+                    <div class="avatar">
+                        <div class="pic">
+                            <img src="https://picsum.photos/100/100?random=12" />
+                        </div>
+                    <div class="name">漢斯機器人</div>
+                </div>
+                <div class="text">
+                    ${Aws.answer}
+                </div>
+        </div>`
+
+                document.querySelector(".dialogue").innerHTML += Usertext;
+                document.querySelector(".dialogue").innerHTML += Remotetext;
+            }
+            else {
+                alert("請輸入文字");
+            }
+        }
+    </script>
+}

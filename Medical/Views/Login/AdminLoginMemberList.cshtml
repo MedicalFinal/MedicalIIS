@@ -1,0 +1,134 @@
+﻿@model IEnumerable<Medical.Models.Member>
+
+@{
+    ViewData["Title"] = "AdminLoginMemberList";
+}
+
+<h1>會員資料管理頁面</h1>
+
+<p>
+    <a asp-action="Create">新增會員</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                序號
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdentityId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BirthDay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GenderId)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.BloodType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Weight)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.IcCardNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.OdRight)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OsLeft)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CityId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            @foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdentityId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Password)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MemberName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BirthDay)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GenderId)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.BloodType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Weight)
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IcCardNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.OdRight)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OsLeft)
+                        </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Role)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CityId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.ActionLink("", "Edit", "Login", new { id = item.MemberId }, new { Class="fas fa-edit" })  
+                        @Html.ActionLink("", "Delete", "Login", new { id = item.MemberId }, new { onclick = "return confirm('確定要刪除資料嗎?')", Class="fas fa-trash" })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<br />
+<br />
+<br />
+<br />
+<br />

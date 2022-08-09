@@ -1,0 +1,157 @@
+﻿.upDialogue {
+    position: fixed;
+    bottom: -100%;
+    right: 200px;
+    z-index: 999;
+}
+
+.topDialogue {
+    max-width: 500px;
+    padding: 20px 0px 0px;
+    box-shadow: 0 0 10px #000;
+    background-color: #d4e6ed;
+    border-radius: 20px;
+}
+
+.dialogue {
+    width: 100%;
+    height: 600px;
+    overflow: auto;
+    padding: 0 20px 0 20px;
+}
+
+    .dialogue img {
+        max-width: 100%;
+    }
+
+.user {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+    .user .avatar {
+        width: 60px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .user .pic {
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+        .user .pic .img {
+            width: 100%;
+            vertical-align: middle;
+        }
+
+    .user .name {
+        color: #333;
+    }
+
+    .user .text {
+        background-color: #aaa;
+        padding: 16px;
+        border-radius: 10px;
+        position: relative;
+    }
+
+.remote .text {
+    margin-left: 20px;
+    margin-right: 20px;
+    color: #eee;
+    background-color: #06a3da;
+}
+
+    .remote .text &::before {
+        border-right: 10px solid #4179f1;
+        left: -10px;
+    }
+
+.local {
+    justify-content: flex-end;
+}
+
+    .local .text {
+        margin-right: 20px;
+        margin-left: 80px;
+        order: -1;
+        background-color: #fff;
+        color: #333;
+    }
+
+        .local .text &::before {
+            border-left: 10px solid #fff;
+            right: -10px;
+        }
+
+.message_btn {
+    position: fixed;
+    top: 40%;
+    right: 10px;
+    z-index: 2;
+    border-radius: 50%;
+    height: 106px;
+    padding: 12px;
+    box-shadow: 0 0 10px #0000002b;
+}
+
+    .message_btn span {
+        display: block;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+.inputText {
+    background-color: #8ebcff;
+    padding: 15px;
+    box-shadow: 0 0 2px #000;
+    border-radius: 0px 0px 20px 20px;
+    width: 100%;
+}
+
+.user a {
+    color: #ffffff;
+}
+
+#txtBox {
+    height: 38px;
+}
+
+.text .btn {
+    background-color: #ffffff;
+    color: #f08300;
+}
+
+.text .dep {
+    color: #b9ab47;
+}
+
+.text .doc {
+    color: #255bbd;
+}
+
+.trt {
+    color: #52dd96;
+}
+
+.text .reserve {
+    color: #9b609f;
+}
+
+.shopping {
+    background-color: #df8686;
+}
+
+.login {
+    background-color: #da9e06;
+}
+
+.reservelink {
+    background-color: #00d1c3;
+}
+
+.teach {
+    background-color: #8406da;
+}

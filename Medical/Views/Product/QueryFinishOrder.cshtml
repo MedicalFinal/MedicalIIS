@@ -1,0 +1,105 @@
+﻿@model Medical.ViewModel.COrderforShowViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid" style="margin: auto; margin-bottom: 30px;">
+
+    <ul class="breadcrumb" style="background-color: white; font-size: 16px; margin-top: 30px;">
+        <li class="breadcrumb-item"><a href="">首頁</a></li>
+        <li class="breadcrumb-item"><a href="~/Product/ProductList">產品列表</a></li>
+        <li class="breadcrumb-item"><a href="~/Product/CartViewList">我的購物車</a></li>
+        <li class="breadcrumb-item"><a href="~/Product/QueryOrder">我的訂單</a></li>
+    </ul>
+
+    <div>
+        <div style=" display: flex;justify-content: space-around; width: 100%; margin: auto;height: 3em;">
+            <a href="/Product/QueryNotFinishOrder" class="btn btn-dark" style=" width: 50%; height: 100%; border-radius: 0%; margin-right: 1px; font-size: 22px;">待收貨</a>
+            <a href="/Product/QueryFinishOrder" class="btn btn-primary" style=" width: 50%; height: 100%; border-radius: 0%; margin-right: 1px; font-size: 22px;">已完成訂單</a>
+        </div>
+
+        <br>
+
+        @foreach (var item in Model.orderList)
+        {
+
+            <div class="card mt-3" style="width: 100%;">
+                <div class="card-header">訂單編號-@item.OrderId</div>
+                <div class="card-body">
+                    <hr>
+                    <table style="width: 100%; text-align: center;">
+                        <tr>
+                            <th>圖示</th>
+                            <th>產品名稱</th>
+                            <th>數量</th>
+                            <th>單價</th>
+                            <th>總價</th>
+                            <th></th>
+                        </tr>
+
+                        @{ int total = 0;
+                            foreach (var item2 in item.OrderDetails)
+                            {
+                                int qty = @item2.Quantity;
+                                int price = @item2.Product.ProductSpecifications.FirstOrDefault().UnitPrice;
+                                total += qty * price;
+                                <tr>
+                                    <td>
+                                        <img src="~/images/@item2.Product.ProductSpecifications.FirstOrDefault().ProductImage" height="140" width="160" alt="">
+                                    </td>
+                                    <td>@item2.Product.ProductName </td>
+                                    <td>@item2.Quantity</td>
+                                    <td>@item2.Product.ProductSpecifications.FirstOrDefault().UnitPrice</td>
+                                    <td>@((qty*price).ToString("C0"))</td>
+                                    <td> <a class="btn btn-warning" style="color: gray;font-weight: bold;" href="~/Product/ProductDetail?ProductName=@item2.Product.ProductName">給評價</a></td>
+
+                                </tr>
+
+
+
+                            }
+
+                        }
+                    </table>
+                </div>
+
+                <div class="card-footer" style="width: 100%;height: 8em;">
+                    <div style="height: 50%;width:100%;">
+                        <div style="display: flex;justify-content: space-between;">
+                            <p class="mt-2" style="margin-left: 10px;">
+                                訂單成立時間:<br>
+                                <span style="color:red">@item.OrderDate</span>
+                            </p>
+                            <p class="mt-3" style="margin-right : 1em;">
+                                <span>訂單總金額:</span> <span style="font-size: large;color: red;">@total.ToString("C0")</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div style="height: 50%;width:100%;">
+                        <div style="display: flex;justify-content: end;align-items: center;height: 100%;width: 100%;">
+                            <a class="btn btn-secondary" style="margin-right: 8px;width: 12em;" href="~/Product/productList">再次購買</a>
+                            <a class="btn btn-secondary" style="margin-right: 8px;width: 9em;">聯絡客服</a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <br />
+
+
+        }
+
+    </div>
+
+    <div class="text-end">
+        <button class="btn btn-info mt-4" style="color:white;width: 8em;">返回商城</button>
+    </div>
+</div>
+
+@section css{
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+}
+
+

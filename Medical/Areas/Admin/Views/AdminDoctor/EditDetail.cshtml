@@ -1,0 +1,106 @@
+﻿@model Medical.ViewModels.CDoctorDetailViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@{
+    ViewData["Title"] = "EditDetail";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+<h1>修改詳細資料</h1>
+
+<h4></h4>
+<hr />
+@using (Html.BeginForm("EditDetail", "AdminDoctor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="EditDetail">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" name="DoctorID" value="@Model.DoctorID">
+                    <input type="hidden" name="MemberID" value="@Model.MemberID">
+                    <input type="hidden" name="DepartmentID" value="@Model.DepartmentID">
+                    <input type="hidden" name="ExperienceID" value="@Model.ExperienceID">
+                    <div class="form-group">
+                        <label asp-for="DoctorName" class="control-label"></label>
+                        <input asp-for="DoctorName" class="form-control" id="dcN" />
+                        <span asp-validation-for="DoctorName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Education" class="control-label"></label>
+                        <input asp-for="Education" class="form-control" id="edu" />
+                        <span asp-validation-for="Education" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="JobTitle" class="control-label"></label>
+                        <input asp-for="JobTitle" class="form-control" id="job" />
+                        <span asp-validation-for="JobTitle" class="text-danger"></span>
+                    </div>
+                    <img width="100" height="100" src="~/images/@Html.DisplayFor(modelItem => Model.PicturePath)" id="showImg" />
+                    <div class="form-group">
+                        @Html.Label("產品照片", "", new { @class = "control-label col-md-2" })
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="file" name="photo" id="pho"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Experience" class="control-label"></label>
+                        <input asp-for="Experience" class="form-control" id="exp" />
+                        <span asp-validation-for="Experience" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DepName" class="control-label"></label>
+                        @*<input id="DepName" hidden="hidden" type="text" name="DepName" value="DepName" />*@
+                        <select id="selDep" onchange="selVal(this)">
+                            <option value="asd">請選擇科別</option>
+                        </select>
+                        <input asp-for="DepName" class="form-control" id="dpn" />
+                        <span asp-validation-for="DepName" class="text-danger"></span>
+                    </div>
+                
+                    <div class="form-group">
+                        <input type="submit" value="儲存" class="btn btn-primary" onclick="return confirm('確定修改?')" />
+                        <a href="/Admin/AdminDoctor" class="btn btn-secondary">返回</a>
+                        <input type="button" id="btnDmo" class="btn btn-info" value="D鍵" />
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+    getDep()
+        $('#btnDmo').click(() => {
+            document.getElementById("dcN").value = "高壹陞";
+            document.getElementById("edu").value = "博士";
+            document.getElementById("job").value = "台北諾貝爾眼科 副院長";
+            document.getElementById("exp").value = "臺大醫院眼科主治醫生";
+            document.getElementById("dpn").value = "青光眼科";
+            document.getElementById("dcn").value = "眼科";
+        })
+        $('#pho').change(() => {
+
+            var file = $('#pho')[0].files[0];
+            var reader = new FileReader;
+            reader.onload = function (e) {
+                $('#showImg').attr('src',e.target.result);
+            };
+            reader.readAsDataURL(file);
+        })
+        const setdep = document.getElementById("dpn")
+        const seldep = document.getElementById("selDep")
+        function selVal(sel) {
+            console.log(sel.options[sel.selectedIndex].text)
+            setdep.setAttribute('value', sel.options[sel.selectedIndex].text)
+            console.log(setdep.value)
+        }
+        async function getDep() {
+        obj = document.getElementById("selDep")
+        const deps = await fetch('@Url.Content("~/Admin/AdminDoctor/Dep")').then(response => response.json())
+        deps.forEach((DeptName) => {
+            obj.options.add(new Option(DeptName,DeptName))
+        })
+    }
+</script>
+}

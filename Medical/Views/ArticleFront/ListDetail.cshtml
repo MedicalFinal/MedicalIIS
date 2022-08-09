@@ -1,0 +1,36 @@
+﻿@model Medical.Models.Article
+
+@{
+    ViewData["Title"] = "ListDetail";
+}
+
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">@Model.Articeltitle</h3>
+            <div class="breadcrumb__option reveal_t1" style=" margin-top: 40px">
+                <a style="color:white">發佈日期 : @Model.CreateDate</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="blog__details__text">
+            <input type="hidden" value="@Model.ArticleId" name="No" />
+            @*<img src="~/uploads/@Model.NewsPicturePath" alt="">*@
+            <h4 style="margin-block:20px;display:inline"><i class="nav-check"></i>@Model.Articeltitle</h4>
+            <i style="display:block;text-align:right;font-size:15px">發表醫生 : @Model.Doctor.DoctorName</i>
+            <i style="display:block;text-align:right;font-size:15px;margin-block:5px">發佈日期 : @Model.CreateDate</i>
+            <p>
+                @Html.Raw(@Model.ArticleContent)
+            </p>
+        </div>
+        <div class="card-body" style=" margin-top: 40px;display:inline;text-align:right">
+            <a href="~/ArticleFront/List" class="btn btn-outline-primary" style="border-radius: 15px; font-size: 24px; font-weight: bold; float:right; text-align: right;">返回文章</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,124 @@
+﻿@model Medical.ViewModel.CMemberViewModel
+
+@{
+    ViewData["Title"] = "AdminLoginMemberList";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+<h1>管理員新增頁面</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AdminCreate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" id="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MemberName" class="control-label"></label>
+                <input asp-for="MemberName" class="form-control" id="memName" />
+                <span asp-validation-for="MemberName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdentityId" class="control-label"></label>
+                <input asp-for="IdentityId" class="form-control" id="idid" />
+                <span asp-validation-for="IdentityId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" id="pass" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BirthDay" class="control-label"></label>
+                <input asp-for="BirthDay" class="form-control" type="date" value="2000-01-01" id="bday"/>
+                <span asp-validation-for="BirthDay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GenderId" class="control-label"></label>
+                <br />
+                <select asp-for="GenderId" id="genSelect">
+                    <option>性別</option>
+                    @foreach (var item in Model.MemGender)
+                    {
+                        <option value="@item.GenderId">@item.Gender1</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" id="phone" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+            <label asp-for="Role" class="control-label"></label>
+            <input asp-for="Role" class="form-control" />
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>*@
+            <div class="form-group">
+                <label asp-for="Role" class="control-label"></label>
+                <br />
+                <select asp-for="Role" id="roleSelect">
+                    <option>權限</option>
+                    @foreach (var item in Model.roleTypes)
+                    {
+                        <option value="@item.Role">@item.RoleName</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CityId" class="control-label"></label>
+                <br />
+                <select asp-for="CityId" id="citySelect">
+                    <option>縣市</option>
+                    @foreach (var item in Model.MemCity)
+                    {
+                        <option value="@item.CityId">@item.CityName</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" id="address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="新增會員" class="btn btn-primary" />
+            </div>
+            <div class="form-group">
+                <input type="button" value="新增會員Demo" class="btn btn-primary mb-2" id="regiDemo" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("#regiDemo").click(() => {
+            $("#email").val("ming14199@gmail.com");
+            $("#pass").val("abcd1234")
+            $("#idid").val("A123456777")
+            $("#memName").val("陳小白")
+            $("#phone").val("0911333999")
+            $("#address").val("台北市信義區市府路1號")
+            //====================自動跳出下拉選單!!!
+            $('#citySelect').val("2");
+            $('#genSelect').val("1");
+            $('#roleSelect').val("3");
+            $('#bday').val("1999-09-09");
+            $("#email").blur();
+            $("#pass").blur();
+            $("#idid").blur();
+            $("#memName").blur();
+
+        })
+    </script>
+
+}

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Medical.Models.ProductBrand>
+
+@{
+    ViewData["Title"] = "test001";
+}
+
+<h1>test001</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrandId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrandName)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+    <div class="container">
+        <span>test</span>
+        <form action="" method="post">
+            @foreach (var item in Model)
+            {
+
+                <input type="checkbox" name="pbID[]" value="@item.ProductBrandId" />@item.ProductBrandName
+
+            } 
+            <input type="submit" name="name" value="送出" />
+        </form>
+       
+    </div>  
+

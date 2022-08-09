@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Medical.Models.Doctor>
+@{
+    ViewData["Title"] = "IndexTest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>IndexTest</h1>
+@using (Html.BeginForm())
+{
+    @:關鍵字 @Html.TextBox("txtKeyword")
+    <input type="submit" value="查詢" />
+}@{ int count = 0;
+    foreach (var item in Model)
+    {
+        count++;
+        <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s">
+            <div class="team-item">
+                <div class="team-text position-relative bg-light text-center rounded-bottom p-4 pt-5">
+                    <h4 class="mb-2">@Html.DisplayFor(modelItem => item.DoctorName)</h4>
+                    <p class="text-primary mb-0">醫生</p>
+                </div>
+                <div class="position-relative rounded-top  container" style="z-index: 1;">
+                    <img id="img" class="img-fluid rounded-top w-100" src="~/img/@Html.DisplayFor(modelItem => item.PicturePath)" style="width:640px;height:480px;">
+                    <div class="container">
+                        <p class="title">@Html.DisplayFor(modelItem => item.JobTitle)</p>
+                        <p> @Html.DisplayFor(modelItem => item.Education).</p>
+                    </div>
+                    @*<div class="position-absolute top-100 start-50 translate-middle bg-light rounded p-2 d-flex">
+                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-twitter fw-normal"></i></a>
+                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
+                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-linkedin-in fw-normal"></i></a>
+                <a class="btn btn-primary btn-square m-1" href="#"><i class="fab fa-instagram fw-normal"></i></a>
+            </div>*@
+                </div>
+
+            </div>
+        </div>
+    }
+}
+@section Scripts{
+    <script>
+    </script>
+}

@@ -1,0 +1,60 @@
+﻿@model Medical.ViewModels.CDoctorDetailViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+
+<h1>醫生詳細資料</h1>
+
+<div>
+    <h4>CDoctorDetailViewModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PicturePath)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="~/images/@Html.DisplayFor(model => model.PicturePath)" width="200" height="200" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DoctorName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DoctorName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.JobTitle)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.JobTitle)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Education)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Education)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Experience)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Experience)
+        </dd>
+        
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DepName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DepName)
+        </dd>
+
+
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("修改資料", "EditDetail", new { id = Model.DoctorID }) |
+    @Html.ActionLink("醫師評論", "RatingDoctor", new { id = Model.DoctorID }) |
+    @Html.ActionLink("回到醫師主頁", "Index", new { id = Model.DoctorID }) @*導入RatingDoctor*@
+</div>

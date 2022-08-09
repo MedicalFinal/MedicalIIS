@@ -1,0 +1,356 @@
+﻿@model IEnumerable<Medical.ViewModel.CReserveViewModel>
+
+@{
+    ViewData["Title"] = "WorkSpace";
+    Layout = "~/Areas/Doctors/Doctor_Layout.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">門診名單</h3>
+
+                            <div class="card-tools">
+                                <div class="input-group input-group-sm" style="width: 150px;">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0 " style="height: 500px;">
+
+                            <table id="tbPatient" class="table table-head-fixed text-nowrap">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int count = 0;
+                                        foreach (var item in Model)
+                                        {
+                                            count++;
+                                            <tr>
+                                                <td id=@item.SequenceNumber>
+                                                    @Html.DisplayFor(modelItem => item.SequenceNumber)
+                                                </td>
+                                                <td>
+                                                    @Html.HiddenFor(modelItem => item.Member.MemberId)
+                                                    @Html.DisplayFor(modelItem => item.Member.MemberName)
+                                                </td>
+                                                <td>
+                                                    @{
+                                                        DateTime now = DateTime.Now;
+                                                        DateTime btDay = item.Member.BirthDay.Value;
+                                                        int month = btDay.Month;
+                                                        int day = btDay.Day;
+                                                        int age = now.Year - btDay.Year;
+                                                        if (now.Month < month || (now.Month == month && now.Day < day))
+                                                        {
+                                                            age--;
+
+                                                        }
+                                                    }
+                                                    <a>@age 歲</a>
+
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" style="float:right">
+                                                        <button type="button" class="btn btn-info">
+                                                            候診中
+                                                        </button>
+                                                        <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                                                            <span class="sr-only">
+                                                                切換下拉
+                                                            </span>
+                                                        </button>
+                                                        <div class="dropdown-menu" role="menu" style="">
+                                                            <a class="dropdown-item">
+                                                                過號候補
+                                                            </a>
+                                                        </div>
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <!-- /.card-body -->
+                    </div>
+                    <div>
+                        <input type="button" class="btn btn-block btn-info btn-lg" id="nextNum" value="開始看診" />
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">看診</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">病患病歷紀錄</a>
+
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body" style="height: 500px;">
+                    <div class="tab-content" id="custom-tabs-four-tabContent">
+                        <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
+                            <textarea id="inputMessage" class="form-control" rows="18"></textarea>
+                        </div>
+                        <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
+                            @*<partial name="_PartialCaseRecord"/>*@
+                        </div>
+                        <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- /.card -->
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <button id="btnNotCome" type="button" class="btn btn-block btn-outline-secondary btn-lg">未報到</button>
+                    </div>
+                    <div class="col">
+                        <button id="btnDemo" type="button" class="btn btn-block btn-outline-info btn-lg">Demo</button>
+                    </div>
+                    <div class="col">
+                        <button id="btSave" type="button" class="btn btn-block bg-gradient-primary btn-lg">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<span class="badge badge-light" id="ClinicDetailId" hidden="hidden">@TempData["ClinicDetailId"]</span>
+
+@section Scripts{
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/call.js"></script>
+    <script>
+        var client = new signalR.HubConnectionBuilder().withUrl("/callHub").build();
+
+        var now = 0, pre = -1, finish = 0, pass = 0, waiting = 0;
+        let ResrveID = $('#ReserveId').value, trAll = $('#tbPatient').find('tr'), max = trAll.length;
+
+
+        //進入後載入病患歷史紀錄
+        $(function () {
+            loadPatientDetial();
+            client.start();
+            $('#btSave').addClass("disabled");
+            $('textarea#inputMessage').attr("disabled", "disabled");
+        })
+
+        //叫號
+        $('#nextNum').click(function () {
+
+            if (!$.trim($("textarea#inputMessage").val()) && now > 0)
+            {
+                Swal.fire('尚未輸入診斷紀錄')
+                now++; pre++;
+            }
+            else
+            {
+                if ($.trim($("textarea#inputMessage").val()) != null)
+                {
+                    if (now < max)
+                    {
+                        let target = pre - 1;
+                        let patientId = $('#tbPatient').children().children().eq(target).children().eq(1).children().val();
+                        $('#nextNum').attr({ "value": "叫號" });
+                        $('#btSave').removeClass("disabled");
+                        $('textarea#inputMessage').removeAttr("disabled").val('');
+                        $('#tbPatient').children().children().eq(now).css("background-color", "pink").find('button').removeClass('btn-info').addClass('btn-danger').eq(0).html('看診中');;
+                        $('#tbPatient').children().children().eq(pre).css("background-color", "white");
+
+                        removeData();
+                        loadPatientDetial(patientId);
+                        updateNo();
+                        now++; pre++;
+                    }
+                    else
+                    {
+                        Swal.fire({
+                        title: '結束看診?',
+                        text: "",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '確定'
+                        }).then((result) => {
+                            if (result.isConfirmed)
+                            {
+                                Swal.fire('完成看診', '', 'success');
+                                $.post('@Url.Content("~/Doctors/Consultation/Save")', { id: $('span#ClinicDetailId').html() }, function () {
+                                    window.location.href = " @Url.Action("List", "Consultation") ";
+                                })
+                            }
+                        })
+                    }
+                }
+            }
+        });
+
+        //過號候補
+        $('.dropdown-item').click(function () {
+            let tr = $(this).parents("tr"), len = $('.dropdown-item').length;
+
+            if (tr.index() != len - 1) {
+                tr.css("background-color", "white");
+                tr.find('button').removeClass('btn-info').addClass('btn-warning').eq(0).html('過號候補');
+                tr.fadeOut().fadeIn();
+
+                if (now < max){
+                    tr.parent().children().eq(pre).next().next().after(tr);
+                }
+                else{
+                    tr.parent().children().eq(pre).last().after(tr);
+                }
+                waiting++; now--; pre--;
+                updateNo();
+            }
+        })
+
+        //未報到
+        $('#btnNotCome').click(function (){
+            let tr = $('#tbPatient').find('tr');
+            tr.eq(pre).find('button').removeClass('btn-danger').addClass('btn-warning').eq(0).html('未報到');
+            tr.eq(pre).css("background-color", "white");
+            tr.eq(now).css("background-color", "Pink");
+            tr.eq(now).css("background-color", "pink").find('button').removeClass('btn-info').addClass('btn-danger').eq(0).html('看診中');
+
+            pre++; now++; pass++;
+
+            let patientId = $('#tbPatient').children().children().eq(pre).children().eq(1).children().val();
+            removeData();
+            loadPatientDetial(patientId);
+            updateNo();
+        })
+
+        $('#btnDemo').click(function ()
+        {
+            $('textarea#inputMessage').val('病毒性結膜炎，患者自覺眼睛發癢、異物感和眼睛疲勞感，伴有輕度的充血與少量分泌物');
+        })
+
+        $('#btSave').click(function () {
+            let list = {
+                clinicId: $('span#ClinicDetailId').html(),
+                MemberId: $('input[name="item.Member.MemberId"]').eq(pre).val(),
+                DiagnosticRecord: $('textarea#inputMessage').val()
+            };
+
+            if (!$.trim($("textarea#inputMessage").val()))
+            {
+                Swal.fire('尚未輸入診斷紀錄')
+            }
+            else
+            {
+                $.post('@Url.Content("~/Doctors/Consultation/Save")', list, function (status) {
+                    $('#tbPatient').children().children().eq(pre).find('button').removeClass('btn-info btn-danger btn-warning').addClass('btn-success disabled').eq(0).html('看診完畢');
+                    $('textarea#inputMessage').attr("disabled", "disabled");
+                    $('#btSave').addClass('disabled');
+                    let title = (status == "true") ? "新增成功" : "新增失敗";
+                    let result = (status == "true") ? "success" : "error";
+                    Swal.fire(
+                        title,
+                        '',
+                        result
+                    );
+                    finish++;
+                });
+
+                if (now == max) {
+                    $.post('@Url.Content("~/Doctors/Consultation/Finish")', { id: $('span#ClinicDetailId').html() });
+                    $('#nextNum').attr({ "value": "結束看診" }).removeClass("btn-info").addClass("btn-danger");
+                }
+            }
+
+        });
+
+
+
+        async function updateNo() {
+            let clinicId = await $('span#ClinicDetailId').html();
+            let paitentId = await $('input[name="item.Member.MemberId"]').eq(pre).val();
+
+            $.post('@Url.Content("~/Doctors/Consultation/sendSquNo")', { id: $('span#ClinicDetailId').html(), paitentId: paitentId });
+
+            await client.invoke("SendRooomNo", clinicId, paitentId).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
+
+        function removeData() {
+            let card = document.querySelector("#card");
+            card.remove();
+        }
+
+        async function loadPatientDetial(id) {
+            const response = await fetch('@Url.Content("~/Doctors/Consultation/user")' + `?id=${id}`);
+            const datas = await response.json();
+
+            let card = document.createElement("div");
+            card.setAttribute("id", "card");
+            card.setAttribute("class", "card");
+
+            let tablediv = document.createElement("div");
+            tablediv.setAttribute("class", "card-body table-responsive p-0");
+            tablediv.setAttribute("style", "height: 470px;");
+
+            let table = document.createElement("table");
+            table.setAttribute("class", "table table-head-fixed text-nowrap");
+
+            let thead = document.createElement('thead');
+            let tbody = document.createElement('tbody');
+            let headerTr = document.createElement('tr')
+            let tr = document.createElement("tr");
+
+            for (let i = 0; i < 2; i++) {
+                let th = document.createElement('th');
+                th.textContent = (i == 0) ? "看診日期" : "診斷紀錄";
+                headerTr.appendChild(th);
+            }
+            thead.append(headerTr);
+
+
+            datas.forEach(obj => {
+                tr = document.createElement("tr");
+                Object.entries(obj).forEach(([key, value]) => {
+                    let td = document.createElement("td");
+                    td.textContent = value;
+                    tr.append(td);
+                });
+                tbody.append(tr);
+            });
+
+            table.append(thead);
+            table.append(tbody);
+
+            tablediv.append(table);
+            card.append(tablediv);
+
+            document.querySelector("#custom-tabs-four-profile").appendChild(card);
+        }
+
+    </script>
+}

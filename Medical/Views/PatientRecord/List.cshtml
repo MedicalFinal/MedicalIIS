@@ -1,0 +1,117 @@
+﻿@model IEnumerable<Medical.ViewModels.CaseRecordViewModel>
+
+@{
+    ViewData["Title"] = "List";
+
+}
+
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">診療紀錄</h3>
+        </div>
+    </div>
+</div>
+
+
+<label>醫生查詢&emsp;</label>
+<input type="text" id="myInput" placeholder="查詢" class="light-table-filter" data-table="table" />
+<table class="table table-sm align-middle table-hover" id="myTable" style="margin:20px 0 100px 0">
+    <thead>
+        <tr>
+            <th>
+                序
+            </th>
+            <th>
+                看診醫生
+            </th>
+            <th>
+                病例概況
+            </th>
+            <th>
+                治療科目
+            </th>
+            <th></th>
+        </tr>
+    </thead>`
+    <tbody >
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td >
+                        @Html.DisplayFor(modelItem => item.Doctor.DoctorName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DiagnosticRecord)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TreatmentDetail.TreatmentDetail1)
+                    </td>
+                    <td>
+                        @Html.ActionLink("評論", "Create", new { id = item.Doctor.DoctorId }, new { @class = " fas fa-feather me-md-3" })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@section Scripts{
+    <script>
+
+        (function(document) {
+  'use strict';
+
+  // 建立 LightTableFilter
+  var LightTableFilter = (function(Arr) {
+
+    var _input;
+
+    // 資料輸入事件處理函數
+    function _onInputEvent(e) {
+      _input = e.target;
+      var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
+      Arr.forEach.call(tables, function(table) {
+        Arr.forEach.call(table.tBodies, function(tbody) {
+          Arr.forEach.call(tbody.rows, _filter);
+        });
+      });
+    }
+
+    // 資料篩選函數，顯示包含關鍵字的列，其餘隱藏
+    function _filter(row) {
+      var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
+      row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+    }
+
+    return {
+      // 初始化函數
+      init: function() {
+        var inputs = document.getElementsByClassName('light-table-filter');
+        Arr.forEach.call(inputs, function(input) {
+          input.oninput = _onInputEvent;
+        });
+      }
+    };
+  })(Array.prototype);
+
+  // 網頁載入完成後，啟動 LightTableFilter
+  document.addEventListener('readystatechange', function() {
+    if (document.readyState === 'complete') {
+      LightTableFilter.init();
+    }
+  });
+
+})(document);
+
+      
+
+    </script>
+}
+

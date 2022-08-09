@@ -1,0 +1,450 @@
+﻿@model Medical.ViewModel.CMemberViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+@section styles{
+    <style>
+        .input-selector {
+            outline: none;
+            border: none;
+        }
+
+        .muti-selector {
+            width: max-content;
+            float: left;
+            padding-right: 4px
+        }
+
+        .select-field {
+            border: 1px solid black;
+        }
+
+        .select-field, .task, .list {
+            width: 100%;
+            background-color: white;
+        }
+
+        .list {
+            box-shadow: 0px 30px 60px rgb(0,0,0,0.2);
+            display: none;
+            position: absolute;
+            width: 207.75px;
+            z-index: 10;
+        }
+
+        .down-arrow {
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: inline-block;
+            transition: 0.2s linear;
+        }
+
+        .task {
+            display: block;
+            padding-left: 0;
+        }
+
+            .task span {
+                float: right;
+                font-size: 0.6rem;
+                padding-top: 6px;
+            }
+
+                .task span:hover {
+                    background-color: aliceblue;
+                }
+
+        .show {
+            display: block;
+        }
+
+        .rotate180 {
+            transform: rotate(180deg);
+        }
+
+        .detail {
+            margin-left: 60px;
+            margin-right: 60px;
+        }
+
+        .slideInUp {
+            background-color: #616E83;
+            border: 0.2px #666;
+            border-radius: 25px 25px 25px 25px;
+            margin: 10px 5px 10px 5px;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            margin-bottom: 9px;
+        }
+        .form-control{
+            width:100px;
+        }
+    </style>
+}
+<h1>會員管理頁面</h1>
+<div class="col-xs-4">
+    <input type="text" class="form-control" placeholder="搜尋" id="searchingKey">
+  </div>
+
+    @using (Html.BeginForm())
+    {<div class="d-flex flex-wrap mt-2">
+            <div class="muti-selector">
+                <div class="select-field">
+                    <input type="text" name="" placeholder="權限篩選" class="input-selector" />
+                    <span class="down-arrow">&blacktriangledown;</span>
+
+                </div>
+                <div class="list">
+                    <label for="" class="task">
+                        <input type="checkbox" class="checkAll1" name="123" id="c" onclick="rolecheck_all()" />
+                        全選
+                    </label>
+                </div>
+            </div>
+
+            <div class="muti-selector" hidden="hidden">  @*改為隱藏*@
+                <div class="select-field" id="select-field1">
+                    <input type="text" name="" placeholder="縣市篩選" class="input-selector" />
+                    <span class="down-arrow" id="down-arrow1">&blacktriangledown;</span>
+                </div>
+                <div class="list" id="list1">
+                    <label for="" class="task">
+                        <input type="checkbox" class="checkAll2" onclick="check_allDp()" id="d" />
+                        全選
+                    </label>
+                </div>
+            </div>
+            <div>
+                <a asp-action="AdminCreate" class="fas fa-user-plus">新增會員</a>
+            </div>
+        </div>
+
+
+
+    }
+    @*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*@
+
+    @*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*@
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    序號
+                </th>
+                <th>
+                    信箱
+                </th>
+                <th>
+                    姓名
+                </th>
+                <th>
+                    使用者ID
+                </th>
+                <th>
+                    密碼
+                </th>
+                <th>
+                    生日
+                </th>
+                <th>
+                    性別
+                </th>
+                <th>
+                    健保卡
+                </th>
+                <th>
+                    電話
+                </th>
+                <th>
+                    權限
+                </th>
+                <th>
+                    城市
+                </th>
+                <th>
+                    地址
+                </th>
+                <th></th>
+            </tr>
+        <tbody class="tbody">
+        </tbody>
+    </table>
+    @section Scripts{
+
+        <script>
+            //關鍵字搜尋
+            $("#searchingKey").keydown(function () {
+                keyword($("#searchingKey").val());
+                });
+            async function keyword(keystring) {
+                console.log(keystring);
+                const kw = await fetch('@Url.Content("~/Admin/AdminMemberList/keyword")' + `?thekey=${keystring}`).then(response => response.json());
+                console.log(kw);
+                for (var i = 0; i < kw.length; i++) {
+                    console.log(kw[i].memberId);
+                    loadWebCity(kw[i].memberId);
+                    
+                }
+                //還要清除掉勾選的項目
+                document.getElementById("c").checked = false;
+                document.getElementById("d").checked = false;
+                var checkboxs = document.getElementsByClassName("check")
+                for (var i = 0; i < checkboxs.length; i++) {
+                    checkboxs[i].checked = !checkboxs[i].checked;
+                    cancelCity(checkboxs[i].name);
+                }
+                var ckboxs = document.getElementsByClassName("check1")
+                for (var i = 0; i < ckboxs.length; i++) {
+                    ckboxs[i].checked = !ckboxs[i].checked;
+                    cancelWebMem(ckboxs[i].name);
+                }
+            }
+
+    @*網頁開始全選*@
+        function rolefirstCheck() {
+            document.getElementById("c").checked = true;
+        }
+        function cityfirstCheck() {
+            document.getElementById("d").checked = true;
+        }
+    @*網頁開始時執行*@
+        loadMemberRole();
+        @* 醫生全選 *@
+            function check_allDp() {
+                var ckboxs = document.getElementsByClassName("check1")
+                for (var i = 0; i < ckboxs.length; i++) {
+                    ckboxs[i].checked = !ckboxs[i].checked;
+                    if (ckboxs[i].checked == true)
+                        loadWebCity(ckboxs[i].name)
+                    else
+                        cancelWebMem(ckboxs[i].name)
+                }
+        }
+        @* 科別全選 *@
+        function rolecheck_all() {
+                var checkboxs = document.getElementsByClassName("check")
+                for (var i = 0; i < checkboxs.length; i++) {
+                    checkboxs[i].checked = !checkboxs[i].checked;
+                    if (checkboxs[i].checked == true) {
+                        loadCity(checkboxs[i].name);
+                    }
+                    else
+                        cancelCity(checkboxs[i].name);
+                }
+            }
+
+    @* 刪除取消勾選Role *@
+        async function cancelCity(N) {
+            roleName = N;
+            const trtDs = await fetch('@Url.Content("~/Admin/AdminMemberList/City")' + `?roName=${roleName}`).then(response => response.json());
+                trtDs.forEach((CityName) => {
+                    document.querySelector(`#mem${CityName}`).remove();
+                    document.getElementById(`${CityName}Div`).remove();
+                })
+        }
+    @*取消全選醫生Ajax*@
+        async function cancelWebMem(N) {
+            ctName = N;
+            console.log(ctName);
+            const members = await fetch('@Url.Content("~/Admin/AdminMemberList/GetMemWeb")' + `?kity=${ctName}`).then(response => response.json());
+            console.log(members);
+            members.forEach((DoctorName) => {
+                var div = document.getElementById(`${members[0].memberId}Div`);
+                div.remove()
+            })
+        }
+    @*選單下拉*@
+        document.querySelector('.select-field').addEventListener('click', () => {
+        document.querySelector('.list').classList.toggle('show');
+            document.querySelector('.down-arrow').classList.toggle('rotate180')
+
+        })
+        document.querySelector('#select-field1').addEventListener('click', () => {
+            document.querySelector('#list1').classList.toggle('show');
+            document.querySelector('#down-arrow1').classList.toggle('rotate180')
+        })
+    @*勾選專長*@
+        function CCC() {
+            if ($(event.target)[0].checked == true) {
+                loadCity($(event.target)[0].name);
+            }
+            else
+                cancelCity($(event.target)[0].name);
+        }
+
+    @*勾選醫生*@
+        function DDD() {
+            if ($(event.target)[0].checked == true) {
+                loadWebCity($(event.target)[0].name);
+            }
+            else
+                cancelWebMem($(event.target)[0].name)
+        }
+
+    @*讀取專長選單*@
+        async function loadMemberRole() {
+
+            const roles = await fetch('@Url.Content("~/Admin/AdminMemberList/Role")').then(response => response.json())
+            roles.forEach((roleName) => {
+                name =`<label for="" class="task">
+                <input type="checkbox" class="check" onclick="CCC()" id="${roleName}" name="${roleName}" value="${roleName}"/>
+                ${roleName}
+            </label>`;
+                document.querySelector('.list').innerHTML += name;
+            })
+            rolefirstCheck();
+            rolecheck_all();
+        }
+
+    @*讀取TreatmentDetail*@
+        async function loadCity(N) {
+            roleName = N;
+            const citycity = await fetch('@Url.Content("~/Admin/AdminMemberList/City")' + `?roName=${roleName}`).then(response => response.json());
+            citycity.forEach((memid) => {
+                name = `<label for="" class="task" id="mem${memid}">
+                <input type="checkbox" class="check1" checked="true" name="${memid}" onclick="DDD()" value="${memid}"/>
+                ${memid}
+            </label>`;
+                    document.querySelector('#list1').innerHTML += name;
+                loadWebCity(`${memid}`)
+                })
+            cityfirstCheck()
+        }
+        var count = 0;
+        async function loadWebCity(ctName) {
+            const members = await fetch('@Url.Content("~/Admin/AdminMemberList/CityWeb")' + `?memid=${ctName}`).then(response => response.json());
+            console.log(members)
+            //console.log(members[0]);
+            //console.log(members[0].memberName);
+            //console.log(members[0].email)
+            //console.log(members[0].address)
+            //console.log(members[0].phone)
+            //物件名稱大小寫會改變，要用console.log去抓
+            members.forEach((CityName) => {
+                count++;
+
+                //========================================
+                loadGender(members[0].genderId, members[0].memberId);
+                //console.log(members[0].genderId);
+              async function loadGender(gid,memid) {
+               const genderff = await fetch('@Url.Content("~/Admin/AdminMemberList/GetGenderName")' + `?gengen=${gid}`).then(response => response.json());
+                       let web = `${genderff[0]}`
+                       //console.log(web);
+                       if (web == "undefined") {
+                           document.querySelector(`#gen${memid}`).innerHTML = "";
+                       }
+                       else
+                       document.querySelector(`#gen${memid}`).innerHTML = web;
+                }
+                //=======================================
+                loadCity(members[0].cityId, members[0].memberId);
+
+                async function loadCity(ctid,memid) {
+                    const ctct = await fetch('@Url.Content("~/Admin/AdminMemberList/GetCityName")' + `?yourCityid=${ctid}`).then(response => response.json());
+                    let web = `${ctct[0]}`
+                       //console.log(web);
+                       if (web == "undefined") {
+                           document.querySelector(`#city${members[0].memberId}`).innerHTML = "";
+                       }
+                       else
+                           document.querySelector(`#city${members[0].memberId}`).innerHTML = web;
+                }
+                //地址不顯示為null=======================================
+                let addStr = "";  //要用let 不能用const
+                letAddressNotNull(members[0].address);
+
+                function letAddressNotNull(add) {
+                    //console.log(add);
+                    if (add == null)
+                        addStr = "";
+                    else
+                        addStr = add;
+                }
+                //電話不顯示為null=======================================
+                let phoneStr = "";
+                letPhoneNotNull(members[0].phone);
+                function letPhoneNotNull(telphone) {
+                    if (telphone == null)
+                        phoneStr = "";
+                    else
+                        phoneStr = telphone;
+                }
+                //=================================================
+                let icCardStr = "";
+                letIcCardNotNull(members[0].icCardNo);
+                function letIcCardNotNull(card) {
+                    if (card == null)
+                        icCardStr = "";
+                    else
+                        icCardStr = card;
+                }
+                //=================================================
+
+               var date_value="";   //日期格式化部分，要避免null時預設值Thu Jan 01 1970 08:00:00 GMT+0800
+                if (members[0].birthDay != null) {
+                    const date = new Date(members[0].birthDay);
+                        date_value = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+                    //console.log(date);
+                    //console.log(date_value);
+                }
+                else
+                    date_value = "";
+                //這邊要注意點出來的是小寫
+                web = `<tr id="${members[0].memberId}Div">
+                    <td>
+                        ${count}
+                    </td>
+                    <td>
+                        ${members[0].email}
+                    </td>
+
+                    <td>
+                        ${members[0].memberName}
+                    </td>
+                    <td>
+                        ${members[0].identityId}
+                    </td>
+                 <td>
+                        ${members[0].password}
+                    </td>
+                   <td>
+                        ${date_value}
+                    </td>
+                    <td id="gen${members[0].memberId}">
+
+                    </td>
+                    <td>
+                        ${icCardStr}
+                    </td>
+                    <td>
+                        ${phoneStr}
+                    </td>
+                   <td>
+                        ${members[0].role}
+                    </td>
+                        <td id="city${members[0].memberId}">
+
+                    </td>
+               <td>
+                        ${addStr}
+                    </td>
+                    <td>
+                        <a class = "btn btn-primary fas fa-edit" href="/Admin/AdminMemberList/Edit/${members[0].memberId}"></a>
+                        <a class = "btn btn-danger fas fa-trash" onclick = "return confirm('確定刪除?')" href="/Admin/AdminMemberList/Delete/${members[0].memberId}"></a>
+                    </td>
+                </tr>`
+                document.querySelector('.tbody').innerHTML += web
+            })
+
+        }
+
+
+        </script>
+    }

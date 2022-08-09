@@ -1,0 +1,101 @@
+﻿@model Medical.ViewModels.CDoctorDetailViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+@section css{
+    <style>
+        .det {
+            float: left;
+            width: 100%;
+        }
+
+        .row {
+            font-size: 20px !important;
+        }
+        .pic{
+            width:100%;
+            height:auto;
+            max-height:450px;
+            object-fit:contain;
+        }
+        .actbtn button,input{
+            font-size:14px;
+        }
+    </style>
+}
+
+<h1>醫生詳細資料</h1>
+<input type="hidden" id="DoctorID" name="DoctorID" value="@Model.DoctorID">
+<div class="row">
+    <div class="col-md-6 col-12">
+        <hr />
+        <dl class="row det">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DoctorName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DoctorName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.JobTitle)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.JobTitle)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Education)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Education)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Experience)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Experience)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DepName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DepName)
+            </dd>
+            <dt class="col-sm-2">
+                治療項:
+            </dt>
+            <dd class="col-sm-10" id="trtD">
+
+            </dd>
+        </dl>
+        <div class="actbtn mb-4">
+            <a class="btn btn-success btn-sm " href="/reserve/reservelist?id=@Model.DoctorID">我要掛號</a>
+            @*<button class="btn btn-success btn-sm " href="/reserve/reservelist?id=@Model.DoctorID">我要掛號</button>*@
+            <input type="button" onclick="location.href='@Url.Action("ListTest","Doctor")'" value="返回醫生" class="btn btn-info btn-sm" />
+            <a href="/clinicdetail/listajax" class="btn btn-primary btn-sm">門診時間</a>
+        </div>
+    </div>
+    <div class="col-md-6 col-12">
+        <img class="pic" src="~/images/@Html.DisplayFor(model => model.PicturePath)"/>
+    </div>
+</div>
+<br />
+
+
+@section Scripts{
+    <script>
+
+        loadTrTD();
+        async function loadTrTD()
+        {
+            const trts = await fetch('@Url.Content("~/doctor/getTreatment")' + `?dcID=${@Model.DoctorID}`).then(response => response.json());
+            trts.forEach((TreatmentDetail1) => {
+                    console.log(TreatmentDetail1)
+                    name = TreatmentDetail1+"/"
+                    document.querySelector("#trtD").innerHTML += name;
+            })
+        }
+
+    </script>
+}

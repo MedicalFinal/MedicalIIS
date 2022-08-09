@@ -1,0 +1,402 @@
+﻿@model Medical.ViewModel.CMemberViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Mvc.Core.Fluent;
+@using X.PagedList.Mvc.Core.Common;
+
+@{
+    ViewData["Title"] = "AdminMemberList";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
+}
+<link href="~/css/PagedList.css" rel="stylesheet" />
+<div class="btn btn-outline-secondary">
+    <a asp-action="AdminCreate" class="fas fa-user-plus">新增會員</a>
+</div>
+
+<h1>會員資料管理頁面</h1>
+<div class="col-md-3">
+    <div>
+        <div class="col-xs-4">
+            <input type="text" class="form-control" placeholder="搜尋" id="searchingKey" oninput="myInputFunction()" />
+            <input type="button" value="小白Demo" class="btn btn-primary" id="mingDemo" />
+        </div>
+
+
+        @*下拉選單篩選，method="post" action="AdminMemberList"*@
+        <form name="Role" method="post" action="AdminMemberList">
+            <div class="form-group">
+                <a>權限篩選:</a>
+                <select asp-for="Role" id="roleSelect">
+                    @*-1時回controller搜全部會員*@
+                    <option value="-1">全部會員</option>
+                    @*@foreach (var item in Model.roleTypes)*@
+                    @*@foreach (var item in Model.roleTypespage)*@
+                    @foreach (var item in Model.roleTypes)
+                    {
+                    <option value="@item.Role">@item.RoleName</option>
+                    }
+                </select>
+                <input type="submit" value="篩選" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                序號
+            </th>
+            <th>
+                信箱
+            </th>
+            <th>
+                姓名
+            </th>
+            <th>
+                使用者ID
+            </th>
+            @*<th>
+                    密碼
+                </th>*@
+            <th>
+                生日
+            </th>
+            <th>
+                性別
+            </th>
+            <th>
+                健保卡
+            </th>
+            <th>
+                電話
+            </th>
+            <th>
+                權限
+            </th>
+            <th>
+                城市
+            </th>
+            <th>
+                地址
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="newtbd"></tbody>
+    <tbody id="tbd">
+        @{
+            int count = 0;
+
+            @*@foreach (var item in Model.mem)*@
+            @foreach (var item in Model.mempage)
+            {
+                count++;
+
+                //前端篩選value=============================================================
+                //var ro = Model.roleTypes.Where(t => t.Role == item.Role).Select(n => n.RoleName);  //篩選權限
+                var ro = Model.roleTypespage.Where(t => t.Role == item.Role).Select(n => n.RoleName);  //篩選權限  //分頁IPagedList
+                string showRole = "";
+                foreach (var r in ro)
+                {
+                    showRole = r;          //只會有一個
+                }
+                //========================
+                //var gen = Model.MemGender.Where(t => t.GenderId == item.GenderId).Select(n => n.Gender1);
+                var gen = Model.MemGenderpage.Where(t => t.GenderId == item.GenderId).Select(n => n.Gender1);  //分頁IPagedList
+                string showGen = "";
+                foreach (var g in gen)
+                {
+                    showGen = g;
+                }
+                //========================
+                //var ci = Model.MemCity.Where(t => t.CityId == item.CityId).Select(n => n.CityName);
+                var ci = Model.MemCitypage.Where(t => t.CityId == item.CityId).Select(n => n.CityName);  //分頁IPagedList
+                string showCity = "";
+                foreach (var c in ci)
+                {
+                    showCity = c;
+                }
+                //========================日期格式化，避免生日空值
+                string happyBD = "";
+                if (item.BirthDay != null)
+                    happyBD = item.BirthDay.Value.ToString("yyyy/MM/dd");
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MemberName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdentityId)
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.Password)
+                        </td>*@
+                    <td>
+                        @happyBD
+                    </td>
+                    <td>
+                        @showGen
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IcCardNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+                    <td>
+                        @showRole
+                    </td>
+                    <td>
+                        @showCity
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.ActionLink("", "Edit", "AdminMemberList", new { id = item.MemberId }, new { Class = "fas fa-edit" })
+                        @Html.ActionLink("", "Delete", "AdminMemberList", new { id = item.MemberId }, new { onclick = "return confirm('確定要刪除資料嗎?')", Class = "fas fa-trash" })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<br />
+<div style="align-content:center" id="pagelistShow">
+
+    @Html.PagedListPager(Model.mempage, page => Url.Action("AdminMemberList", new { page }), new PagedListRenderOptions
+{
+    LinkToFirstPageFormat = "首頁",
+    LinkToNextPageFormat = "下一頁",
+    LinkToPreviousPageFormat = "上一頁",
+    LinkToLastPageFormat = "末頁",
+    MaximumPageNumbersToDisplay = 5,
+    DisplayItemSliceAndTotal = false,//從頭到尾顯示頁碼
+
+
+
+
+ UlElementClasses = new[] { "pagination" },  // 為ul li a 元素添加鏈接，使用ContainerDivClasses = new[] { "pagination" }替換 UlElementClasses = new[] { "pagination"},也是相同的效果。也可以不要此行代碼，因為Bootstrap4與3相比，ul的class名沒有變化，li 元素和a 元素加了page-item和page-link的類名。
+
+    LiElementClasses = new[] { "page-item" },
+    PageClasses = new[] { "page-link" },
+
+})
+</div>
+<br />
+
+@section Scripts{
+    <script>
+
+        //使用keyup字串輸進去後會觸發2次
+        //!!!!!!!改用oninput="myInputFunction()
+        //$("#searchingKey").keyup(function () {
+
+        function myInputFunction() {
+           // var inputkey = $("#searchingKey").val();
+           ////檢查空字串要3個等號===
+           // if (inputkey === null || inputkey=== "") {
+           //     console.log("空值觸發");
+           //     $("#tbd").prop('hidden', false);
+           //     //要做一個清空tbody的動作，把查詢表格刪掉
+           //     $("#newtbd").empty();
+           // }
+           // else {
+           //     console.log("myInputFunction觸發")
+           //     $("#newtbd").empty();  //多打一個字就先清空避免重複
+           //     count = 0;  //重新歸0避免累加
+           //     $("#tbd").prop("hidden", "hidden");
+           //     console.log(inputkey);
+           //     keywordnew(inputkey);
+           // }
+        };
+
+        //用change事件不會有延遲問題
+        $("#searchingKey").change(function () {
+            var inputkey = $("#searchingKey").val();
+            //檢查空字串要3個等號===
+            if (inputkey === null || inputkey === "") {
+                console.log("空值觸發");
+                $("#tbd").prop('hidden', false);
+                $("#pagelistShow").prop('hidden', false);   //分頁鍵顯示
+                //要做一個清空tbody的動作，把查詢表格刪掉
+                $("#newtbd").empty();
+            }
+            else {
+                console.log("myInputFunction觸發")
+                $("#newtbd").empty();  //輸入完清空避免重複
+                count = 0;  //序號計數重新歸0避免累加
+                $("#tbd").prop("hidden", "hidden");
+                $("#pagelistShow").prop("hidden", "hidden");   //分頁鍵隱藏
+                console.log(inputkey);
+                keywordnew(inputkey);
+            }
+        });
+        async function keywordnew(keystring) {
+             //console.log(keystring);
+             const kw = await fetch('@Url.Content("~/Admin/AdminMemberList/keywordnew")' + `?thekey=${keystring}`).then(response => response.json());
+            //console.log(kw);
+            for (var i = 0; i < kw.length; i++) {
+                console.log(kw[i].memberId);
+                loadnewTbody(kw[i].memberId);
+            }
+        }
+        var count = 0;
+        async function loadnewTbody(menID) {
+
+            console.log("===================");
+            $("#newtbd").empty();  //再清一次避免延遲重複(不完全)
+            //console.log(menID);
+            const members = await fetch('@Url.Content("~/Admin/AdminMemberList/loadnewTbody")' + `?memid=${menID}`).then(response => response.json());
+            console.log(members);
+            //console.log(members[0]);
+            //console.log(members[0].memberName);
+            //console.log(members[0].email)
+            //console.log(members[0].address)
+            //console.log(members[0].phone)
+            //物件名稱大小寫會改變，要用console.log去抓
+            //顯示權限Name======================================
+            loadRole(members[0].role, members[0].memberId);
+            async function loadRole(roleid,memid) {
+                const rorero = await fetch('@Url.Content("~/Admin/AdminMemberList/GetRoleName")' + `?roro=${roleid}`).then(response => response.json());
+                let web = `${rorero[0]}`
+                       //console.log(web);
+                       if (web == "undefined") {
+                           document.querySelector(`#ro${memid}`).innerHTML = "";
+                       }
+                       else
+                       document.querySelector(`#ro${memid}`).innerHTML = web;
+                }
+            //顯示性別Name======================================
+                loadGender(members[0].genderId, members[0].memberId);
+                //console.log(members[0].genderId);
+              async function loadGender(gid,memid) {
+               const genderff = await fetch('@Url.Content("~/Admin/AdminMemberList/GetGenderName")' + `?gengen=${gid}`).then(response => response.json());
+                       let web = `${genderff[0]}`
+                       //console.log(web);
+                       if (web == "undefined") {
+                           document.querySelector(`#gen${memid}`).innerHTML = "";
+                       }
+                       else
+                       document.querySelector(`#gen${memid}`).innerHTML = web;
+                }
+                //顯示CityName=====================================
+                loadCity(members[0].cityId, members[0].memberId);
+
+                async function loadCity(ctid,memid) {
+                    const ctct = await fetch('@Url.Content("~/Admin/AdminMemberList/GetCityName")' + `?yourCityid=${ctid}`).then(response => response.json());
+                    let web = `${ctct[0]}`
+                       //console.log(web);
+                       if (web == "undefined") {
+                           document.querySelector(`#city${members[0].memberId}`).innerHTML = "";
+                       }
+                       else
+                           document.querySelector(`#city${members[0].memberId}`).innerHTML = web;
+                }
+            //地址不顯示為null=======================================
+            let addStr = "";  //要用let 不能用const
+            letAddressNotNull(members[0].address);
+
+            function letAddressNotNull(add) {
+                //console.log(add);
+                if (add == null)
+                    addStr = "";
+                else
+                    addStr = add;
+            }
+            //電話不顯示為null=======================================
+            let phoneStr = "";
+            letPhoneNotNull(members[0].phone);
+            function letPhoneNotNull(telphone) {
+                if (telphone == null)
+                    phoneStr = "";
+                else
+                    phoneStr = telphone;
+            }
+            //健保卡不顯示為null=========================================
+            let icCardStr = "";
+            letIcCardNotNull(members[0].icCardNo);
+            function letIcCardNotNull(card) {
+                if (card == null)
+                    icCardStr = "";
+                else
+                    icCardStr = card;
+            }
+            //=================================================
+
+            var date_value = "";   //日期格式化部分，要避免null時預設值Thu Jan 01 1970 08:00:00 GMT+0800
+            if (members[0].birthDay != null) {
+                const date = new Date(members[0].birthDay);
+                date_value = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+                //console.log(date);
+                //console.log(date_value);
+            }
+            else
+                date_value = "";
+            //===================================================
+            members.forEach(() => {
+                count++;
+                web = `<tr id="${members[0].memberId}Div">
+                    <td>
+                        ${count}
+                    </td>
+                    <td>
+                        ${members[0].email}
+                    </td>
+
+                    <td>
+                        ${members[0].memberName}
+                    </td>
+                    <td>
+                        ${members[0].identityId}
+                    </td>
+                   <td>
+                         ${date_value}
+                    </td>
+                    <td id="gen${members[0].memberId}">
+
+                    </td>
+                    <td>
+                        ${icCardStr}
+                    </td>
+                    <td>
+                          ${phoneStr}
+                    </td>
+                   <td id="ro${members[0].memberId}">
+
+                    </td>
+                    <td id="city${members[0].memberId}">
+
+                    </td>
+                   <td>
+                       ${addStr}
+                    </td>
+                    <td>
+                        <a class = "fas fa-edit" href="/Admin/AdminMemberList/Edit/${members[0].memberId}"></a>
+                        <a class = "fas fa-trash" onclick = "return confirm('確定刪除?')" href="/Admin/AdminMemberList/Delete/${members[0].memberId}"></a>
+                    </td>
+                </tr>`
+                document.querySelector('#newtbd').innerHTML += web;
+            })
+        }
+
+        //==============
+        $("#mingDemo").click(() => {
+            $("#searchingKey").val("陳");
+
+            $("#searchingKey").change();
+        })
+    </script>
+}

@@ -1,0 +1,336 @@
+﻿@model List<Medical.ViewModel.CShoppingCartItem>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid" style="width: 100%; max-width: 1024px; margin: auto; margin-bottom: 30px;">
+
+    <ul class="breadcrumb" style="background-color: white; font-size: 16px; margin-top: 30px;">
+        <li class="breadcrumb-item"><a href="~/Product/ProductList">首頁</a></li>
+        <li class="breadcrumb-item"><a href="~/Product/ProductList">產品列表</a></li>
+        <li class="breadcrumb-item"><a href="~/Product/CartViewList">我的購物車</a></li>
+        <li class="breadcrumb-item"><a href="~/Product/CheckViewList">結帳</a></li>
+    </ul>
+    <form action="Reserve" method="post" id="myform">
+        <div class="card" style="width: 100%;">
+            <div class="card-header">1.確認訂單</div>
+            <div class="card-body">
+                <hr>
+                @{
+
+                    if (Model.FirstOrDefault() != null)
+                    {
+                        <input type="hidden" id="getMemid" name="Memberid" value=@Model.FirstOrDefault().MemberId />
+                    }
+                }
+
+                <table class="table" style="width: 100%; text-align: center;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>圖示</th>
+                            <th>產品名稱</th>
+                            <th>數量</th>
+                            <th>單價</th>
+                            <th>總價</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @{int pay = 0;
+                            //decimal tax = 0;
+                            foreach (var item in Model)
+                            {
+
+                                pay += item.小計;
+                                <tr>
+                                    <td valign="middle" align='center'><input type="checkbox" name="pId[]" amount="@item.小計" value="@item.prod.ProductId" checked onchange="changeAmount(event)" /></td>
+                                    <td><img src="~/images/@item.prodspec.ProductImage" height="160" width="140" alt=""></td>
+                                    <td align='center' valign="middle"> @item.prod.ProductName</td>
+                                    <td align='center' valign="middle">@item.cart.ProductAmount</td>
+                                    <td align='center' valign="middle">@item.prodspec.UnitPrice.ToString("C0")</td>
+                                    <td align='center' valign="middle">@item.小計</td>
+                                </tr>
+                            }
+                            for (int i = 0; i < Model.Count(); i++)
+                            {
+                                @Html.HiddenFor(m => m[i].cart.ShoppingCartId)
+                                @Html.HiddenFor(m => m[i].prodspec.ProductImage)
+                                @Html.HiddenFor(m => m[i].prod.ProductName)
+                                @Html.HiddenFor(m => m[i].cart.ProductAmount)
+                                @Html.HiddenFor(m => m[i].prodspec.UnitPrice)
+                                @Html.HiddenFor(m => m[i].prod.ProductId)
+                            }
+                        }
+                    </tbody>
+                </table>
+                <input id="mytotal" type="hidden" name="total" value="@pay" />
+                @*<input type="submit" name="name" value="送出" />*@
+                <hr>
+            </div>
+            <div class="card-footer" style="display: flex; flex-direction: row-reverse; align-items: center;">
+
+                <p>
+                    <span>折扣:</span><span id="discount">0</span>
+                    <span>訂單總金額:</span>&nbsp;<span style="font-size: 24px; font-weight: bold; color: rgb(195, 50, 50);" id="SPtotal">@(pay+60)</span>
+                </p>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <select name="couponName" id="mySelect">
+                    <option value="請選擇優惠券">請選擇優惠券</option>
+                </select>
+            </div>
+        </div>
+
+        <br><br>
+        <!-- ============================================2================================================ -->
+
+
+        <div class="card" style="width: 100%;">
+            <div class="card-header">2.取貨方式</div>
+            <div class="card-body">
+                <span>收件人 : &nbsp;</span> <input type="text" name="custName" placeholder="收件人姓名" value="@ViewBag.MemberName" id="myCustName" required><span style="color:red;margin-left:5px;" hidden id="SPName">(此為必填欄位)</span>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+
+
+                        <span>選擇取貨方式 :</span> <span style="color:red;margin-left:5px;" hidden id="SPdeliveryWay">(此為必填欄位)</span> <input type="radio" name="r1" value="delivery" required id="mydelivery"> <span>宅配</span>
+                        <br><br>
+                        <span>收件地址 :</span>
+                        @Html.DropDownList("CityName", ViewBag.citySelectListItem as IEnumerable<SelectListItem>, new { id = "myCity",name="cityname" })
+
+                        <br><br>
+                        <span>地址:</span> &nbsp; <input type="text" name="address" id="txtaddress" placeholder="請輸入地址" style="width: 300px;"><span style="color:red;margin-left:5px;" hidden id="SPaddress">(此為必填欄位)</span>
+
+                    </div>
+                    <div class="col-md-6">
+
+
+                        <input type="radio" name="r1" value="SevenTake"> <span>超商取貨(7-11)</span>
+                        <br><br>
+                        <span>請選擇門市(點擊7-11圖示)</span>
+                        <div id="map" style="height: 20em;width:25em;"></div>
+                        <br><br>
+                        <input type="text" name="sevenAddress" id="txtSevenAddress" value="超商地址" placeholder="超商地址" style="width: 300px; color: rgb(139, 140, 140);" readonly>
+
+                    </div>
+                </div>
+
+                <hr>
+
+            </div>
+            <div class="card-footer" style="height: 70px;">
+
+
+            </div>
+        </div>
+
+        <br><br>
+        <!-- =============================================== 3 =================================================== -->
+
+
+        <div class="card" style="width: 100%;">
+            <div class="card-header">3.付款方式</div>
+            <div class="card-body">
+                <span>選擇付款方式: &nbsp;</span><span style="color:red;margin-left:5px;" hidden id="SPpay">(此為必填欄位)</span>
+                <input type="radio" name="r2" required value="linePay"> <span>LinePay</span> &nbsp;
+                <input type="radio" name="r2" value="noPay"> <span>貨到付款</span>
+                <hr>
+
+                <div>
+                    <img src="~/img/linepay-logo-tw.png" height="260" width="380" />
+                    <img src="~/img/7-11.jpg" height="260" width="340" alt="Alternate Text" />
+                </div>
+            </div>
+
+            <div class="card-footer" style="height: 70px;">
+
+
+            </div>
+        </div>
+
+        <br>
+        <div style=" text-align: end;">
+            <button form="myform" onclick="check()" type="submit" class="btn btn-dark" style="margin-top: 10px; margin-right: 20px; width: 200px; border-radius: 25px;">送出訂單</button>
+        </div>
+
+    </form>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+
+        var map;
+        var myLatLng = { lat: 25.04, lng: 121.512 };
+
+        function initMap() {
+            var markers = [];
+            var infoWindows = [];
+            var loaction;
+            var geocoder = new google.maps.Geocoder();
+            var info_config = [
+                '<h2>7-ELEVEN 鑫復門市</h2>' +
+                '<span>台北市大安區信義路三段178號1樓</span><br/>',
+                '<h2>7-ELEVEN 信安門市</h2>' +
+                '<span>台北市大安區大安路一段218號</span><br/>',
+                '<h2>7-ELEVEN 豐安門市</h2>' +
+                '<span>台北市大安區東豐街9號</span><br/>'
+            ];
+
+            //建立地圖 marker 的集合
+            var marker_config = [{
+                address: '7-ELEVEN 鑫復門市'
+            }, {
+                address: '7-ELEVEN 信安門市'
+            }, {
+                address: '7-ELEVEN 豐安門市'
+            }];
+
+            //geocoder主程式
+            function _geocoder(address, callback) {
+                geocoder.geocode({
+                    address: address
+                }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        loaction = results[0].geometry.location;
+                        callback(loaction); //用一個 callback 就不用每次多寫上面這段
+                    }
+                });
+            }
+
+            var Sevenaddres = "";
+
+            //使用地址或名稱標出位置
+            _geocoder('7-ELEVEN 鑫復門市', function (address) {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: address,
+                    zoom: 14
+                });
+
+                //設定資訊視窗內容
+                info_config.forEach(function (e, i) {
+                    infoWindows[i] = new google.maps.InfoWindow({
+                        content: e
+                    });
+                });
+
+                //標出 marker
+                marker_config.forEach(function (e, i) {
+                    _geocoder(e.address, function (address) {
+                        var marker = {
+                            position: address,
+                            map: map,
+                            icon: { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/7-eleven_logo.svg/272px-7-eleven_logo.svg.png', scaledSize: new google.maps.Size(30, 30) }
+                        }
+                        markers[i] = new google.maps.Marker(marker);
+                        markers[i].setMap(map);
+                        markers[i].addListener('click', function () {
+                            infoWindows.forEach(item => {
+                                item.close();
+                            });
+
+                            infoWindows[i].open(map, markers[i]);
+                            str1 = infoWindows[i].getContent();
+                            arr1 = str1.split("<span>");
+                            str2 = arr1[1];
+                            arr2 = str2.split("</span>");
+                            str3 = arr2[0]
+                            Sevenaddres = str3;
+                            console.log(Sevenaddres);
+                            $("#txtSevenAddress").val(Sevenaddres);
+                        });
+                    });
+                });
+            });
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAydj-Tptu-RDnqonMVSIDEw9GyuWPRfuI&callback=initMap"></script>
+
+
+    <script>
+        console.log($("#myCity"))
+        const mySelect = document.querySelector("#mySelect");
+        let TotalSum = document.querySelector("#SPtotal");
+        const getMemid = $("#getMemid").val()
+        let discount = document.querySelector("#discount");
+
+        console.log(getMemid);
+        // 加總陣列數字Function
+        function SumData(array) {
+            var sum = 0;
+            for (var i = 0; i < array.length; i++) {
+                sum += array[i];
+            };
+            return sum;
+        }
+
+        // Checkedbox 變更 更換總數
+        function changeAmount(event) {
+            let arr = $("input:checkbox:checked").map(function () { return parseInt($(this).attr("amount")); }).get();
+            $("#SPtotal").text(`${SumData(arr)}`)
+            $("#mytotal").val(`${SumData(arr)}`)
+            $("#mySelect option:first").prop("selected", "selected")
+            discount.innerText = 0;
+        }
+
+        //取得Coupon Function
+        async function GetCoupon(memId) {
+                const reponse = await fetch('@Url.Content("~/Product/GetCoupon")' + `?id=${memId}`);
+                const datas = await reponse.json();
+                console.log(datas);
+                datas.forEach(coupon => {
+                    const OptCoupon = new Option(`滿${coupon.couponRequireNum}折${coupon.couponDiscountNum}券`, coupon.couponDiscountNum)
+                    OptCoupon.classList.add("myCoupon")
+                    mySelect.options.add(OptCoupon);
+
+                });
+
+        }
+
+        //執行 取得使用者Coupon
+        GetCoupon(getMemid);
+
+        $("#mySelect").on("change", function () {
+            var chooseOpt = $("#mySelect option:selected");
+
+            var tranSumnumber = parseInt($("#mytotal").val());
+            var chooseOptVal = parseInt(chooseOpt.val());
+
+            if (chooseOpt.text() === "請選擇優惠券") {
+                discount.innerText = 0;
+            }
+            else if (tranSumnumber< chooseOptVal * 10) {
+                $("#mySelect option:first").prop("selected", "selected")
+            }
+            else {
+                discount.innerText = chooseOpt.val();
+            }
+            var discountnumber = parseInt(discount.innerText);
+
+            TotalSum.innerHTML = (tranSumnumber - discountnumber);
+
+        })
+
+
+        function check()
+        {
+
+            if ($("#myCustName").val() == "")
+                $("#SPName").attr("hidden", false);
+            if ($("#mydelivery").prop("checked") == true) {
+                if ($("#SPaddress").val() == "")
+                    $("#SPaddress").attr("hidden", false);
+            }
+            if ($('[name="r1"]:checked').length == 0)
+                $("#SPdeliveryWay").attr("hidden", false);
+            if ($('[name="r2"]:checked').length == 0)
+                $("#SPpay").attr("hidden", false);
+        }
+
+
+  
+
+    </script>
+
+}
