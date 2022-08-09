@@ -99,24 +99,24 @@
                 count++;
 
                 //前端篩選value=============================================================
-                //var ro = Model.roleTypes.Where(t => t.Role == item.Role).Select(n => n.RoleName);  //篩選權限
-                var ro = Model.roleTypespage.Where(t => t.Role == item.Role).Select(n => n.RoleName);  //篩選權限  //分頁IPagedList
+                var ro = Model.roleTypes.Where(t => t.Role == item.Role).Select(n => n.RoleName);  //篩選權限
+                //var ro = Model.roleTypespage.Where(t => t.Role == item.Role).Select(n => n.RoleName);  //篩選權限  //分頁IPagedList
                 string showRole = "";
                 foreach (var r in ro)
                 {
                     showRole = r;          //只會有一個
                 }
                 //========================
-                //var gen = Model.MemGender.Where(t => t.GenderId == item.GenderId).Select(n => n.Gender1);
-                var gen = Model.MemGenderpage.Where(t => t.GenderId == item.GenderId).Select(n => n.Gender1);  //分頁IPagedList
+                var gen = Model.MemGender.Where(t => t.GenderId == item.GenderId).Select(n => n.Gender1);
+                //var gen = Model.MemGenderpage.Where(t => t.GenderId == item.GenderId).Select(n => n.Gender1);  //分頁IPagedList
                 string showGen = "";
                 foreach (var g in gen)
                 {
                     showGen = g;
                 }
                 //========================
-                //var ci = Model.MemCity.Where(t => t.CityId == item.CityId).Select(n => n.CityName);
-                var ci = Model.MemCitypage.Where(t => t.CityId == item.CityId).Select(n => n.CityName);  //分頁IPagedList
+                var ci = Model.MemCity.Where(t => t.CityId == item.CityId).Select(n => n.CityName);
+                //var ci = Model.MemCitypage.Where(t => t.CityId == item.CityId).Select(n => n.CityName);  //分頁IPagedList
                 string showCity = "";
                 foreach (var c in ci)
                 {
