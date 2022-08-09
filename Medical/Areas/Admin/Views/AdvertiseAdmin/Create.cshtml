@@ -80,7 +80,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="AdTitle" class="control-label"></label>
-                <input asp-for="AdTitle" class="form-control form-control-lg" />
+                <input asp-for="AdTitle" class="form-control form-control-lg" id="adtitle" />
                 <span asp-validation-for="AdTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -111,6 +111,7 @@
     @*修改*@
     <div style="margin: 0 0 50px 45px">
         <a asp-action="List" type="button" class="btn bg-gradient-warning" style="border-radius: 5px; font-weight: bold"><i class="fa fa-book" style="margin-right: 10px;"></i>回到文章內容</a>
+        <button class="btn btn-primary" id="btn">Demo</button>
     </div>
 </div>
 
@@ -122,8 +123,41 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
     <script>
         //增加文章內容的格式轉換
-        ClassicEditor
-            .create(document.querySelector('#editor'));
+        ClassicEditor.create(document.querySelector('#editor'));
+
+        $(function () {
+            $("#btn").click(function () {
+
+                // A reference to the editor editable element in the DOM.
+                const domEditableElement = document.querySelector('.ck-editor__editable');
+
+                // Get the editor instance from the editable element.
+                const editorInstance = domEditableElement.ckeditorInstance;
+
+
+                $("#adtitle").val("雙眼皮美容術");
+                editorInstance.setData(`<div class="Content_text">
+             <h4 class="titles marginTop0">雙眼皮美容術</h4>
+            <p class="ex_title">縫合法</p>
+            <p>縫合法介紹<br>雙眼皮縫合法手術簡單，適用於眼皮比較薄且眼窩脂肪少的年輕族群，優點是手術時間短，消腫快，術後不必拆線與疤痕不明顯，手術後一星期就不太會腫。缺點是：極少數的人雙眼皮會在一年內消失，或者是眼皮皺摺較不明顯。該手術方式無法切除過多的皮膚及脂肪，因此較不適合年紀大與眼皮脂肪多的患者。一般來說會覺得縫合的方法，若縫線脫落，雙眼皮會漸漸消失，事實上，只要醫師技術高超，視縫合的技巧也可以克服此點。</p>
+             <div class="Content_img text-center">
+            <p class="ex_title">縫合法 vs 切割法</p>
+            <img src="https://www.eyedoctor.com.tw/Images/web/Eyebeauty/Service_01/Eyebeauty_img02.png">
+            </div>
+            <p>縫合法流程<br>雙眼皮縫合手術過程<br>1. 按術前所設計的眼皮部位畫線<br>2. 在眼皮上的畫線處切開3~4個小洞<br>3. 從眼皮外縫三針，讓提眼瞼筋膜與上眼皮的皮膚連接，形成雙眼線的凹痕</p>
+        </div>
+<div class="Content_text">
+            <p class="ex_title">韓式縫合式雙眼皮...超自然韓系雙眼皮</p>
+            <p>微創六點式無縫線手術<br>韓式縫合式的雙眼皮適合眼皮薄與眼窩脂肪少的族群，優點是手術時間短、快速消腫且較沒有疤痕。手術方式在上眼皮上切開六個微創小口，以一針到底穿過小口，做出很自然的雙眼皮，其特色是每個小口以同一條連續皮下埋線，使其每一道的雙眼皮摺痕能夠以均等力道撐之，較傳統的三點式縫合法更為牢固且不易鬆脫。</p>
+            <p>微創六點式無縫線手術過程<br>1. 按術前所設計的眼皮部位畫線<br>2. 在眼皮上的畫線處切開6個微創小口<br>3. 從眼皮外讓提眼瞼筋膜與上眼皮的皮膚連接，形成雙眼線的凹痕</p>
+        </div>
+`);
+
+            })
+        })
+
+
+
 
 
     LoadAdstatue();
