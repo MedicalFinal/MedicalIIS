@@ -31,7 +31,7 @@ connection.on("ReceiveMessage", function (sendUser, message) {
         }
         //這邊是寫死的，之後要優化可以優化
         else {
-            userName2 = "小名";
+            userName2 = "陳小名";
         }
     }
    
